@@ -48,9 +48,9 @@ const userLoginCreate = async (
 
 //find the login session based on the accessToken stored in the header
 const findUserLogin = async (req: Request, res: Response) => {
-  const userID = res.locals.user._id;
+  const userEmail = res.locals.user.email;
   const loginSession = await loginSessionModel.find({
-    userID: userID,
+    userEmail: userEmail,
     valid: true,
   });
   console.log(loginSession);
