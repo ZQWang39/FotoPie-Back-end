@@ -30,16 +30,17 @@ const userLoginCreate = async (
 
   //create a login session
   const loginSession = (
-    await loginSessionModel.create({ userID: findUser._id })
+    await loginSessionModel.create({ userEmail: findUser.email })
   ).toJSON();
+
   //create an access token
   const accessToken = signJwt(
-    { ...findUser, session: loginSession.userID },
+    { ...findUser, session: loginSession.userEmail },
     { expiresIn: "30m" }
   );
   //create a refresh token
   const refreshToken = signJwt(
-    { ...findUser, session: loginSession.userID },
+    { ...findUser, session: loginSession.userEmail },
     { expiresIn: "1y" }
   );
   return res.status(200).send({ accessToken, refreshToken });
