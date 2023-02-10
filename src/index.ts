@@ -1,31 +1,26 @@
-import { config } from "./config";
-import express, { Request, Response } from "express";
-import mongoose, { Schema } from "mongoose";
+import { config } from "./config/config";
+import express from "express";
+import mongoose from "mongoose";
 import cors from "cors";
-import dotenv from "dotenv";
-import { userRouter } from "./routes";
+import userRoutes from "./routes/userLogin";
+import dbConnection from "./utilities/databaseConnection";
+import deserializeUser from "./middleware/deserializeUser";
 
-const bcrypt = require("bcryptjs");
+const router = express();
 
-dotenv.config();
+//connect to mongo db
+mongoose.set("strictQuery", true);
+dbConnection();
 
-//MongoDB setup
-mongoose.connect(config.mongo.url);
+// basic config
+router.use(express.json());
+router.use(deserializeUser);
+router.use(cors());
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "Connection Error..."));
-db.once("open", () => {
-  console.log("Connected to the Database...");
-});
+// routes
+router.use("/user", userRoutes);
 
-//Express
-const app = express();
-app.use(express.json());
-app.use(cors());
-app.use("/api/user", userRouter);
-
-//Port
-const port = process.env.SERVER_PORT;
-app.listen(port, () => {
-  console.log(`Server is on port ${port}...`);
+//create server
+router.listen(config.server.port, () => {
+  console.log("server started");
 });
