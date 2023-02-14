@@ -51,7 +51,8 @@ export class UserController {
       throw new NotFoundException();
     }
     const token = await this.userService.generateJWT(findedUser);
-    const userWithToken = { ...findedUser, token };
+    const { password, ...rest } = findedUser;
+    const userWithToken = { rest, token };
     return null; // Todo: userWithToken function setup
   }
 }
