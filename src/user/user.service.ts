@@ -87,7 +87,8 @@ export class UserService {
           email,
         },
         {
-          secret: "at-secret",
+          algorithm: "RS256",
+          secret: process.env.ACCESS_TOKEN_SECRET,
           expiresIn: "15m",
         }
       ),
@@ -96,7 +97,8 @@ export class UserService {
           email,
         },
         {
-          secret: "rt-secret",
+          algorithm: "RS256",
+          secret: process.env.REFRESH_TOKEN_SECRET,
           expiresIn: "7d",
         }
       ),
