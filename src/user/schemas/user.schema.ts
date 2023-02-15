@@ -18,7 +18,7 @@ export class User {
   password: string;
 
   @Prop()
-  token: string;
+  refreshToken: string;
 
   @Prop({ default: role.User, type: String })
   role: role;
