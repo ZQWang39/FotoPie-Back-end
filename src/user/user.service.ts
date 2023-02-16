@@ -1,22 +1,12 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
-import { Model } from "mongoose";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import mongoose, { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { LoginUserDto } from "./dto/login-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { User, UserDocument } from "./schemas/user.schema";
-import bcrypt from "bcryptjs";
-import { JwtService } from "@nestjs/jwt";
-import { Tokens } from "./types/tokens.typ";
-
 @Injectable()
 export class UserService {
   constructor(
-    private jwtService: JwtService,
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>
   ) {}
   create(createUserDto: CreateUserDto) {
@@ -35,77 +25,24 @@ export class UserService {
     return `This action removes a #${id} user`;
   }
 
-  //login logics
-  async login({ email, password }: LoginUserDto): Promise<Tokens> {
+  async findByEmail(email: string): Promise<User> {
     const user = await this.userModel.findOne({ email });
-
-    if (!user) {
-      throw new NotFoundException();
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      throw new ForbiddenException();
-    }
-
-    const tokens = await this.getTokens(email);
-    await this.userModel.updateOne(
-      { email },
-      { refreshToken: tokens.refresh_token }
-    );
-    return tokens;
+    if (!user) throw new NotFoundException();
+    return user;
   }
 
-  async logout(email: string) {
-    await this.userModel.updateOne(
-      { email },
-      {
-        refreshToken: null,
-      }
-    );
+  async findById(id: mongoose.Schema.Types.ObjectId): Promise<User> {
+    const user = await this.userModel.findOne({ id });
+    if (!user) throw new NotFoundException();
+    return user;
   }
 
-  async refreshToken(email: string, rt: string) {
-    const user = await this.userModel.findOne({ email });
-
-    if (!user || !user.refreshToken) throw new ForbiddenException();
-
-    if (user.refreshToken !== rt) throw new ForbiddenException();
-
-    const tokens = await this.getTokens(email);
-    await this.userModel.updateOne(
+  async updateByEmail(email: string, rt: string): Promise<void> {
+    const user = await this.userModel.updateOne(
       { email },
-      { refreshToken: tokens.refresh_token }
+      { refreshToken: rt }
     );
-    return tokens;
-  }
-
-  async getTokens(email: string) {
-    const [at, rt] = await Promise.all([
-      this.jwtService.signAsync(
-        {
-          email,
-        },
-        {
-          algorithm: "RS256",
-          secret: process.env.ACCESS_TOKEN_SECRET,
-          expiresIn: "15m",
-        }
-      ),
-      this.jwtService.signAsync(
-        {
-          email,
-        },
-        {
-          algorithm: "RS256",
-          secret: process.env.REFRESH_TOKEN_SECRET,
-          expiresIn: "7d",
-        }
-      ),
-    ]);
-    return {
-      access_token: at,
-      refresh_token: rt,
-    };
+    if (!user) throw new NotFoundException();
+    return null;
   }
 }
