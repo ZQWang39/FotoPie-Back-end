@@ -6,10 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guards";
+import { Request } from "express";
 
 @Controller("user")
 export class UserController {
@@ -39,4 +43,11 @@ export class UserController {
   remove(@Param("id") id: string) {
     return this.userService.remove(+id);
   }
+
+  // @UseGuards(JwtAuthGuard)
+  // @Get("/me")
+  // me(@Req() req: Request) {
+  //   const userEmail = req.user["email"];
+  //   return this.userService.findByEmail(userEmail);
+  // }
 }

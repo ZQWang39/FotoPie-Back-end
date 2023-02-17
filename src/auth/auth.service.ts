@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { LoginUserDto } from "./dto/login-user.dto";
-import bcrypt from "bcryptjs";
+import * as bcrypt from "bcryptjs";
 import { JwtService } from "@nestjs/jwt";
 import { Tokens } from "./types/tokens.type";
 import { UserService } from "src/user/user.service";
@@ -56,7 +56,7 @@ export class AuthService {
       },
       {
         algorithm: "RS256",
-        secret: process.env.ACCESS_TOKEN_SECRET,
+        secret: process.env.ACCESS_TOKEN_SECRET_PRIVATE,
         expiresIn: "15m",
       }
     );
@@ -66,7 +66,7 @@ export class AuthService {
 
   async verifyRt(rt: string) {
     const decoded = this.jwtService.verify(rt, {
-      secret: process.env.REFRESH_TOKEN_SECRET,
+      secret: process.env.REFRESH_TOKEN_SECRET_PUBLIC,
     });
     if (!decoded || typeof decoded === "string") throw new NotFoundException();
 
@@ -85,7 +85,7 @@ export class AuthService {
         },
         {
           algorithm: "RS256",
-          secret: process.env.ACCESS_TOKEN_SECRET,
+          secret: process.env.ACCESS_TOKEN_SECRET_PRIVATE,
           expiresIn: "15m",
         }
       ),
@@ -95,7 +95,7 @@ export class AuthService {
         },
         {
           algorithm: "RS256",
-          secret: process.env.REFRESH_TOKEN_SECRET,
+          secret: process.env.REFRESH_TOKEN_SECRET_PRIVATE,
           expiresIn: "7d",
         }
       ),

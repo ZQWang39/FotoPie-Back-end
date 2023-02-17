@@ -12,6 +12,7 @@ import { Tokens } from "./types/tokens.type";
 import { AuthGuard } from "@nestjs/passport";
 import { Request } from "express";
 import { AuthService } from "./auth.service";
+import { JwtAuthGuard } from "./guards/jwt-auth.guards";
 
 @Controller("auth")
 export class AuthController {
@@ -19,23 +20,23 @@ export class AuthController {
 
   @Post("login")
   @HttpCode(HttpStatus.OK)
-  login(@Body("user") loginUserDto: LoginUserDto): Promise<Tokens> {
+  login(@Body() loginUserDto: LoginUserDto): Promise<Tokens> {
     return this.authService.login(loginUserDto);
   }
 
-  @UseGuards(AuthGuard("jwt-refresh"))
+  //@UseGuards(AuthGuard("jwt-refresh"))
   @Post("refresh")
   @HttpCode(HttpStatus.OK)
-  refreshAccessToken(@Req() req: Request, rt: string) {
-    const user = req.user;
-    return this.authService.refresh(user["email"], rt);
+  refreshAccessToken(@Req() req: Request) {
+    const user = req.body;
+    return this.authService.refresh(user["email"], user["refreshToken"]);
   }
 
-  @UseGuards(AuthGuard("jwt"))
+  //@UseGuards(JwtAuthGuard)
   @Post("logout")
   @HttpCode(HttpStatus.OK)
   logout(@Req() req: Request) {
-    const user = req.user;
+    const user = req.body;
     return this.authService.logout(user["email"]);
   }
 }
