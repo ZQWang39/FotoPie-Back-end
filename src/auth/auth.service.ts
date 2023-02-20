@@ -43,14 +43,14 @@ export class AuthService {
     if (!user || !user.refreshToken) throw new NotFoundException();
 
     const decoded = await this.jwtService.verify(rt, {
-      secret: process.env.REFRESH_TOKEN_SECRET,
+      secret: process.env.REFRESH_TOKEN_SECRET_PUBLIC,
     });
 
     if (!decoded || typeof decoded === "string") throw new NotFoundException();
 
     if (user.refreshToken !== rt) throw new ForbiddenException();
 
-    const newAt = this.jwtService.signAsync(
+    const newAccessToken = this.jwtService.signAsync(
       {
         email,
       },
@@ -61,7 +61,7 @@ export class AuthService {
       }
     );
 
-    return newAt;
+    return newAccessToken;
   }
 
   async verifyRt(rt: string) {

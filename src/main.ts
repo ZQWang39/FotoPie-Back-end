@@ -11,6 +11,7 @@ async function bootstrap() {
     methods: "GET,HEAD,PATCH,POST,DELETE,OPTIONS",
     credentials: true,
   });
+  app.setGlobalPrefix("api");
   await app.listen(process.env.SERVER_PORT);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
