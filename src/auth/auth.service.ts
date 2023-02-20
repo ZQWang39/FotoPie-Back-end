@@ -61,7 +61,7 @@ export class AuthService {
       }
     );
 
-    return newAccessToken;
+    return { access_token: newAccessToken };
   }
 
   async verifyRt(rt: string) {
