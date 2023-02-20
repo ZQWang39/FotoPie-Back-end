@@ -4,14 +4,12 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.fto';
 import { User, UserDocument } from './schemas/user.schema';
 import { JwtService } from '@nestjs/jwt'
-// import { MailgunService } from 'nestjs-mailgun';
-// import { MailgunMessageData } from 'nestjs-mailgun'
+
 import VerificationTokenPayload from './interface/verificationTokenPayload.interface';
 
 import { BadRequestException, Injectable } from '@nestjs/common'
 
-// import { ConfigService } from '@nestjs/config';
-// import bcrypt from "bcryptjs";
+
 const bcrypt = require("bcryptjs");
 
 
