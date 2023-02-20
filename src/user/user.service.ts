@@ -34,6 +34,11 @@ export class UserService {
     
     async doesUserExists(createUserDTO: CreateUserDto): Promise<User> {
         const user = await this.userModel.findOne({ email: createUserDTO.email });
+        if (user) {
+            throw new ConflictException('User already exist')
+            
+        }
+       
         return user
     }
 
@@ -48,7 +53,7 @@ export class UserService {
             expiresIn: process.env.EXPIRE
         });
      
-        const url = `${process.env.EMAIL_CONFIRMATION_URL}?token=${token}`;
+        const url = `${process.env.EMAIL_CONFIRMATION_URL}/${token}`;
      
         const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
         const mailgun = require("mailgun-js");
@@ -79,9 +84,9 @@ export class UserService {
  
         const hash = await bcrypt.hash(password, 5);
         if ((await this.userModel.findOne({ email}))){
-                  throw new ConflictException('User already exist');
+                  throw new ConflictException('User already exist or Invalid token');
                 }
-        const createduser = await this.userModel.create({ firstName,lastName , password:hash, email });
+        const createduser =await this.userModel.create({ firstName,lastName , password:hash, email });
         return { createduser};
       
         
