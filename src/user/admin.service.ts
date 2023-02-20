@@ -20,12 +20,12 @@ export class AdminService {
     return user;
   }
 
-  async updateByEmail(email: string, rt: string): Promise<void> {
-    const user = await this.userModel.updateOne(
-      { email },
-      { refreshToken: rt }
-    );
-    if (!user) throw new NotFoundException();
-    return null;
-  }
+  // async updateByEmail(email: string, rt: string): Promise<void> {
+  //   const user = await this.userModel.updateOne(
+  //     { email },
+  //     { refreshToken: rt }
+  //   );
+  //   if (!user) throw new NotFoundException();
+  //   return null;
+  // }
 }

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsEmail } from "class-validator";
+import { IsNotEmpty, IsEmail, IsEnum } from "class-validator";
 export class AdminLoginDto {
   @IsNotEmpty()
   @IsEmail()
@@ -6,4 +6,5 @@ export class AdminLoginDto {
 
   @IsNotEmpty()
   readonly password: string;
+  
 }

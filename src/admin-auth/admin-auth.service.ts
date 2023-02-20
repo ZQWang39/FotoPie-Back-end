@@ -4,11 +4,11 @@ import {
   ForbiddenException,
 } from "@nestjs/common";
 import * as mongoose from "mongoose";
-import { Role, User } from "../user/schema/user.schema";
+import {  User } from "../user/schema/user.schema";
 import { AdminService } from "src/user/admin.service";
 import { InjectModel } from "@nestjs/mongoose";
 import { JwtService } from "@nestjs/jwt";
-import { Tokens } from "./types/tokens.type";
+import { Token } from "./types/tokens.type";
 import { AdminLoginDto } from "./dto/admin-login.dto";
 import * as bcrypt from "bcryptjs";
 
@@ -32,41 +32,69 @@ export class AdminAuthService {
     return user;
   }
 
-  async generateToken(email: string, role: string): Promise<Tokens> {
-    const tokens = await this.getTokens(email, role);
-    await this.updateRt(email, tokens.refresh_token);
-    return tokens;
-  }
+  async adminLogin({ email, password }: AdminLoginDto): Promise<Token> {
+    const user = await this.adminService.findByEmail(email);
+    console.log(user);
+    // const user = await this.authAdmin({ email, password });
+    if (!user) {
+      throw new NotFoundException();
+    }
 
-  async adminLogin({ email, password }: AdminLoginDto): Promise<Tokens> {
-    const user = await this.authAdmin({ email, password });
-    if (user.role !== Role.ADMIN) {
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      throw new ForbiddenException();
+    }
+    if ("admin" !== user.role) {
+      console.log(user.role);
       throw new ForbiddenException();
     }
     return await this.generateToken(email, user.role);
   }
-
-  async logout(email: string) {
-    await this.updateRt(email, null);
+  async generateToken(email: string, role: string): Promise<Token> {
+    const tokens = await this.getTokens(email, role);
+    return tokens;
   }
 
-  async refresh(email: string, rt: string) {
-    const user = await this.adminService.findByEmail(email);
+  // async logout(email: string) {
+  //   await this.updateRt(email, null);
+  // }
 
-    if (!user || !user.refreshToken) throw new NotFoundException();
+  // async refresh(email: string, rt: string) {
+  //   const user = await this.adminService.findByEmail(email);
 
-    const decoded = await this.jwtService.verify(rt, {
-      secret: process.env.REFRESH_TOKEN_SECRET,
-    });
+  //   if (!user || !user.refreshToken) throw new NotFoundException();
 
-    if (!decoded || typeof decoded === "string") throw new NotFoundException();
+  //   const decoded = await this.jwtService.verify(rt, {
+  //     secret: process.env.REFRESH_TOKEN_SECRET,
+  //   });
 
-    if (user.refreshToken !== rt) throw new ForbiddenException();
+  //   if (!decoded || typeof decoded === "string") throw new NotFoundException();
 
-    const newAt = this.jwtService.signAsync(
+  //   if (user.refreshToken !== rt) throw new ForbiddenException();
+
+  //   const newAt = this.jwtService.signAsync(
+  //     {
+  //       email,
+  //       role: user.role,
+  //     },
+  //     {
+  //       algorithm: "RS256",
+  //       secret: process.env.ACCESS_TOKEN_SECRET_PRIVATE,
+  //       expiresIn: "15m",
+  //     }
+  //   );
+
+  //   return newAt;
+  // }
+  // async updateRt(email: string, rt: string): Promise<void> {
+  //   await this.adminService.updateByEmail(email, rt);
+  // }
+
+  async getTokens(email: string, role: string) {
+    const at = await this.jwtService.signAsync(
       {
         email,
-        role: user.role,
+        role,
       },
       {
         algorithm: "RS256",
@@ -75,40 +103,8 @@ export class AdminAuthService {
       }
     );
 
-    return newAt;
-  }
-  async updateRt(email: string, rt: string): Promise<void> {
-    await this.adminService.updateByEmail(email, rt);
-  }
-
-  async getTokens(email: string, role: string) {
-    const [at, rt] = await Promise.all([
-      this.jwtService.signAsync(
-        {
-          email,
-          role,
-        },
-        {
-          algorithm: "RS256",
-          secret: process.env.ACCESS_TOKEN_SECRET_PRIVATE,
-          expiresIn: "15m",
-        }
-      ),
-      this.jwtService.signAsync(
-        {
-          email,
-          role,
-        },
-        {
-          algorithm: "RS256",
-          secret: process.env.REFRESH_TOKEN_SECRET_PRIVATE,
-          expiresIn: "7d",
-        }
-      ),
-    ]);
     return {
       access_token: at,
-      refresh_token: rt,
     };
   }
 }
