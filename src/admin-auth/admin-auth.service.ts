@@ -3,10 +3,8 @@ import {
   NotFoundException,
   ForbiddenException,
 } from "@nestjs/common";
-import * as mongoose from "mongoose";
-import {  User } from "../user/schema/user.schema";
-import { AdminService } from "src/user/admin.service";
-import { InjectModel } from "@nestjs/mongoose";
+import {  User } from "../admin/schema/user.schema";
+import { AdminService } from "src/admin/admin.service";
 import { JwtService } from "@nestjs/jwt";
 import { Token } from "./types/tokens.type";
 import { AdminLoginDto } from "./dto/admin-login.dto";
@@ -55,40 +53,6 @@ export class AdminAuthService {
     return tokens;
   }
 
-  // async logout(email: string) {
-  //   await this.updateRt(email, null);
-  // }
-
-  // async refresh(email: string, rt: string) {
-  //   const user = await this.adminService.findByEmail(email);
-
-  //   if (!user || !user.refreshToken) throw new NotFoundException();
-
-  //   const decoded = await this.jwtService.verify(rt, {
-  //     secret: process.env.REFRESH_TOKEN_SECRET,
-  //   });
-
-  //   if (!decoded || typeof decoded === "string") throw new NotFoundException();
-
-  //   if (user.refreshToken !== rt) throw new ForbiddenException();
-
-  //   const newAt = this.jwtService.signAsync(
-  //     {
-  //       email,
-  //       role: user.role,
-  //     },
-  //     {
-  //       algorithm: "RS256",
-  //       secret: process.env.ACCESS_TOKEN_SECRET_PRIVATE,
-  //       expiresIn: "15m",
-  //     }
-  //   );
-
-  //   return newAt;
-  // }
-  // async updateRt(email: string, rt: string): Promise<void> {
-  //   await this.adminService.updateByEmail(email, rt);
-  // }
 
   async getTokens(email: string, role: string) {
     const at = await this.jwtService.signAsync(

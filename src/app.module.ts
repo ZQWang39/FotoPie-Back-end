@@ -1,19 +1,18 @@
-import "dotenv/config";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
-import { AdminModule } from "./user/admin.module";
+import { AdminModule } from "./admin/admin.module";
 import { AdminAuthModule } from "./admin-auth/admin-auth.module";
 
 @Module({
   imports: [
+    MongooseModule.forRoot(process.env.MONGO_URL),
     ConfigModule.forRoot({
       envFilePath: ".env",
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.MONGO_URL),
     AdminModule,
-    AdminAuthModule
+    AdminAuthModule,
   ],
 })
 export class AppModule {}
