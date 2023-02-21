@@ -7,7 +7,7 @@ import { JwtService } from '@nestjs/jwt'
 
 import VerificationTokenPayload from './interface/verificationTokenPayload.interface';
 
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable ,UnauthorizedException} from '@nestjs/common'
 
 
 const bcrypt = require("bcryptjs");
@@ -56,15 +56,23 @@ export class UserService {
         const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
         const mailgun = require("mailgun-js");
         const DOMAIN = process.env.DOMAIN;
-        const mg = mailgun({ apiKey:process.env.MAILGUN_APIKEY, domain: DOMAIN });
+        const mg = mailgun({ apiKey: process.env.MAILGUN_APIKEY, domain: DOMAIN });
+        
 
-     
-        return mg.messages().send({
-            from: process.env.EMAIL_SEND,
-            to: email,
-            subject: 'Email confirmation',
-            text,
-        })
+
+        try {
+
+            return mg.messages().send({
+                from: process.env.EMAIL_SEND,
+                to: email,
+                subject: 'Email confirmation',
+                text,
+            })
+            
+        }catch (error) {
+            throw new BadRequestException("Failed to send email");
+          }
+        
     }
 
 
@@ -73,21 +81,30 @@ export class UserService {
     public async decodeConfirmationToken(token: string) {
         
         const payload = await this.jwtService.verify(token, {
-            secret: process.env.JWT_ACTIVIATE_SECRET_KEY ,
+            secret: process.env.JWT_ACTIVIATE_SECRET_KEY,
         });
 
  
-        const { firstName,lastName, email, password } = payload
+        const { firstName, lastName, email, password } = payload
 
  
         const hash = await bcrypt.hash(password, 5);
-        if ((await this.userModel.findOne({ email}))){
-                  throw new ConflictException('User already exist or Invalid token');
-                }
-        const createduser =await this.userModel.create({ firstName,lastName , password:hash, email });
-        return { createduser};
-      
-        
+        if ((await this.userModel.findOne({ email }))) {
+            throw new ConflictException('User already exist');
+        }
+        else {
+            try {
+                const createduser = await this.userModel.create({ firstName, lastName, password: hash, email });
+                return { createduser };
+            
+
+            }
+
+            catch (error) {
+                throw new UnauthorizedException("Invalid Token");
+            }
+     
+        }
     }
     
 
