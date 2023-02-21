@@ -44,7 +44,7 @@ async addUser(@Res() res, @Body() createUserDTO: CreateUserDto): Promise<User> {
 //create user 
 @Post('/signup')
 
-  async register(@Res() res,@Body()  ConfirmEmailDto: ConfirmEmailDto) {
+  async register(@Res() res,@Body()  ConfirmEmailDto: ConfirmEmailDto):Promise<User> {
     
     await this.userService.decodeConfirmationToken(ConfirmEmailDto.token);
     return res.status(HttpStatus.CREATED).json({

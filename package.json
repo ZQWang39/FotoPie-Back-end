@@ -26,6 +26,7 @@
     "@nestjs/mongoose": "9.2.0",
     "@nestjs/platform-express": "9.0.1",
     "bcryptjs": "^2.4.3",
+    "class-validator": "^0.14.0",
     "dotenv": "^16.0.3",
     "mailgun-js": "^0.22.0",
     "mongoose": "6.4.6",
