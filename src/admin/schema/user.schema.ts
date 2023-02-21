@@ -5,7 +5,7 @@ export type UserDocument = User & Document;
 
 @Schema({ timestamps: true, versionKey: false })
 export class User {
- 
+
   _id: mongoose.Schema.Types.ObjectId;
 
   @Prop()
