@@ -8,8 +8,12 @@ export class User {
 
   _id: mongoose.Schema.Types.ObjectId;
 
-  @Prop()
-  name: string;
+  @Prop({ required: true })
+    firstName: String;
+
+
+  @Prop({ required: true })
+  lastName: String;
 
   @Prop({ unique: true })
   email: string;
