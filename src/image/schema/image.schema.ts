@@ -8,13 +8,16 @@ export type ImageDocument = HydratedDocument<Image>;
 export class Image {
 
     @Prop({ unique: true })
-    original: string ;
-
-    @Prop({ unique: true })
-    large: string;
+    path: string;
     
-    @Prop({ unique: true })
-    small:  string ;
+    // @Prop({})
+    // caption:string
+
+    // @Prop({ unique: true })
+    // large: string;
+    
+    // @Prop({ unique: true })
+    // small:  string ;
 
 
 

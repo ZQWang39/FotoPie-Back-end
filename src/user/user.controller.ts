@@ -19,6 +19,10 @@ import { User } from './schemas/user.schema';
 import { HttpStatus } from '@nestjs/common/enums';
 import { JwtService } from '@nestjs/jwt';
 import { ConfirmEmailDto } from './dto/confirmEmail.dto'
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UseInterceptors, UploadedFile } from '@nestjs/common'
+import { diskStorage } from 'multer';
+import { Observable } from "rxjs";
 
 @Controller("user")
 export class UserController {
@@ -84,6 +88,28 @@ export class UserController {
       })
   
   
-    }
+  }
+  
+
+  // @Post('upload')
+  // @UseInterceptors(FileInterceptor('file', {
+  //   storage: diskStorage({
+  //     destination: './files',
+  //     filename: (req, file, callback) => {
+  //       const uniqueSufix =
+  //         Date.now() + '-' + Math.round(Math.random() * 1e9);
+  //       var path = require('path')
+  //       const ext = path.extname(file.originalname);
+  //       const filename = `${uniqueSufix}${ext}`;
+  //       callback(null,filename)
+        
+  //     }
+    
+  // })}))
+  // uploadSingle(@UploadedFile() file, @Body() body):Observable<Object> {
+  //   console.log(file);
+  //   console.log(body);
+  //   return "sucessfully"
+  // }
     
   }
