@@ -9,10 +9,14 @@ export class ImageService {
 
     constructor(
         @InjectModel(Image.name) private readonly imageModel: Model<ImageDocument>,
-    ) { }
+    ) {}
 
-    create(ImageDTO: ImageDTO) {
-        return "This action adds a new user";
+
+    public async createImage(ImageDTO) {
+      
+        const image = await this.imageModel.create(ImageDTO)
+        return image
       }
+
 
 }

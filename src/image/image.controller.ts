@@ -17,10 +17,12 @@ import { Req, Res } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UseInterceptors, UploadedFile } from '@nestjs/common'
 import { diskStorage } from 'multer';
+import { ConfigModule } from '@nestjs/config';
 
 import { Observable } from 'rxjs';
 import Image from '../image/interface/Image.interface'
 import { ImageDTO } from './dto/image.dto';
+import { Request } from "express"
 
 var path = require('path')
 
@@ -37,8 +39,7 @@ export class ImageController {
     storage: diskStorage({
     destination: './files',
         filename: (req, file, callback) => {
-        const uniqueSufix =
-        Date.now() + '-' + Math.round(Math.random() * 1e9);
+        const uniqueSufix = Date.now() + '-' + Math.round(Math.random() * 1e9);
         const ext = path.extname(file.originalname);
         const filename = `${uniqueSufix}${ext}`;
         callback(null,`${filename}`)
@@ -46,12 +47,16 @@ export class ImageController {
         }
       
     })}))
-    uploadSingle(@UploadedFile() file, @Body() body) {
+    async upload(@UploadedFile() file:Express.Multer.File, @Req() req: any) {
     console.log(file);
-    return file
+   
+    return this.ImageService.createImage(file)
       
-    // return this.ImageService.create(ImageDTO);
+    // return file
 }
+    
+
+
 
 
   

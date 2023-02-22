@@ -9,6 +9,9 @@ export class Image {
 
     @Prop({ unique: true })
     path: string;
+
+    @Prop({ unique: true })
+    filename: string
     
     // @Prop({})
     // caption:string
