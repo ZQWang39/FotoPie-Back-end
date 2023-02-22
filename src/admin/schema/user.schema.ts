@@ -9,11 +9,11 @@ export class User {
   _id: mongoose.Schema.Types.ObjectId;
 
   @Prop({ required: true })
-    firstName: String;
+    firstName: string;
 
 
   @Prop({ required: true })
-  lastName: String;
+  lastName: string;
 
   @Prop({ unique: true })
   email: string;
