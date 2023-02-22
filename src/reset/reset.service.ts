@@ -5,7 +5,7 @@ import {
 } from "@nestjs/common";
 import { Model } from "mongoose";
 import { User } from "./schemas/user.schema";
-import { hash as bcryptHash } from "bcrypt";
+import { hash as bcryptHash } from "bcryptjs";
 import { JwtService as NestJwtService } from "@nestjs/jwt";
 import { InjectModel } from "@nestjs/mongoose";
 import { ResetPasswordDto } from "./dto/ResetPassword.dto";
