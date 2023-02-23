@@ -69,12 +69,10 @@ export class PostsController {
   })}))
   async upload(@UploadedFile() file, @Res() res): Promise<Image>{
     console.log(file);
-    const response = {
-      filename: file.filename,
-    };
+    
   return res.status(HttpStatus.OK).json({
     message: "Confirmed ",
-    response
+    filename: file.filename,
   })
 }
 
