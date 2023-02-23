@@ -14,6 +14,7 @@ import { JwtService } from "@nestjs/jwt";
 import VerificationTokenPayload from "./interface/verificationTokenPayload.interface";
 import * as bcrypt from "bcryptjs";
 import * as mailgun from "mailgun-js";
+import { Logger } from "@nestjs/common";
 
 @Injectable()
 export class UserService {
@@ -38,7 +39,9 @@ export class UserService {
   }
 
   async findByEmail(email: string): Promise<User> {
-    const user = await this.userModel.findOne({ email });
+    const user = await this.userModel.findOne({ email }).exec();
+    Logger.log("user💥");
+    console.log("user💥");
     if (!user) throw new NotFoundException();
     return user;
   }
