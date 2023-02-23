@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
+import { CreateLikeDto } from './Dto/createLike.dto';
 import { Like, LikeDocument } from './schemas/like.schema';
 
 @Injectable()
@@ -16,7 +17,7 @@ export class LikeService {
       return addLikeData
     }
 
-    async checkLike(like_user_id, liked_user_id, post_id){
+    async checkLike(like_user_id: string, liked_user_id: string, post_id: string, createLikeDto:CreateLikeDto ){
       const checkLikeData = await this.likeModel.findOne({like_user_id, liked_user_id, post_id});
       const deleteLikeData = await this.likeModel.deleteOne({like_user_id,liked_user_id, post_id});
       
