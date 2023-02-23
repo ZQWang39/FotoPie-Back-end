@@ -13,7 +13,9 @@ export class Image {
 
     @Prop()
     filename: string
-    
+
+
+   
     // @Prop({})
     // caption:string
 

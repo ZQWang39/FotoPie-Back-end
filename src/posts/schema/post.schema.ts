@@ -19,7 +19,7 @@ tag: string;
 
 
 @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })
-user: User;
+user_id: User;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Posts);
