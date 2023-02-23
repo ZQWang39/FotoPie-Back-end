@@ -7,7 +7,7 @@ export class QuickViewController {
   constructor(private quickViewService: QuickViewService) {}
 
   @Get(":id")
-  async getPhoto(@Param('id') post_id: string): Promise<object> {
-    return this.quickViewService.getData(post_id);
+  async getPostInfo(@Param('uuid') uuid: string): Promise<object> {
+    return this.quickViewService.getPostInfo(uuid);
   }
 }

@@ -6,13 +6,10 @@ export type ImageDocument = HydratedDocument<Image>;
 @Schema({ timestamps: true, versionKey: false })
 export class Image {
   @Prop({ unique: true })
-  original: string;
+  path: string;
 
   @Prop({ unique: true })
-  large: string;
-
-  @Prop({ unique: true })
-  small: string;
+  filename: string;
 }
 
 export const ImageSchema = SchemaFactory.createForClass(Image);
