@@ -7,7 +7,7 @@ import { MulterModule } from '@nestjs/platform-express/multer';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name:  Image.name, schema: ImageSchema }], ),MulterModule.register({ dest: './upload' })
+    MongooseModule.forFeature([{ name:  Image.name, schema: ImageSchema }], )
     
 
    

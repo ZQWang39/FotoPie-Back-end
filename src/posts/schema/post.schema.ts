@@ -13,11 +13,9 @@ _id: mongoose.Schema.Types.ObjectId;
 @Prop({ required: true, type: ImageSchema })
 image:Image;
    
-@Prop()
-image_description: string;
 
 @Prop()
-type: string;
+tag: string;
 
 
 @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })

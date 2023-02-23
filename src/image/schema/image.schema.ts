@@ -4,13 +4,14 @@ import mongoose, { HydratedDocument } from "mongoose";
 
 export type ImageDocument = HydratedDocument<Image>;
 
-@Schema({ timestamps: true, versionKey: false })
+@Schema()
 export class Image {
 
-    @Prop({ unique: true })
+
+    @Prop()
     path: string;
 
-    @Prop({ unique: true })
+    @Prop()
     filename: string
     
     // @Prop({})
