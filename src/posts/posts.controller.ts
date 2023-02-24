@@ -27,9 +27,9 @@ import { diskStorage } from 'multer';
 import { UseGuards } from '@nestjs/common/decorators';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 
-
+import * as path from 'path'
 import {Request} from "express"
-var path = require('path')
+// var path = require('path')
 
 
 
