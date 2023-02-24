@@ -1,8 +1,8 @@
-import { Injectable, Param, NotFoundException } from "@nestjs/common";
-import mongoose, { Model, ObjectId } from "mongoose";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { Posts, PostSchema } from "./schema/post.schema";
-import { User, UserSchema } from "../user/schemas/user.schema";
+import { Posts } from "./schema/post.schema";
+import { User } from "../user/schemas/user.schema";
 
 @Injectable()
 export class QuickViewService {

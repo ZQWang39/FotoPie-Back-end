@@ -1,5 +1,5 @@
-import { Controller, Get, Param, Query, Res } from "@nestjs/common";
-import { ObjectId } from "mongoose";
+import { Controller, Get, Param, Res } from "@nestjs/common";
+
 import { QuickViewService } from "./quickView.service";
 import { Response } from "express";
 import * as path from "path";
