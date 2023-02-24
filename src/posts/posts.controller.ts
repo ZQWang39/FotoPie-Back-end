@@ -84,14 +84,14 @@ findImage(@Param('imagename') imagename, @Res() res): Observable<Image>{
  @UseGuards(JwtAuthGuard)
  @Post('sent')
  async create(@Body() PostDTO: PostDTO, @Req() req: any) {
-   const post = new Posts()
-   post.user = req.user["email"];
-   post.filename = PostDTO.filename
+   const posts= new Posts()
+   posts.user = req.user["email"];
+   posts.filename = PostDTO.filename
 
-   await this.PostsService.create(post)
+   await this.PostsService.create(posts)
  
    
-   return post
+   return posts
     
    }
   }
