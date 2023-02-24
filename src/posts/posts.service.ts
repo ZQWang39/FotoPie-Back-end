@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { UserService } from 'src/user/user.service';
 import { PostDTO } from './dto/post.dto';
 import { User, UserDocument } from "../user/schemas/user.schema";
+
 // const slugify = require(slugify)
 
 @Injectable()
@@ -15,16 +16,27 @@ export class PostsService {
 
     constructor(
         @InjectModel(Posts.name) private readonly postModel: Model<PostDocument>,
-        // private userService: UserService
+        private userService: UserService
 
     ) { }
 
-    // public async create(user: User, PostDTO: PostDTO){
-    //     const post = await this.postModel.create(PostDTO, user:User)
+
+
+
+    // public async create(UserEmail:string, PostDTO: PostDTO){
+    //     const post = await this.postModel.create(PostDTO, User)
     //     return post
+    //    const user  = await this.postModel.findOne({email: UserEmail})
+        
+    //     const post = new this.postModel(PostDTO, {email: UserEmail})
+        
+    //     return post.save();
+        
     // }
 
-  
+    public async create(post: Posts) {
+        const newPost = new this.postModel(post);
+        return newPost.save()
 
 
 
@@ -32,5 +44,7 @@ export class PostsService {
 
 
 
+    
+    }
     
 }

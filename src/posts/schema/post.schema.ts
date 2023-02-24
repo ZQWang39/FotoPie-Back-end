@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
-import { User } from "../../user/schemas/user.schema"
+import { User,UserSchema } from "../../user/schemas/user.schema"
 
 
 export type PostDocument = HydratedDocument<Posts>;
@@ -17,11 +17,15 @@ filename: string;
 tag: string;
     
 @Prop()
-price:number 
+price: number 
+    
 
+@Prop()
+user: string;
 
-@Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })
-user: User;
+// @Prop({ type:UserSchema,  ref: "User" })
+// user: string;
+  
 }
 
 export const PostSchema = SchemaFactory.createForClass(Posts);

@@ -24,7 +24,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UseInterceptors, UploadedFile } from '@nestjs/common'
 import { diskStorage } from 'multer';
+import { UseGuards } from '@nestjs/common/decorators';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 
+
+import {Request} from "express"
 var path = require('path')
 
 
@@ -34,11 +38,7 @@ export class PostsController {
   constructor(private readonly PostsService: PostsService,
   ) { }
     
-  // @Post()
-  // create(@Body() PostDTO: PostDTO, @Req() req:any): Observable<PostDTO>{
-  //   const user = req.user.user
-  //   return this.PostsService.create(user, PostDTO)
-  // }
+ 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file', {
       // limits: {
@@ -81,6 +81,20 @@ findImage(@Param('imagename') imagename, @Res() res): Observable<Image>{
 }
   
   
+ @UseGuards(JwtAuthGuard)
+ @Post('sent')
+ async create(@Body() PostDTO: PostDTO, @Req() req: any) {
+   const post = new Posts()
+   post.user = req.user["email"];
+   post.filename = PostDTO.filename
+
+   await this.PostsService.create(post)
+ 
+   
+   return post
+    
+   }
+  }
   
 // @guard
 // @Post('/upload/sent') 
@@ -88,5 +102,3 @@ findImage(@Param('imagename') imagename, @Res() res): Observable<Image>{
   
   
  
-
-}
