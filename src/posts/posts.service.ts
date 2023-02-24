@@ -34,9 +34,9 @@ export class PostsService {
         
     // }
 
-    public async create(post: Posts) {
-        const newPost = new this.postModel(post);
-        return newPost.save()
+    public async create(posts: Posts) {
+        const newPosts = new this.postModel(posts);
+        return newPosts.save()
 
 
 
