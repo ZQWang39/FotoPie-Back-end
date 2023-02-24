@@ -11,24 +11,32 @@ export class QuickViewService {
     @InjectModel("User") private readonly userModel: Model<User>
   ) {}
 
-  async getPostInfo(uuid: string): Promise<any> {
-    const post = await this.findPostById(uuid);
-    const user = await this.findUserById(post.user);
+  async getUsername(filename: string): Promise<object> {
+    const post = await this.findPostByFilename(filename);
+    const user = await this.findUserByEmail(post.email);
 
-    const user_name = user.firstName + "" + user.lastName;
-    const user_image = user.image;
-    const photo = post.image;
-    return { user_name, user_image, photo };
+    const user_name = user.firstName + " " + user.lastName;
+
+    return { user_name };
   }
 
-  async findPostById(_id: ObjectId): Promise<Posts> {
-    const post = await this.postModel.findOne({ _id });
+  async getAvatar(filename: string): Promise<string> {
+    const post = await this.findPostByFilename(filename);
+    const user = await this.findUserByEmail(post.email);
+
+    const avatar = user.avatar;
+
+    return avatar;
+  }
+
+  async findPostByFilename(filename: string): Promise<Posts> {
+    const post = await this.postModel.findOne({ filename });
     if (!post) throw new NotFoundException();
     return post;
   }
 
-  async findUserById(_id: ObjectId): Promise<User> {
-    const user = await this.userModel.findOne({ _id });
+  async findUserByEmail(email: string): Promise<User> {
+    const user = await this.userModel.findOne({ email });
     if (!user) throw new NotFoundException();
     return user;
   }
