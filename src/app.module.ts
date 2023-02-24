@@ -6,7 +6,7 @@ import { AdminAuthModule } from "./admin-auth/admin-auth.module";
 import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
 import { PostsModule } from './posts/posts.module';
-import { ImageModule } from './image/image.module';
+
 
 
 @Module({
@@ -21,7 +21,7 @@ import { ImageModule } from './image/image.module';
     UserModule,
     AuthModule,
     PostsModule,
-    ImageModule,
+
  
   ],
 })

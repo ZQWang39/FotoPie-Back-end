@@ -17,9 +17,8 @@ import { Req, Res } from '@nestjs/common';
 import { PostDTO } from './dto/post.dto';
 import { Observable } from 'rxjs';
 
-import Image from '../image/interface/Image.interface'
-import { ImageDTO } from './dto/image.dto';
-import { Request } from "express"
+import Image from './interface/Image.interface'
+
 import { v4 as uuidv4 } from 'uuid';
 
 import { FileInterceptor } from '@nestjs/platform-express';
