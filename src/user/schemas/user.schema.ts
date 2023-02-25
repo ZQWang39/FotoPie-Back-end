@@ -27,8 +27,11 @@ export class User {
   @Prop()
   image: string;
 
+  @Prop({ default: "default_avatar.png", type: String })
+  avatarName: string;
+
   @Prop()
-  avatar: string;
+  comment: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
