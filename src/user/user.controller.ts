@@ -50,13 +50,19 @@ export class UserController {
     return this.userService.remove(+id);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get("/me")
-  me(@Req() req: Request, @Res() res: Response) {
-    const userEmail = req.user["email"];
-    const loginUser = this.userService.findByEmail(userEmail);
-    return res.status(204).json(loginUser);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get("me")
+  // async me(@Req() req: Request, @Res() res: Response) {
+  //   const userEmail = req.user["email"];
+  //   const loginUser = await this.userService.findByEmail(userEmail);
+  //   return res.status(HttpStatus.OK).json({
+  //     message: "success",
+  //     data: {
+  //       firstName: loginUser.firstName,
+  //       lastName: loginUser.lastName,
+  //     },
+  //   });
+  // }
 
   // send email
   @Post("/create")

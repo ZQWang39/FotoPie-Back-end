@@ -5,14 +5,10 @@ export type UserDocument = User & Document;
 
 @Schema({ timestamps: true, versionKey: false })
 export class User {
-
-
-
   _id: mongoose.Schema.Types.ObjectId;
 
   @Prop({ required: true })
-    firstName: string;
-
+  firstName: string;
 
   @Prop({ required: true })
   lastName: string;
@@ -28,6 +24,9 @@ export class User {
 
   @Prop({ default: "user", type: String, enum: ["user", "admin"] })
   role: string;
+
+  @Prop({ default: "default.jpg" })
+  avatar: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

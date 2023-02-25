@@ -14,7 +14,6 @@ import { JwtService } from "@nestjs/jwt";
 import VerificationTokenPayload from "./interface/verificationTokenPayload.interface";
 import * as bcrypt from "bcryptjs";
 import * as mailgun from "mailgun-js";
-import { Logger } from "@nestjs/common";
 
 @Injectable()
 export class UserService {
@@ -40,8 +39,6 @@ export class UserService {
 
   async findByEmail(email: string): Promise<User> {
     const user = await this.userModel.findOne({ email }).exec();
-    Logger.log("user💥");
-    console.log("user💥");
     if (!user) throw new NotFoundException();
     return user;
   }
@@ -117,13 +114,13 @@ export class UserService {
       throw new ConflictException("User already exist");
     } else {
       try {
-        const createduser = await this.userModel.create({
+        const createduser = new this.userModel({
           firstName,
           lastName,
           password: hash,
           email,
         });
-        return { createduser };
+        return await createduser.save();
       } catch (error) {
         throw new UnauthorizedException("Invalid Token");
       }

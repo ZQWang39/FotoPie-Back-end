@@ -24,7 +24,7 @@ export class User {
   @Prop({ default: "user", type: String, enum: ["user", "admin"] })
   role: string;
 
-  @Prop({ default: "default.jpg", type: String })
+  @Prop({ default: "default.jpg" })
   avatar: string;
 }
 
