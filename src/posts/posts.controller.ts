@@ -72,6 +72,7 @@ export class PostsController {
   return res.status(HttpStatus.OK).json({
     message: "Confirmed ",
     filename: file.filename,
+    path: file.path
   })
 }
 
@@ -85,8 +86,9 @@ findImage(@Param('imagename') imagename, @Res() res): Observable<Image>{
  @Post('sent')
  async create(@Body() PostDTO: PostDTO, @Req() req: any) {
    const posts= new Posts()
-   posts.user = req.user["email"];
+   posts.userEmail = req.user["email"];
    posts.filename = PostDTO.filename
+   posts.path = PostDTO.path
 
    await this.PostsService.create(posts)
  

@@ -11,7 +11,10 @@ export class Posts {
 _id: mongoose.Schema.Types.ObjectId;
     
 @Prop()
-filename: string;   
+filename: string;  
+
+@Prop()
+path: string;   
 
 @Prop()
 tag: string;
@@ -21,7 +24,7 @@ price: number
     
 
 @Prop()
-user: string;
+userEmail: string;
 
 // @Prop({ type:UserSchema,  ref: "User" })
 // user: string;

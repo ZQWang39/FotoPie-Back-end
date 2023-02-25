@@ -6,7 +6,8 @@ export class PostDTO {
    
     filename: string;
     email: string;
-    
+    path: string;
+
 
   
     }
