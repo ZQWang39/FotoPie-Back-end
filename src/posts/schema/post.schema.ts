@@ -20,7 +20,7 @@ path: string;
 tag: string;
     
 @Prop()
-price: number 
+price: GLfloat
     
 
 @Prop()

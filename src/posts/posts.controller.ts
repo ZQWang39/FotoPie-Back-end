@@ -87,8 +87,10 @@ findImage(@Param('imagename') imagename, @Res() res): Observable<Image>{
  async create(@Body() PostDTO: PostDTO, @Req() req: any) {
    const posts= new Posts()
    posts.userEmail = req.user["email"];
-   posts.filename = PostDTO.filename
-   posts.path = PostDTO.path
+   posts.filename = PostDTO.filename;
+   posts.path = PostDTO.path;
+   posts.tag = PostDTO.tag;
+   posts.price = PostDTO.price;
 
    await this.PostsService.create(posts)
  
@@ -98,8 +100,7 @@ findImage(@Param('imagename') imagename, @Res() res): Observable<Image>{
    }
   }
   
-// @guard
-// @Post('/upload/sent') 
+
   
   
   
