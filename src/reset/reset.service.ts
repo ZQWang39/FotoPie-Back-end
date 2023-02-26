@@ -23,26 +23,30 @@ export class ResetService {
   //---------------Main Services---------------
   //send reset request service
   async resetRequest({ email }: ResetRequestDto): Promise<{ message: string }> {
-    //Search the db and see if this email exists
-    const user = await this.findOneByEmail(email);
+    try {
+      //Search the db and see if this email exists
+      const user = await this.findOneByEmail(email);
 
-    //if email does not exist, print not found
-    if (!user) {
-      console.log("User Not Found");
-      throw new NotFoundException("User not found");
+      //if email does not exist, print not found
+      if (!user) {
+        throw new NotFoundException("User not found");
+      }
+
+      //if the email exists, sign the JWT token with the secret key
+      const payload = {
+        email: email,
+      };
+      const token = await this.nestJwtService.sign(payload);
+      console.log(token);
+
+      //send the token via email
+      await this.sendPasswordResetEmail(email, token);
+
+      return { message: "Email Sent Successfully" };
+    } catch (e) {
+      console.log(e);
+      return { message: "User Not Found" };
     }
-
-    //if the email exists, sign the JWT token with the secret key
-    const payload = {
-      email: email,
-    };
-    const token = await this.nestJwtService.sign(payload);
-    console.log(token);
-
-    //send the token via email
-    await this.sendPasswordResetEmail(email, token);
-
-    return { message: "Email Sent Successfully" };
   }
 
   //reset password service
