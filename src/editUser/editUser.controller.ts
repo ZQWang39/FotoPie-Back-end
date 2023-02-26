@@ -1,4 +1,8 @@
-import { EditUserService } from "./editUser.service";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { Request, Response } from "express";
+import * as multer from "multer";
+import { v4 as uuidv4 } from "uuid";
+import * as sharp from "sharp";
 import {
   Body,
   Controller,
@@ -11,14 +15,10 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
+
+import { EditUserService } from "./editUser.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guards";
 import { EditUserDto } from "./dto/edit-user.dto";
-import { Request, Response } from "express";
-import { FileInterceptor } from "@nestjs/platform-express";
-import * as multer from "multer";
-import { v4 as uuidv4 } from "uuid";
-import * as sharp from "sharp";
-import { User } from "src/admin/schema/user.schema";
 
 // export const multerStorage = multer.memoryStorage();
 
