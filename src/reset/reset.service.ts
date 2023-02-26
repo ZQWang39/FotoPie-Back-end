@@ -124,7 +124,8 @@ export class ResetService {
 
     const data = {
       from: process.env.SENDER_EMAIL,
-      to: email,
+      to: "jeremy.zeyuliu@gmail.com",
+      // to: email,
       subject: "Email Verification",
       html: `
           <p>Hi,</p>
