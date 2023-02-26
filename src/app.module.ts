@@ -8,6 +8,7 @@ import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
 import { EditUserModule } from "./editUser/editUser.module";
 import { join } from "path";
+import { ResetModule } from "./reset/reset.module";
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { join } from "path";
     UserModule,
     AuthModule,
     EditUserModule,
+    ResetModule,
   ],
 })
 export class AppModule {}
