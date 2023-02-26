@@ -26,14 +26,13 @@ export class QuickViewService {
 
     console.log(post);
     console.log(user);
-    const avatar = user.avatarName;
+    const avatar = user.avatar;
     console.log(user.firstName);
     console.log(user.lastName);
     console.log(user.email);
     console.log(user.role);
 
-    console.log(user.avatarName);
-    console.log(user.comment);
+    console.log(user.avatar);
 
     return avatar;
   }

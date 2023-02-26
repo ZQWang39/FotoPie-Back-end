@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Model } from "mongoose";
-import { User } from "./schemas/user.schema";
+import { User } from "../user/schemas/user.schema";
 import { hash as bcryptHash } from "bcryptjs";
 import { JwtService as NestJwtService } from "@nestjs/jwt";
 import { InjectModel } from "@nestjs/mongoose";
@@ -25,7 +25,6 @@ export class ResetService {
   async resetRequest({ email }: ResetRequestDto): Promise<{ message: string }> {
     //Search the db and see if this email exists
     const user = await this.findOneByEmail(email);
-    console.log(user);
 
     //if email does not exist, print not found
     if (!user) {
@@ -34,7 +33,6 @@ export class ResetService {
     }
 
     //if the email exists, sign the JWT token with the secret key
-    console.log("User exist!");
     const payload = {
       email: email,
     };
@@ -55,24 +53,20 @@ export class ResetService {
     //After user enters password and click submit, verify the token
     //valid:
     try {
-      //token = {token: "dsfhjkhwejkr32094732"}
+      //example: token = {token: "dsfhjkhwejkr32094732"}
       const decodedToken = await this.verifyAsync(token.token);
       // decodedToken = {
       //   email: string;  // user email
       // };
-      console.log(decodedToken);
 
       const userEmail = decodedToken.email;
       //hash the new password
       const hashedPassword = await this.hash(resetPasswordDto.password);
-      console.log(resetPasswordDto.password);
-      console.log(hashedPassword);
 
       //update the new password in db
       await this.userModel
         .findOneAndUpdate(
           { email: userEmail },
-
           { password: hashedPassword },
           { new: true }
         )
@@ -125,9 +119,8 @@ export class ResetService {
     });
 
     const data = {
-      from: "FotoPie <unswmercury@gmail.com>",
-      to: "jeremy.zeyuliu@gmail.com",
-      // to: `${email}`,
+      from: process.env.SENDER_EMAIL,
+      to: email,
       subject: "Email Verification",
       html: `
           <p>Hi,</p>
