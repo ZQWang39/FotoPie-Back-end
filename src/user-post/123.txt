@@ -1,0 +1,27 @@
+1. My MongoDB database have a collection, in this collection, I stored some fields as below, remember that, my post in somewhere else, may be in AWS S3, just maybe, not in MongoDB, so I just have this post filename and path and user email.
+
+_id: ObjectId('63f9d9141d94da5ca3b87af5')
+filename: "fe0252b8-36c0-4821-8f77-cf9cda14cd77.jpg"
+path:"files\fe0252b8-36c0-4821-8f77-cf9cda14cd77.jpg"
+userEmail: "cai19980122@gmail.com"
+
+2. I use Nestjs to build a post module, in this post module, I have post schema, post service, post controller and post module.
+
+my post schema like this as below, this schema cannot change, just use this schema as below,
+
+  _id: mongoose.Schema.Types.ObjectId;
+    
+    @Prop()
+    filename: string;  
+    
+    @Prop()
+    path: string;   
+    
+    
+    @Prop()
+    userEmail: string;
+
+3. Now, I need  to build an api to provide a get request for frontend. To be specific, this api provides  all posts from this user email address. the url like "http://localhost:9090/api/post/useremail". you only use join or some methods like __dirname or whatever methods to code, do not try assume we have another service. 
+
+4. In Controller, I need to return this post 
+
