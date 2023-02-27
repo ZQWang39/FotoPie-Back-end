@@ -62,6 +62,7 @@ export class EditUserController {
 
   // upload avatar
   @Patch("upload")
+  // 缓存照片
   @UseInterceptors(
     FileInterceptor("file", {
       storage: multer.memoryStorage(),
@@ -72,17 +73,21 @@ export class EditUserController {
     @Req() req: Request,
     @Res() res: Response
   ) {
+    // 修改文件名
     console.log(file);
     file.filename = `user-${uuidv4()}.jpg`;
 
+    // 保存图片
     await sharp(file.buffer)
       .resize(500, 500)
       .toFormat("jpg")
       .jpeg({ quality: 90 })
       .toFile(`public/${file.filename}`);
 
+    // 提取用户email
     const userEmail = req.user["email"];
 
+    // 更新数据库头像文件名
     const updateAvatar = await this.editUserService.updateAvatarByEmail(
       userEmail,
       {
@@ -98,3 +103,5 @@ export class EditUserController {
     });
   }
 }
+
+// <img src=`public/{avatarFileName}`>
