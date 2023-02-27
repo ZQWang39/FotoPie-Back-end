@@ -20,7 +20,7 @@ image_description: string;
 type: string;
 
 
-@Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })
+@Prop()
 user: User;
 }
 

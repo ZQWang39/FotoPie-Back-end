@@ -11,11 +11,11 @@ export class Like {
 
 _id: mongoose.Schema.Types.ObjectId;
 
-@Prop()
-like_user: string;
+@Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })
+like_user: User;
 
-@Prop()
-liked_user: string;
+@Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })
+liked_user: User;
 
 @Prop()
 posts: string;

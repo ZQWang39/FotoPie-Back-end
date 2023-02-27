@@ -18,6 +18,10 @@ export class LikeController {
         return this.likeService.checkLike( like_user_id,liked_user_id, post_id, createLikeDto);
     }
     
+    @Get('LikeNumber')
+    numberLike(@Param('id')id:string){
+        return this.numberLike(id)
+    }
 
 
 

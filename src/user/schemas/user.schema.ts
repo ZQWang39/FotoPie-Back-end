@@ -6,8 +6,11 @@ export type UserDocument = HydratedDocument<User>;
 export class User {
   _id: mongoose.Schema.Types.ObjectId;
 
-  @Prop()
-  name: string;
+  @Prop({ required: true })
+  firstName: string;
+
+  @Prop({ required: true })
+  lastName: string;
 
   @Prop({ unique: true })
   email: string;

@@ -27,6 +27,10 @@ export class LikeService {
       return this.addLike
     }
 
+    async numberLike(_id){
+      return this.likeModel.count(_id)
+    }
+
     
     
 
