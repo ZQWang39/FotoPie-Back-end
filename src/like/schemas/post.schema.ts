@@ -9,19 +9,22 @@ export type PostDocument = HydratedDocument<Posts>;
 export class Posts {
 
 _id: mongoose.Schema.Types.ObjectId;
-
-@Prop({ required: true, type: ImageSchema })
-image:Image;
-   
+    
 @Prop()
-image_description: string;
-
+filename: string;  
+    
 @Prop()
-type: string;
-
-
+path: string;   
+    
 @Prop()
-user: User;
+tag: string;
+        
+@Prop()
+price: GLfloat
+        
+    
+@Prop()
+userEmail: string;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Posts);

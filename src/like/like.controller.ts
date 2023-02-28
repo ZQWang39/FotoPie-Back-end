@@ -1,18 +1,21 @@
 import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { CreateLikeDto } from './Dto/createLike.dto';
 import { LikeService } from './like.service';
+import { UseGuards } from "@nestjs/common/decorators";
+
 
 
 @Controller('like')
 export class LikeController {
     constructor(private readonly likeService: LikeService) {}
 
-    @UseGuard()
+    @UseGuards(JwtAuthGuard)
     @Post('')
-    async getLike(@Param("like") fileName: string,){ //findEmailby
-        // const like_user_email= await //Guard 
-        // const liked_user_email = await this.likeService.findEmailByFilename;
-        this.likeService.checklike(like_user_email,liked_user_email,fileName);
+    async getLike(@Param("like") fileName: string, @Req() req:any){ 
+        const like_user_email= await req.user["email"];
+        const liked_user_email = await this.likeService.findEmailByFilename;
+        this.likeService.checkLike(CreateLikeDto);
         return this.likeService.numberLike(fileName);
 }
 }
