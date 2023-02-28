@@ -11,14 +11,14 @@ export class Like {
 
 _id: mongoose.Schema.Types.ObjectId;
 
-@Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })
-like_user: User;
-
-@Prop({ type: mongoose.Schema.Types.ObjectId, ref: "User" })
-liked_user: User;
+@Prop()
+like_user_email: string;
 
 @Prop()
-posts: string;
+liked_user_email: string;
+
+@Prop()
+fileName: string;
 
 // @Prop({type:Date})
 // updatedAt: Date;

@@ -10,30 +10,37 @@ export class LikeService {
         @InjectModel(Like.name) private readonly likeModel: Model<LikeDocument>
       ) {}
 
-    async addLike(like_user_id, liked_user_id, post_id, ){ 
-      const addLikeData = await this.likeModel.insertMany({
-        "like_user": like_user_id ,"liked_user": liked_user_id,"post": post_id,
+    async addLike(like_user_email, liked_user_email, fileName, ){ 
+      const addLikeData = await this.likeModel.create({
+        like_user_email ,
+        liked_user_email,
+        fileName,
       })
       return addLikeData
     }
 
-    async checkLike(like_user_id: string, liked_user_id: string, post_id: string, createLikeDto:CreateLikeDto ){
-      const checkLikeData = await this.likeModel.findOne({like_user_id, liked_user_id, post_id});
-      const deleteLikeData = await this.likeModel.deleteOne({like_user_id,liked_user_id, post_id});
-      
+    async deleteLike(like_user_email, liked_user_email, fileName,){
+      return await this.likeModel.deleteOne({
+        like_user_email,
+        liked_user_email,
+        fileName,
+      })
+    }
+
+    async checkLike(createLikeDto:CreateLikeDto ){
+      const checkLikeData = await this.likeModel.findOne(createLikeDto);
+
       if(checkLikeData)
-      return deleteLikeData
+      return this.deleteLike
       if(!checkLikeData)
       return this.addLike
     }
 
-    async numberLike(_id){
-      return this.likeModel.count(_id)
+    async numberLike(fileName){
+      return this.likeModel.count(fileName)
     }
 
-    
-    
-
-
+    async findEmailByFilename(){
+    }
 
 }

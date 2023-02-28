@@ -3,15 +3,15 @@ import { IsNotEmpty, IsString } from "class-validator";
 export class CreateLikeDto {
     @IsNotEmpty()
     @IsString()
-    readonly like_user_ld: string;
+    readonly like_user_email: string;
 
     @IsNotEmpty()
     @IsString()
-    readonly liked_user_ld: string;
+    readonly liked_user_email: string;
 
     @IsNotEmpty()
     @IsString()
-    readonly post_ld: string;
+    readonly fileName: string;
 
 
 
