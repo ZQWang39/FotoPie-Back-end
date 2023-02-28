@@ -11,7 +11,7 @@ export class CreateLikeDto {
 
     @IsNotEmpty()
     @IsString()
-    readonly fileName: string;
+    readonly filename: string;
 
 
 

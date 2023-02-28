@@ -18,7 +18,7 @@ like_user_email: string;
 liked_user_email: string;
 
 @Prop()
-fileName: string;
+filename: string;
 
 // @Prop({type:Date})
 // updatedAt: Date;

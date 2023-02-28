@@ -12,27 +12,30 @@ export class LikeService {
         private readonly postModel: Model<Posts>,
       ) {}
 
-      
+      async addLike(like:Like){
+        const newLike = new this.likeModel(like);
+        return newLike.save()
+      }
 
-    async addLike(like_user_email, liked_user_email, fileName, ){ 
-      const addLikeData = await this.likeModel.create({
-        like_user_email ,
-        liked_user_email,
-        fileName,
-      })
-      return addLikeData
-    }
+    // async addLike(like_user_email, liked_user_email, fileName, ){ 
+    //   const addLikeData = await this.likeModel.create({
+    //     like_user_email ,
+    //     liked_user_email,
+    //     fileName,
+    //   })
+    //   return addLikeData
+    // }
 
-    async deleteLike(like_user_email, liked_user_email, fileName,){
+    async deleteLike(like_user_email, liked_user_email, filename,){
       return await this.likeModel.deleteOne({
         like_user_email,
         liked_user_email,
-        fileName,
+        filename,
       })
     }
 
-    async checkLike(createLikeDto:CreateLikeDto ){
-      const checkLikeData = await this.likeModel.findOne(createLikeDto);
+    async checkLike(CreateLikeDto:CreateLikeDto ){
+      const checkLikeData = await this.likeModel.findOne(CreateLikeDto);
 
       if(checkLikeData)
       return this.deleteLike
@@ -40,12 +43,12 @@ export class LikeService {
       return this.addLike
     }
 
-    async numberLike(fileName){
-      return this.likeModel.count(fileName)
+    async numberLike(filename){
+      return this.likeModel.count(filename)
     }
 
-    async findEmailByFilename(fileName:string):Promise<string>{
-      const findThePost = await this.postModel.findOne({fileName});
+    async findEmailByFilename(filename:string):Promise<string>{
+      const findThePost = await this.postModel.findOne({filename});
       if(!findThePost) throw new NotFoundException;
       return findThePost.userEmail;
     }
