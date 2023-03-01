@@ -8,6 +8,7 @@ import { Posts, PostsSchema } from './schemas/post.schema';
 @Module({
   imports:[
     MongooseModule.forFeature([{ name: Posts.name, schema: PostsSchema }]),
+    MongooseModule.forFeature([{ name: Like.name, schema: LikeSchema }]),
   ],
   controllers: [LikeController],
   providers: [LikeService],

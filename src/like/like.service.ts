@@ -13,9 +13,11 @@ export class LikeService {
         @InjectModel("Posts") private readonly postModel: Model<Posts>,
       ) {}
 
-      async addLike(like:Like){
-        const newLike = new this.likeModel(like);
-        return newLike.save()
+      async addLike(userLikeDto){
+        console.log("like2"+userLikeDto);
+        const newLike = new this.likeModel(userLikeDto);
+        console.log("newLike"+newLike)
+        return this.likeModel.create(newLike)
       }
 
     // async addLike(like_user_email, liked_user_email, fileName, ){ 
@@ -33,11 +35,13 @@ export class LikeService {
 
     async checkLike(userLikeDto: UserLikeDto){
       const checkLikeData = await this.likeModel.findOne(userLikeDto);
-
+      console.log(userLikeDto)
+      console.log("checkLikeData"+checkLikeData)
       if(checkLikeData)
-      return this.deleteLike
+      return this.deleteLike(userLikeDto)
       if(!checkLikeData)
-      return this.addLike
+      return this.addLike(userLikeDto)
+      
     }
 
     async numberLike(createLikeDto:CreateLikeDto){
@@ -46,6 +50,8 @@ export class LikeService {
 
     async findEmailByFilename(createLikeDto:CreateLikeDto):Promise<string>{
       const findThePost = await this.postModel.findOne(createLikeDto);
+      console.log(createLikeDto)
+      console.log("findThePost"+findThePost)
       if(!findThePost) throw new NotFoundException;
       return findThePost.userEmail;
     }

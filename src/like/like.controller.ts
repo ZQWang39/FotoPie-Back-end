@@ -12,12 +12,13 @@ export class LikeController {
     constructor(private readonly likeService: LikeService) {}
 
     @UseGuards(JwtAuthGuard)
-    @Post("filename")
-    async getLike(@Param("filename") createLikeDto:CreateLikeDto, @Req() req: any) {
+    @Post(":filename")
+    async getLike(@Param() createLikeDto:CreateLikeDto, @Req() req: any) {
     const like = new Like()
     like.like_user_email = req.user["email"];
     like.liked_user_email = await this.likeService.findEmailByFilename(createLikeDto);
     like.filename = createLikeDto.filename;
+    console.log("like1"+like);
     this.likeService.checkLike(like);
     return this.likeService.numberLike(createLikeDto)
 }
