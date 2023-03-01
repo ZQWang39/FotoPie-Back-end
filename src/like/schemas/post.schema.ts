@@ -1,7 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
-import { User } from "../../user/schemas/user.schema"
-import {Image, ImageSchema} from "./image.schema"
+
 
 export type PostDocument = HydratedDocument<Posts>;
 
@@ -27,4 +26,4 @@ price: GLfloat
 userEmail: string;
 }
 
-export const PostSchema = SchemaFactory.createForClass(Posts);
+export const PostsSchema = SchemaFactory.createForClass(Posts);

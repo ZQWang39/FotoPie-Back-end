@@ -2,14 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model } from "mongoose";
 import { CreateLikeDto } from './Dto/createLike.dto';
+import { UserLikeDto } from './Dto/UserLike.dto';
 import { Like, LikeDocument } from './schemas/like.schema';
 import { Posts } from './schemas/post.schema';
 
 @Injectable()
 export class LikeService {
     constructor(
-        @InjectModel(Like.name) private readonly likeModel: Model<LikeDocument>, 
-        private readonly postModel: Model<Posts>,
+        @InjectModel("Like") private readonly likeModel: Model<LikeDocument>, 
+        @InjectModel("Posts") private readonly postModel: Model<Posts>,
       ) {}
 
       async addLike(like:Like){
@@ -26,16 +27,12 @@ export class LikeService {
     //   return addLikeData
     // }
 
-    async deleteLike(like_user_email, liked_user_email, filename,){
-      return await this.likeModel.deleteOne({
-        like_user_email,
-        liked_user_email,
-        filename,
-      })
+    async deleteLike(userLikeDto: UserLikeDto){
+      return await this.likeModel.deleteOne({userLikeDto})
     }
 
-    async checkLike(CreateLikeDto:CreateLikeDto ){
-      const checkLikeData = await this.likeModel.findOne(CreateLikeDto);
+    async checkLike(userLikeDto: UserLikeDto){
+      const checkLikeData = await this.likeModel.findOne(userLikeDto);
 
       if(checkLikeData)
       return this.deleteLike
@@ -43,12 +40,12 @@ export class LikeService {
       return this.addLike
     }
 
-    async numberLike(filename){
-      return this.likeModel.count(filename)
+    async numberLike(createLikeDto:CreateLikeDto){
+      return this.likeModel.count(createLikeDto)
     }
 
-    async findEmailByFilename(filename:string):Promise<string>{
-      const findThePost = await this.postModel.findOne({filename});
+    async findEmailByFilename(createLikeDto:CreateLikeDto):Promise<string>{
+      const findThePost = await this.postModel.findOne(createLikeDto);
       if(!findThePost) throw new NotFoundException;
       return findThePost.userEmail;
     }

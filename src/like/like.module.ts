@@ -3,10 +3,11 @@ import { LikeService } from './like.service';
 import { MongooseModule } from "@nestjs/mongoose";
 import { Like, LikeSchema } from './schemas/like.schema';
 import { LikeController } from './like.controller';
+import { Posts, PostsSchema } from './schemas/post.schema';
 
 @Module({
   imports:[
-    MongooseModule.forFeature([{name:Like.name, schema:LikeSchema }])
+    MongooseModule.forFeature([{ name: Posts.name, schema: PostsSchema }]),
   ],
   controllers: [LikeController],
   providers: [LikeService],
