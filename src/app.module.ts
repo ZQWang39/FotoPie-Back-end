@@ -20,7 +20,7 @@ import { CollectModule } from "./collect/collect.module";
     UserModule,
     AuthModule,
     ResetModule,
-    CollectModule
+    CollectModule,
   ],
 })
 export class AppModule {}
