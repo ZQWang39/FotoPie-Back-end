@@ -1,20 +1,24 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Posts } from "./schema/post.schema";
-
-
-
+import { User } from "src/user/schemas/user.schema";
 
 @Injectable()
 export class UserPostService {
-  constructor(@InjectModel(Posts.name) private postModel: Model<Posts>) {}
+  constructor(
+    @InjectModel(Posts.name) private postModel: Model<Posts>,
+    @InjectModel(User.name) private userModel: Model<User>
+  ) {}
 
-  async findAllPostsByUserEmail(userEmail:string){
-    const post = await this.postModel.find({userEmail});
-    return post;
+  async getUserEmailById(id: string): Promise<string> {
+    const user = await this.userModel.findOne({ id }).exec();
+    if (!user) {
+      throw new NotFoundException();
+    }
+    return user.email;
   }
-
+  async getPostsByUserEmail(userEmail: string): Promise<Posts[]> {
+    return this.postModel.find({ userEmail });
+  }
 }
-
-
