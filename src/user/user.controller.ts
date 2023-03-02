@@ -20,6 +20,7 @@ import { User } from "./schemas/user.schema";
 import { HttpStatus } from "@nestjs/common/enums";
 import { JwtService } from "@nestjs/jwt";
 import { ConfirmEmailDto } from "./dto/confirmEmail.dto";
+import { ObjectId } from "mongoose";
 
 @Controller("user")
 export class UserController {
@@ -31,13 +32,29 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  async findAll(@Res() res: Response) {
+    const users = await this.userService.findAll();
+    const data = users.map((user) => {
+      return {
+        id: user._id,
+      };
+    });
+    return res.status(HttpStatus.OK).json({
+      message: "success",
+      data,
+    });
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return null;
+  async findOne(@Param("id") id: string, @Res() res: Response) {
+    const user = await this.userService.findById(id);
+    res.status(HttpStatus.OK).json({
+      message: "success",
+      id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      avatar: user.avatar,
+    });
   }
 
   @Patch(":id")

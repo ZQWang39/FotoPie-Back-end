@@ -26,7 +26,9 @@ export class UserService {
   }
 
   findAll() {
-    return `This action returns all user`;
+    const users = this.userModel.find().exec();
+    if (!users) throw new NotFoundException();
+    return users;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
@@ -43,8 +45,8 @@ export class UserService {
     return user;
   }
 
-  async findById(id: mongoose.Schema.Types.ObjectId): Promise<User> {
-    const user = await this.userModel.findOne({ id });
+  async findById(_id: string): Promise<User> {
+    const user = await this.userModel.findOne({ _id }).exec();
     if (!user) throw new NotFoundException();
     return user;
   }

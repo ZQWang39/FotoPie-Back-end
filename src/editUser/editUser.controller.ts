@@ -20,8 +20,6 @@ import { EditUserService } from "./editUser.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guards";
 import { EditUserDto } from "./dto/edit-user.dto";
 
-// export const multerStorage = multer.memoryStorage();
-
 @UseGuards(JwtAuthGuard)
 @Controller("editUser")
 export class EditUserController {

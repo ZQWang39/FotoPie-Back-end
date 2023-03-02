@@ -19,7 +19,7 @@ import { ResetModule } from "./reset/reset.module";
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, "..", "public"),
-      exclude: ["/api*"],
+     
     }),
     AdminModule,
     AdminAuthModule,
