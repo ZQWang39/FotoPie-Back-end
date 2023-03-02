@@ -12,6 +12,7 @@ import {
   Delete,
   HttpException,
   NotFoundException,
+  StreamableFile,
 } from "@nestjs/common";
 import { Req, Res } from "@nestjs/common";
 import { PostDTO } from "./dto/post.dto";
@@ -81,10 +82,10 @@ export class PostsController {
     });
   }
 
-  @Get(":imagename")
-  findImage(@Param("imagename") imagename, @Res() res): Observable<Image> {
-    return res.sendFile(path.join(process.cwd(), "./files/" + imagename));
-  }
+  // @Get(":imagename")
+  // findImage(@Param("imagename") imagename, @Res() res): Observable<Image> {
+  //   return res.sendFile(path.join(process.cwd(), "./files/" + imagename));
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Post("sent")
@@ -106,8 +107,12 @@ export class PostsController {
     return this.PostsService.findAllPosts(query);
   }
 
-  @Get("files/:imageName")
-  getPhotos(@Param("imageName") imageName, @Res() response): Promise<unknown> {
-    return response.sendFile(join(process.cwd(), "files" + imageName));
+  @Get(":imageName")
+  getPhotos(@Param("imageName") imageName) {
+    const imageFile = join(
+      "https://fotopie.s3.ap-southeast-2.amazonaws.com/" + imageName
+    );
+
+    return { imageURL: imageFile };
   }
 }
