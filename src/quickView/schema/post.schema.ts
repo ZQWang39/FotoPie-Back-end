@@ -17,7 +17,7 @@ export class Posts {
   price: number;
 
   @Prop()
-  user: string;
+  userEmail: string;
 }
 
 export const PostsSchema = SchemaFactory.createForClass(Posts);

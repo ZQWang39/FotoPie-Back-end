@@ -15,21 +15,18 @@ export class QuickViewService {
     @InjectModel("Collect") private readonly collectModel: Model<Collect>
   ) {}
 
-  async getUsername(filename: string): Promise<object> {
+  async getUsername(filename: string): Promise<string> {
     const post = await this.findPostByFilename(filename);
-    const user = await this.findUserByEmail(post.user);
-
+    const user = await this.findUserByEmail(post.userEmail);
     const user_name = user.firstName + " " + user.lastName;
-
-    return { user_name };
+    return user_name;
   }
 
   async getAvatar(filename: string): Promise<string> {
     const post = await this.findPostByFilename(filename);
-    const user = await this.findUserByEmail(post.user);
+    const user = await this.findUserByEmail(post.userEmail);
 
     const avatar = user.avatar;
-
     return avatar;
   }
 
