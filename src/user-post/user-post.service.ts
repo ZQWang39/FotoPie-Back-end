@@ -11,8 +11,8 @@ export class UserPostService {
     @InjectModel(User.name) private userModel: Model<User>
   ) {}
 
-  async getUserEmailById(id: string): Promise<string> {
-    const user = await this.userModel.findOne({ id }).exec();
+  async getUserEmailById(_id: string): Promise<string> {
+    const user = await this.userModel.findOne({ _id }).exec();
     if (!user) {
       throw new NotFoundException();
     }

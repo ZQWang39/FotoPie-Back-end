@@ -24,6 +24,7 @@ export class Posts {
     
     @Prop()
     userEmail: string;
+
       
 
 }
