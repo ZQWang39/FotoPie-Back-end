@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post, Req } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { CreateLikeDto } from './Dto/createLike.dto';
 import { LikeService } from './like.service';
@@ -10,6 +10,8 @@ import { Like } from './schemas/like.schema'
 @Controller('like')
 export class LikeController {
     constructor(private readonly likeService: LikeService) {}
+
+
 
     @UseGuards(JwtAuthGuard)
     @Post(":filename")

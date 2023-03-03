@@ -56,4 +56,16 @@ export class LikeService {
       return findThePost.userEmail;
     }
 
+    // async checkUserLogin(){
+    //   const token = localStorage.access_token;
+    //   if(!token) {
+    //     this.res("sorry, you haven't log in",{
+    //     }).then(()=>{
+    //       self.redirect("/auth/login")
+    //     })
+    //     return false
+    //   }
+    //   return token
+    // }
+
 }
