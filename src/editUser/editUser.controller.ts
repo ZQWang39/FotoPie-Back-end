@@ -15,6 +15,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { EditUserService } from "./editUser.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guards";
@@ -60,7 +61,7 @@ export class EditUserController {
 
   // upload avatar
   @Patch("upload")
-  // 缓存照片
+  // set multer middleware
   @UseInterceptors(
     FileInterceptor("file", {
       storage: multer.memoryStorage(),
@@ -71,31 +72,54 @@ export class EditUserController {
     @Req() req: Request,
     @Res() res: Response
   ) {
-    // 修改文件名
-    file.filename = `user-${uuidv4()}.jpg`;
+    // set file name
+    const filename = `user-${uuidv4()}.jpeg`;
 
-    // 保存图片
-    await sharp(file.buffer)
+    // resize image
+    const fileBuffer = await sharp(file.buffer)
       .resize(500, 500)
-      .toFormat("jpg")
+      .toFormat("jpeg")
       .jpeg({ quality: 90 })
-      .toFile(`public/${file.filename}`);
+      .toBuffer();
 
-    // 提取用户email
+    // S3 upload
+    const bucketName = process.env.BUCKET_NAME;
+    const bucketRegion = process.env.BUCKET_REGION;
+    const accessKey = process.env.ACCESS_KEY as string;
+    const secretAccessKey = process.env.SECRET_ACCESS_KEY as string;
+
+    const s3Clinet = new S3Client({
+      region: bucketRegion,
+      credentials: {
+        accessKeyId: accessKey,
+        secretAccessKey: secretAccessKey,
+      },
+    });
+
+    await s3Clinet.send(
+      new PutObjectCommand({
+        Bucket: bucketName,
+        Body: fileBuffer,
+        Key: filename,
+        ContentType: file.mimetype,
+      })
+    );
+
+    // get user email from jwt token
     const userEmail = req.user["email"];
 
-    // 更新数据库头像文件名
-    const updateAvatar = await this.editUserService.updateAvatarByEmail(
+    // update avatar in db
+    const updatedAvatar = await this.editUserService.updateAvatarByEmail(
       userEmail,
       {
-        avatar: file.filename,
+        avatar: `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${filename}`,
       }
     );
 
     return res.status(HttpStatus.OK).json({
       message: "success",
       data: {
-        updateAvatar,
+        avatar: updatedAvatar,
       },
     });
   }

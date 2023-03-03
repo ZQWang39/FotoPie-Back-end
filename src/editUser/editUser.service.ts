@@ -45,14 +45,14 @@ export class EditUserService {
   async updateAvatarByEmail(
     userEmail: string,
     dto: EditUserAvatarDto
-  ): Promise<{ avatar: string }> {
-    const updateUser = await this.userModel.findOneAndUpdate(
+  ): Promise<string> {
+    const updatedUser = await this.userModel.findOneAndUpdate(
       { email: userEmail },
       { ...dto },
       { new: true }
     );
 
-    if (!updateUser) throw new NotFoundException();
-    return { avatar: updateUser.avatar };
+    if (!updatedUser) throw new NotFoundException();
+    return updatedUser.avatar;
   }
 }
