@@ -82,10 +82,10 @@ export class PostsController {
     });
   }
 
-  // @Get(":imagename")
-  // findImage(@Param("imagename") imagename, @Res() res): Observable<Image> {
-  //   return res.sendFile(path.join(process.cwd(), "./files/" + imagename));
-  // }
+  @Get(":imagename")
+  findImage(@Param("imagename") imagename, @Res() res): Observable<Image> {
+    return res.sendFile(path.join(process.cwd(), "./files/" + imagename));
+  }
 
   @UseGuards(JwtAuthGuard)
   @Post("sent")
@@ -103,16 +103,7 @@ export class PostsController {
   }
 
   @Get()
-  getAllPosts(@Query() query: ExpressQuery): Promise<Posts[]> {
+  getAllPosts(@Query() query: ExpressQuery): Promise<unknown> {
     return this.PostsService.findAllPosts(query);
-  }
-
-  @Get(":imageName")
-  getPhotos(@Param("imageName") imageName) {
-    const imageFile = join(
-      "https://fotopie.s3.ap-southeast-2.amazonaws.com/" + imageName
-    );
-
-    return { imageURL: imageFile };
   }
 }

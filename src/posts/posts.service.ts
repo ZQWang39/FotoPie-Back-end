@@ -12,6 +12,7 @@ import { UserService } from "src/user/user.service";
 import { PostDTO } from "./dto/post.dto";
 import { User, UserDocument } from "../user/schemas/user.schema";
 import { Query } from "express-serve-static-core";
+import { join } from "path";
 
 // const slugify = require(slugify)
 
@@ -38,15 +39,21 @@ export class PostsService {
     return newPosts.save();
   }
 
-  async findAllPosts(query: Query): Promise<Posts[]> {
+  async findAllPosts(query: Query): Promise<string[]> {
     const resPerPage = Number(query.limit);
     const currentPage = Number(query.page) || 1;
     const skip = resPerPage * (currentPage - 1);
 
-    return this.postModel
+    const paginatedImage = this.postModel
       .find()
       .sort({ createdAt: "desc" })
       .limit(resPerPage)
       .skip(skip);
+
+    const paginatedImageJoin = (await paginatedImage).map((item) =>
+      join("https://fotopie.s3.ap-southeast-2.amazonaws.com/" + item.filename)
+    );
+
+    return paginatedImageJoin;
   }
 }
