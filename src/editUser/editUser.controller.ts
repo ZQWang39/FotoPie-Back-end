@@ -72,7 +72,6 @@ export class EditUserController {
     @Res() res: Response
   ) {
     // 修改文件名
-    console.log(file);
     file.filename = `user-${uuidv4()}.jpg`;
 
     // 保存图片
