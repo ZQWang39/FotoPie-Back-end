@@ -15,14 +15,8 @@ export class QuickViewController {
     const collects = await this.quickViewService.getCollects(filename);
 
     //photo and avatar path
-    const photo_url = path.join(
-      "https://fotopie.s3.ap-southeast-2.amazonaws.com",
-      filename
-    );
-    const avatar_url = path.join(
-      "https://fotopie-avatar.s3.ap-southeast-2.amazonaws.com",
-      avatar
-    );
+    const photo_url = path.join(process.env.BUCKET_PHOTO_PREFIX, filename);
+    const avatar_url = path.join(process.env.BUCKET_AVATAR_PREFIX, avatar);
 
     //send response to front end: user_name, likes, collects, photo_url, avatar_url
     console.log({ user_name, likes, collects, photo_url, avatar_url });
