@@ -4,7 +4,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { CollectService } from "./collect.service";
 import { CollectController } from "./collect.controller";
 import { Collect, CollectSchema } from "./schemas/collect.schema";
-import { Posts, PostSchema } from "src/posts/schema/post.schema";
+import { Posts, PostSchema } from "src/collect/schemas/post.schema";
 
 @Module({
   imports: [
