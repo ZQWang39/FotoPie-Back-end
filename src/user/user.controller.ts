@@ -48,12 +48,13 @@ export class UserController {
   @Get(":id")
   async findOne(@Param("id") id: string, @Res() res: Response) {
     const user = await this.userService.findById(id);
+    const avatarUrl = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${user.avatar}`;
     res.status(HttpStatus.OK).json({
       message: "success",
       id: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
-      avatar: user.avatar,
+      avatar: avatarUrl,
     });
   }
 

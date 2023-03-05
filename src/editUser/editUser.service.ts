@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, ObjectId } from "mongoose";
 
 import { User, UserDocument } from "src/user/schemas/user.schema";
 import { EditUserDto } from "./dto/edit-user.dto";
@@ -28,9 +28,12 @@ export class EditUserService {
   }
 
   // get user info
-  async findByEmail(
-    userEmail: string
-  ): Promise<{ firstName: string; lastName: string; avatar: string }> {
+  async findByEmail(userEmail: string): Promise<{
+    firstName: string;
+    lastName: string;
+    avatar: string;
+    id: ObjectId;
+  }> {
     const user = await this.userModel.findOne({ userEmail }).exec();
     if (!user) throw new NotFoundException();
 
@@ -38,6 +41,7 @@ export class EditUserService {
       firstName: user.firstName,
       lastName: user.lastName,
       avatar: user.avatar,
+      id: user._id,
     };
   }
 
@@ -46,13 +50,13 @@ export class EditUserService {
     userEmail: string,
     dto: EditUserAvatarDto
   ): Promise<string> {
-    const updatedUser = await this.userModel.findOneAndUpdate(
+    const user = await this.userModel.findOneAndUpdate(
       { email: userEmail },
       { ...dto },
       { new: true }
     );
 
-    if (!updatedUser) throw new NotFoundException();
-    return updatedUser.avatar;
+    if (!user) throw new NotFoundException();
+    return user.avatar;
   }
 }

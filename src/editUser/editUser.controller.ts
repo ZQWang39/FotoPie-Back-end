@@ -109,17 +109,17 @@ export class EditUserController {
     const userEmail = req.user["email"];
 
     // update avatar in db
-    const updatedAvatar = await this.editUserService.updateAvatarByEmail(
+    const newAvatarFileName = await this.editUserService.updateAvatarByEmail(
       userEmail,
       {
-        avatar: `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${filename}`,
+        avatar: filename,
       }
     );
 
     return res.status(HttpStatus.OK).json({
       message: "success",
       data: {
-        avatar: updatedAvatar,
+        avatar: `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${newAvatarFileName}`,
       },
     });
   }

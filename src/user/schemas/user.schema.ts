@@ -25,7 +25,7 @@ export class User {
   role: string;
 
   @Prop({
-    default: `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/default_avatar.png`,
+    default: "default_avatar.png",
     type: String,
   })
   avatar: string;
