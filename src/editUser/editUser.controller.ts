@@ -21,6 +21,11 @@ import { EditUserService } from "./editUser.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guards";
 import { EditUserDto } from "./dto/edit-user.dto";
 
+const bucketName = process.env.BUCKET_NAME;
+const bucketRegion = process.env.BUCKET_REGION;
+const accessKey = process.env.ACCESS_KEY as string;
+const secretAccessKey = process.env.SECRET_ACCESS_KEY as string;
+
 @UseGuards(JwtAuthGuard)
 @Controller("editUser")
 export class EditUserController {
@@ -50,11 +55,14 @@ export class EditUserController {
   @Get("me")
   async me(@Req() req: Request, @Res() res: Response) {
     const userEmail = req.user["email"];
-    const userData = await this.editUserService.findByEmail(userEmail);
+    const user = await this.editUserService.findByEmail(userEmail);
     return res.status(HttpStatus.OK).json({
       message: "success",
       data: {
-        userData,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        avatar: `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${user.avatar}`,
+        id: user._id,
       },
     });
   }
@@ -79,14 +87,10 @@ export class EditUserController {
     const fileBuffer = await sharp(file.buffer)
       .resize(500, 500)
       .toFormat("jpeg")
-      .jpeg({ quality: 90 })
+      .jpeg({ quality: 10 })
       .toBuffer();
 
     // S3 upload
-    const bucketName = process.env.BUCKET_NAME;
-    const bucketRegion = process.env.BUCKET_REGION;
-    const accessKey = process.env.ACCESS_KEY as string;
-    const secretAccessKey = process.env.SECRET_ACCESS_KEY as string;
 
     const s3Clinet = new S3Client({
       region: bucketRegion,

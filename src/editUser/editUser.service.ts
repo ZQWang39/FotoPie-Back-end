@@ -28,21 +28,11 @@ export class EditUserService {
   }
 
   // get user info
-  async findByEmail(userEmail: string): Promise<{
-    firstName: string;
-    lastName: string;
-    avatar: string;
-    id: ObjectId;
-  }> {
+  async findByEmail(userEmail: string): Promise<User> {
     const user = await this.userModel.findOne({ userEmail }).exec();
     if (!user) throw new NotFoundException();
 
-    return {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      avatar: user.avatar,
-      id: user._id,
-    };
+    return user;
   }
 
   // upload avatar
