@@ -44,7 +44,6 @@ export class PostsController {
     const filename = `${uuidv4()}.jpeg`;
   
     const fileBuffer = await sharp(file.buffer)
-      .resize(500, 500)
       .toFormat("jpeg")
       .jpeg({ quality: 90 })
       .toBuffer();
