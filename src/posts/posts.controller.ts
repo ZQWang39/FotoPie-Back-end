@@ -84,21 +84,25 @@ export class PostsController {
   return res.status(HttpStatus.OK).json({
     message: "Confirmed ",
     filename: filename,
-    orginal_path: `https://${bucketNameOrginial}.s3.${bucketRegion}.amazonaws.com/${filename}`,
+    original_path: `https://${bucketNameOrginial}.s3.${bucketRegion}.amazonaws.com/${filename}`,
     compression_path:`https://${bucketNameCompression}.s3.${bucketRegion}.amazonaws.com/${filename}`
   })
 }
 
   
- @UseGuards(JwtAuthGuard)
+//  @UseGuards(JwtAuthGuard)
  @Post('sent')
+
  async create(@Body() PostDTO: PostDTO, @Req() req: any) {
    const posts= new Posts()
-   posts.userEmail = req.user["email"];
+  //  posts.userEmail = req.user["email"];
    posts.filename = PostDTO.filename;
    posts.path = PostDTO.path;
    posts.tag = PostDTO.tag;
    posts.price = PostDTO.price;
+   posts.description = PostDTO.description;
+   posts.compressFilePath = PostDTO.compressFilePath;
+   posts.orginalFilePath = PostDTO.orginalFilePath
 
    await this.PostsService.create(posts)
    return posts
