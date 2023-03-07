@@ -7,13 +7,17 @@ import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
 import { PostsModule } from "./posts/posts.module";
 import { config } from "./config/config";
+import { mongoConfig } from "./config/mongoConfig";
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGO_URL),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [config],
+    }),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: mongoConfig,
     }),
     AdminModule,
     AdminAuthModule,
