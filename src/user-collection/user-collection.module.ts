@@ -21,4 +21,4 @@ import { UserCollectionService } from "./user-collection.service";
   providers: [UserCollectionService],
   controllers: [UserCollection],
 })
-export class UserPostModule {}
+export class UserCollectionModule {}

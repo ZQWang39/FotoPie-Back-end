@@ -19,8 +19,8 @@ export class UserCollectionService {
     return user.email;
   }
   async getCollectedPostsIdByCollectUserEmail(
-    collect_userEmail: string
+    collect_user_email: string
   ): Promise<Collect[]> {
-    return this.collectModel.find({ collect_userEmail });
+    return this.collectModel.find({ collect_user_email });
   }
 }

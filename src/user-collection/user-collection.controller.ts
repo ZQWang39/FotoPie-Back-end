@@ -7,12 +7,11 @@ export class UserCollection {
 
   @Get(":id")
   async getProfileCollectionData(@Param("id") id: string) {
-    const collect_userEmail = await this.userCollectionService.getUserEmailById(
-      id
-    );
+    const collect_user_email =
+      await this.userCollectionService.getUserEmailById(id);
     const collectedPosts =
       await this.userCollectionService.getCollectedPostsIdByCollectUserEmail(
-        collect_userEmail
+        collect_user_email
       );
     const s3Url = "https://fotopie.s3.ap-southeast-2.amazonaws.com";
 
