@@ -39,7 +39,7 @@ export class PostsService {
     return newPosts.save();
   }
 
-  async findAllPosts(query: Query): Promise<string[]> {
+  async findAllPosts(query: Query): Promise<PostDocument[]> {
     const resPerPage = Number(query.limit);
     const currentPage = Number(query.page) || 1;
     const skip = resPerPage * (currentPage - 1);
@@ -50,10 +50,10 @@ export class PostsService {
       .limit(resPerPage)
       .skip(skip);
 
-    const paginatedImageJoin = (await paginatedImage).map((item) =>
-      join("https://fotopie.s3.ap-southeast-2.amazonaws.com/" + item.filename)
-    );
+    // const paginatedImageJoin = (await paginatedImage).map((item) =>
+    //   join("https://fotopie.s3.ap-southeast-2.amazonaws.com/" + item.filename)
+    // );
 
-    return paginatedImageJoin;
+    return paginatedImage;
   }
 }

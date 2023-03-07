@@ -8,12 +8,14 @@ import * as bcrypt from "bcryptjs";
 import { JwtService } from "@nestjs/jwt";
 import { Tokens } from "./types/tokens.type";
 import { UserService } from "src/user/user.service";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
+    private configService: ConfigService
   ) {}
 
   async login({ email, password }: LoginUserDto): Promise<Tokens> {
@@ -43,7 +45,7 @@ export class AuthService {
     if (!user || !user.refreshToken) throw new NotFoundException();
 
     const decoded = await this.jwtService.verify(rt, {
-      secret: process.env.REFRESH_TOKEN_SECRET_PUBLIC,
+      secret: this.configService.get("refresh_token_key_public"),
     });
 
     if (!decoded || typeof decoded === "string") throw new NotFoundException();
@@ -56,7 +58,7 @@ export class AuthService {
       },
       {
         algorithm: "RS256",
-        secret: process.env.ACCESS_TOKEN_SECRET_PRIVATE,
+        secret: this.configService.get("access_token_key_private"),
         expiresIn: "15m",
       }
     );
@@ -66,7 +68,7 @@ export class AuthService {
 
   async verifyRt(rt: string) {
     const decoded = this.jwtService.verify(rt, {
-      secret: process.env.REFRESH_TOKEN_SECRET_PUBLIC,
+      secret: this.configService.get("refresh_token_key_public"),
     });
     if (!decoded || typeof decoded === "string") throw new NotFoundException();
 
@@ -85,7 +87,7 @@ export class AuthService {
         },
         {
           algorithm: "RS256",
-          secret: process.env.ACCESS_TOKEN_SECRET_PRIVATE,
+          secret: this.configService.get("access_token_key_private"),
           expiresIn: "15m",
         }
       ),
@@ -95,7 +97,7 @@ export class AuthService {
         },
         {
           algorithm: "RS256",
-          secret: process.env.REFRESH_TOKEN_SECRET_PRIVATE,
+          secret: this.configService.get("refresh_token_key_private"),
           expiresIn: "7d",
         }
       ),
