@@ -3,15 +3,18 @@ import { Decimal128 } from "mongoose";
 import { User } from "../../user/schemas/user.schema"
 
 export class PostDTO {
-   
+    @IsNotEmpty()
     filename: string;
   
-    path: string;
+   
     @IsString()
     tag: string;
+   
     price: number;
     description: string;
+    @IsNotEmpty()
     orginalFilePath: string;
+    @IsNotEmpty()
     compressFilePath: string;
 
 

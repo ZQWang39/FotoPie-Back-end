@@ -31,15 +31,8 @@ orginalFilePath: string;
 @Prop()
 compressFilePath: string;
 
-
-
-
-    
-    
-
-// @Prop()
-// userEmail: string;
-
+@Prop()
+userEmail: string;
 
   
 }

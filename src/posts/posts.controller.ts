@@ -45,7 +45,7 @@ export class PostsController {
   
     const fileBuffer = await sharp(file.buffer)
       .toFormat("jpeg")
-      .jpeg({ quality: 90 })
+      .jpeg({ quality: 50 })
       .toBuffer();
     
     // S3 upload
@@ -90,12 +90,12 @@ export class PostsController {
 }
 
   
-//  @UseGuards(JwtAuthGuard)
+ @UseGuards(JwtAuthGuard)
  @Post('sent')
 
  async create(@Body() PostDTO: PostDTO, @Req() req: any) {
    const posts= new Posts()
-  //  posts.userEmail = req.user["email"];
+   posts.userEmail = req.user["email"];
    posts.filename = PostDTO.filename;
    posts.path = PostDTO.path;
    posts.tag = PostDTO.tag;
