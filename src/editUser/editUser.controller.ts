@@ -43,11 +43,14 @@ export class EditUserController {
       userEmail,
       dto
     );
+
+    if (!updatedData) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ message: "error" });
+    }
+
     return res.status(HttpStatus.OK).json({
       message: "success",
-      data: {
-        updatedData,
-      },
+      updatedData,
     });
   }
 
@@ -56,14 +59,17 @@ export class EditUserController {
   async me(@Req() req: Request, @Res() res: Response) {
     const userEmail = req.user["email"];
     const user = await this.editUserService.findByEmail(userEmail);
+
+    if (!user) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ message: "error" });
+    }
+
     return res.status(HttpStatus.OK).json({
       message: "success",
-      data: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        avatar: `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${user.avatar}`,
-        id: user._id,
-      },
+      firstName: user.firstName,
+      lastName: user.lastName,
+      avatarUrl: `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${user.avatar}`,
+      id: user._id,
     });
   }
 
@@ -81,7 +87,7 @@ export class EditUserController {
     @Res() res: Response
   ) {
     // set file name
-    const filename = `user-${uuidv4()}.jpeg`;
+    const fileName = `user-${uuidv4()}.jpeg`;
 
     // resize image
     const fileBuffer = await sharp(file.buffer)
@@ -104,7 +110,7 @@ export class EditUserController {
       new PutObjectCommand({
         Bucket: bucketName,
         Body: fileBuffer,
-        Key: filename,
+        Key: fileName,
         ContentType: file.mimetype,
       })
     );
@@ -116,17 +122,17 @@ export class EditUserController {
     const newAvatarFileName = await this.editUserService.updateAvatarByEmail(
       userEmail,
       {
-        avatar: filename,
+        avatar: fileName,
       }
     );
 
+    if (!newAvatarFileName) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ message: "error" });
+    }
+
     return res.status(HttpStatus.OK).json({
       message: "success",
-      data: {
-        avatar: `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${newAvatarFileName}`,
-      },
+      avatarUrl: `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${newAvatarFileName}`,
     });
   }
 }
-
-// <img src=`public/{avatarFileName}`>

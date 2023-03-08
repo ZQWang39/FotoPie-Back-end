@@ -54,7 +54,7 @@ export class UserController {
       id: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
-      avatar: avatarUrl,
+      avatarUrl: avatarUrl,
     });
   }
 
