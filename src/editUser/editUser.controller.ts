@@ -1,3 +1,4 @@
+import { User } from "src/user/schemas/user.schema";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Request, Response } from "express";
 import * as multer from "multer";
@@ -7,6 +8,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
   HttpStatus,
   Patch,
   Req,
@@ -45,7 +47,7 @@ export class EditUserController {
     );
 
     if (!updatedData) {
-      return res.status(HttpStatus.BAD_REQUEST).json({ message: "error" });
+      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
     }
 
     return res.status(HttpStatus.OK).json({
@@ -59,18 +61,19 @@ export class EditUserController {
   async me(@Req() req: Request, @Res() res: Response) {
     const userEmail = req.user["email"];
     const user = await this.editUserService.findByEmail(userEmail);
-    const { firstName, lastName, avatar, _id } = user;
-    const avatarUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${avatar}`;
 
     if (!user) {
-      return res.status(HttpStatus.BAD_REQUEST).json({ message: "error" });
+      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
     }
+
+    const { firstName, lastName, avatar, avatarPath, _id } = user;
 
     return res.status(HttpStatus.OK).json({
       message: "success",
       firstName,
       lastName,
-      avatarUrl,
+      avatar,
+      avatarPath,
       id: _id,
     });
   }
@@ -81,6 +84,19 @@ export class EditUserController {
   @UseInterceptors(
     FileInterceptor("file", {
       storage: multer.memoryStorage(),
+      fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith("image")) {
+          cb(null, true);
+        } else {
+          cb(
+            new HttpException(
+              "Not an image! Please upload only images.",
+              HttpStatus.BAD_REQUEST
+            ),
+            false
+          );
+        }
+      },
     })
   )
   async uploadFile(
@@ -99,7 +115,6 @@ export class EditUserController {
       .toBuffer();
 
     // S3 upload
-
     const s3Clinet = new S3Client({
       region: bucketRegion,
       credentials: {
@@ -108,34 +123,38 @@ export class EditUserController {
       },
     });
 
-    await s3Clinet.send(
-      new PutObjectCommand({
-        Bucket: bucketName,
-        Body: fileBuffer,
-        Key: fileName,
-        ContentType: file.mimetype,
-      })
-    );
+    try {
+      await s3Clinet.send(
+        new PutObjectCommand({
+          Bucket: bucketName,
+          Body: fileBuffer,
+          Key: fileName,
+          ContentType: file.mimetype,
+        })
+      );
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
 
     // get user email from jwt token
     const userEmail = req.user["email"];
 
     // update avatar in db
-    const newAvatarFileName = await this.editUserService.updateAvatarByEmail(
-      userEmail,
-      {
-        avatar: fileName,
-      }
-    );
+    const user = await this.editUserService.updateAvatarByEmail(userEmail, {
+      avatar: fileName,
+      avatarPath: `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${fileName}`,
+    });
 
-    if (!newAvatarFileName) {
-      return res.status(HttpStatus.BAD_REQUEST).json({ message: "error" });
+    const { avatar, avatarPath } = user;
+
+    if (!user) {
+      throw new HttpException("error", HttpStatus.BAD_REQUEST);
     }
-    const avatarUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${newAvatarFileName}`;
 
     return res.status(HttpStatus.OK).json({
       message: "success",
-      avatarUrl,
+      avatar,
+      avatarPath,
     });
   }
 }

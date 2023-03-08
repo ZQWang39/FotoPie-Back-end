@@ -9,6 +9,7 @@ import {
   UseGuards,
   Req,
   Res,
+  HttpException,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -35,9 +36,7 @@ export class UserController {
   async findAll(@Res() res: Response) {
     const users = await this.userService.findAll();
     if (!users) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
-        message: "error",
-      });
+      throw new HttpException("Users not found", HttpStatus.NOT_FOUND);
     }
 
     const data = users.map((user) => {
@@ -55,20 +54,17 @@ export class UserController {
   async findOne(@Param("id") id: string, @Res() res: Response) {
     const user = await this.userService.findById(id);
     if (!user) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
-        message: "error",
-      });
+      throw new HttpException("User not found", HttpStatus.NOT_FOUND);
     }
 
-    const { _id, firstName, lastName, avatar } = user;
-    const avatarUrl = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${avatar}`;
+    const { _id, firstName, lastName, avatarPath } = user;
 
     res.status(HttpStatus.OK).json({
       message: "success",
       id: _id,
       firstName,
       lastName,
-      avatarUrl,
+      avatarPath,
     });
   }
 
