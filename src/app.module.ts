@@ -5,6 +5,8 @@ import { AdminModule } from "./admin/admin.module";
 import { AdminAuthModule } from "./admin-auth/admin-auth.module";
 import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
+import { EditUserModule } from "./editUser/editUser.module";
+import { ResetModule } from "./reset/reset.module";
 import { UserCollectionModule } from "./user-collection/user-collection.module";
 
 @Module({
@@ -18,6 +20,8 @@ import { UserCollectionModule } from "./user-collection/user-collection.module";
     AdminAuthModule,
     UserModule,
     AuthModule,
+    EditUserModule,
+    ResetModule,
     UserCollectionModule,
   ],
 })
