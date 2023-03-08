@@ -13,7 +13,8 @@ export class UserCollection {
       await this.userCollectionService.getCollectedPostsIdByCollectUserEmail(
         collect_user_email
       );
-    const s3Url = "https://fotopie.s3.ap-southeast-2.amazonaws.com";
+    const s3Url =
+      "https://fotopie-photo-compression.s3.ap-southeast-2.amazonaws.com";
 
     return collectedPosts.map(
       ({ _id, filename, collect_user_email, collected_user_email }) => {
