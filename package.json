@@ -27,6 +27,7 @@
     "@nestjs/mongoose": "9.2.0",
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "9.0.1",
+    "@stripe/stripe-js": "^1.48.0",
     "bcrypt": "^5.1.0",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
@@ -38,7 +39,8 @@
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "0.1.13",
     "rimraf": "3.0.2",
-    "rxjs": "7.5.5"
+    "rxjs": "7.5.5",
+    "stripe": "^11.13.0"
   },
   "devDependencies": {
     "@nestjs/cli": "9.0.0",
