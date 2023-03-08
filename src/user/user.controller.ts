@@ -34,6 +34,12 @@ export class UserController {
   @Get()
   async findAll(@Res() res: Response) {
     const users = await this.userService.findAll();
+    if (!users) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: "error",
+      });
+    }
+
     const data = users.map((user) => {
       return {
         id: user._id,
@@ -48,13 +54,21 @@ export class UserController {
   @Get(":id")
   async findOne(@Param("id") id: string, @Res() res: Response) {
     const user = await this.userService.findById(id);
-    const avatarUrl = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${user.avatar}`;
+    if (!user) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        message: "error",
+      });
+    }
+
+    const { _id, firstName, lastName, avatar } = user;
+    const avatarUrl = `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${avatar}`;
+
     res.status(HttpStatus.OK).json({
       message: "success",
-      id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      avatarUrl: avatarUrl,
+      id: _id,
+      firstName,
+      lastName,
+      avatarUrl,
     });
   }
 

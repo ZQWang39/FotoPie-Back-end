@@ -59,6 +59,8 @@ export class EditUserController {
   async me(@Req() req: Request, @Res() res: Response) {
     const userEmail = req.user["email"];
     const user = await this.editUserService.findByEmail(userEmail);
+    const { firstName, lastName, avatar, _id } = user;
+    const avatarUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${avatar}`;
 
     if (!user) {
       return res.status(HttpStatus.BAD_REQUEST).json({ message: "error" });
@@ -66,10 +68,10 @@ export class EditUserController {
 
     return res.status(HttpStatus.OK).json({
       message: "success",
-      firstName: user.firstName,
-      lastName: user.lastName,
-      avatarUrl: `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${user.avatar}`,
-      id: user._id,
+      firstName,
+      lastName,
+      avatarUrl,
+      id: _id,
     });
   }
 
@@ -129,10 +131,11 @@ export class EditUserController {
     if (!newAvatarFileName) {
       return res.status(HttpStatus.BAD_REQUEST).json({ message: "error" });
     }
+    const avatarUrl = `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${newAvatarFileName}`;
 
     return res.status(HttpStatus.OK).json({
       message: "success",
-      avatarUrl: `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${newAvatarFileName}`,
+      avatarUrl,
     });
   }
 }
