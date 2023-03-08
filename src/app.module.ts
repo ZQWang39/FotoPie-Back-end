@@ -5,6 +5,7 @@ import { AdminModule } from "./admin/admin.module";
 import { AdminAuthModule } from "./admin-auth/admin-auth.module";
 import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
+import { EditUserModule } from "./editUser/editUser.module";
 import { ResetModule } from "./reset/reset.module";
 
 @Module({
@@ -18,6 +19,7 @@ import { ResetModule } from "./reset/reset.module";
     AdminAuthModule,
     UserModule,
     AuthModule,
+    EditUserModule,
     ResetModule,
   ],
 })
