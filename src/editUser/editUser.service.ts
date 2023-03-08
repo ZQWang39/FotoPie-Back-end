@@ -23,14 +23,12 @@ export class EditUserService {
       { new: true }
     );
 
-    if (!updateUser) throw new NotFoundException();
     return { firstName: updateUser.firstName, lastName: updateUser.lastName };
   }
 
   // get user info
   async findByEmail(userEmail: string): Promise<User> {
     const user = await this.userModel.findOne({ userEmail }).exec();
-    if (!user) throw new NotFoundException();
 
     return user;
   }
@@ -46,7 +44,6 @@ export class EditUserService {
       { new: true }
     );
 
-    if (!user) throw new NotFoundException();
     return user;
   }
 }

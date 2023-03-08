@@ -1,4 +1,4 @@
-import { User } from "src/user/schemas/user.schema";
+
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Request, Response } from "express";
 import * as multer from "multer";
