@@ -1,6 +1,7 @@
 import { Controller, Get, Param } from "@nestjs/common";
 import { UserPostService } from "./user-post.service";
 
+
 @Controller("profile")
 export class UserPost {
   constructor(private userPostService: UserPostService) {}
@@ -9,7 +10,7 @@ export class UserPost {
   async getProfileData(@Param("id") id: string) {
     const userEmail = await this.userPostService.getUserEmailById(id);
     const posts = await this.userPostService.getPostsByUserEmail(userEmail);
-    const s3Url = "https://fotopie.s3.ap-southeast-2.amazonaws.com";
+    const s3Url = process.env.AWS_S3_URL;
 
     return posts.map(({ _id, filename, userEmail, price, tag }) => {
       return {
