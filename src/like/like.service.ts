@@ -20,15 +20,6 @@ export class LikeService {
         return this.likeModel.create(newLike)
       }
 
-    // async addLike(like_user_email, liked_user_email, fileName, ){ 
-    //   const addLikeData = await this.likeModel.create({
-    //     like_user_email ,
-    //     liked_user_email,
-    //     fileName,
-    //   })
-    //   return addLikeData
-    // }
-
     async deleteLike(userLikeDto: UserLikeDto){
       return await this.likeModel.deleteOne({userLikeDto})
     }
@@ -55,17 +46,4 @@ export class LikeService {
       if(!findThePost) throw new NotFoundException;
       return findThePost.userEmail;
     }
-
-    // async checkUserLogin(){
-    //   const token = localStorage.access_token;
-    //   if(!token) {
-    //     this.res("sorry, you haven't log in",{
-    //     }).then(()=>{
-    //       self.redirect("/auth/login")
-    //     })
-    //     return false
-    //   }
-    //   return token
-    // }
-
 }
