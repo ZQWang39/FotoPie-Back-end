@@ -30,7 +30,7 @@ export class LikeService {
       console.log("checkLikeData"+checkLikeData)
       if(checkLikeData)
       return this.deleteLike(userLikeDto)
-      if(!checkLikeData)
+      else
       return this.addLike(userLikeDto)
       
     }
