@@ -28,7 +28,7 @@ export class AuthController {
   @Post("refresh")
   @HttpCode(HttpStatus.OK)
   refreshAccessToken(@Req() req: Request) {
-    const user = req.body;
+    const user = req.user;
     return this.authService.refresh(user["email"], user["refreshToken"]);
   }
 
@@ -36,7 +36,7 @@ export class AuthController {
   @Post("logout")
   @HttpCode(HttpStatus.OK)
   logout(@Req() req: Request) {
-    const user = req.body;
+    const user = req.user;
     return this.authService.logout(user["email"]);
   }
 }

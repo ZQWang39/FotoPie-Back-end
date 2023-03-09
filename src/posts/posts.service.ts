@@ -50,10 +50,6 @@ export class PostsService {
       .limit(resPerPage)
       .skip(skip);
 
-    // const paginatedImageJoin = (await paginatedImage).map((item) =>
-    //   join("https://fotopie.s3.ap-southeast-2.amazonaws.com/" + item.filename)
-    // );
-
     return paginatedImage;
   }
 }

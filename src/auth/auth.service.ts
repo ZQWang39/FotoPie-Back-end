@@ -36,7 +36,7 @@ export class AuthService {
   }
 
   async logout(email: string) {
-    await this.updateRt(email, null);
+    await this.userService.updateRefreshTokenByEmail(email, "");
   }
 
   async refresh(email: string, rt: string) {
@@ -76,7 +76,7 @@ export class AuthService {
   }
 
   async updateRt(email: string, rt: string): Promise<void> {
-    await this.userService.updateByEmail(email, rt);
+    await this.userService.updateRefreshTokenByEmail(email, rt);
   }
 
   async getTokens(email: string) {

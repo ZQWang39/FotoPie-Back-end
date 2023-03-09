@@ -49,10 +49,13 @@ export class UserService {
     return user;
   }
 
-  async updateByEmail(email: string, rt: string): Promise<void> {
+  async updateRefreshTokenByEmail(
+    email: string,
+    refreshToken: string
+  ): Promise<void> {
     const user = await this.userModel.updateOne(
       { email },
-      { refreshToken: rt }
+      { refreshToken: refreshToken }
     );
     if (!user) throw new NotFoundException();
     return null;
