@@ -52,7 +52,7 @@ export class AuthService {
 
     if (user.refreshToken !== rt) throw new ForbiddenException();
 
-    const newAccessToken = this.jwtService.signAsync(
+    const newAccessToken = this.jwtService.sign(
       {
         email,
       },
