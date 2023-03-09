@@ -5,6 +5,7 @@ import { Posts } from "./schema/post.schema";
 import { User } from "../user/schemas/user.schema";
 import { Collect } from "./schema/collect.schema";
 import { Like } from "./schema/like.schema";
+import { JwtService as NestJwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class QuickViewService {
@@ -12,7 +13,8 @@ export class QuickViewService {
     @InjectModel("Posts") private readonly postsModel: Model<Posts>,
     @InjectModel("User") private readonly userModel: Model<User>,
     @InjectModel("Like") private readonly likeModel: Model<Like>,
-    @InjectModel("Collect") private readonly collectModel: Model<Collect>
+    @InjectModel("Collect") private readonly collectModel: Model<Collect>,
+    private readonly nestJwtService: NestJwtService
   ) {}
 
   async getUsername(filename: string): Promise<string> {
@@ -56,7 +58,14 @@ export class QuickViewService {
       filename: filename,
     });
 
-    const like_status = status ? true : false;
+    // const like_status = status ? true : false;
+    // return like_status;
+    let like_status = null;
+    if (!status) {
+      like_status = false;
+    } else {
+      like_status = true;
+    }
     return like_status;
   }
 
@@ -73,6 +82,12 @@ export class QuickViewService {
     return collect_status;
   }
 
+  async getLoginUserEmail(token: { token: string }): Promise<string> {
+    const decodedToken = await this.verifyAsync(token.token);
+    const login_user_email = decodedToken.email;
+    return login_user_email;
+  }
+
   async findPostByFilename(filename: string): Promise<Posts> {
     const post = await this.postsModel.findOne({ filename });
     if (!post) throw new NotFoundException();
@@ -83,5 +98,10 @@ export class QuickViewService {
     const user = await this.userModel.findOne({ email });
     if (!user) throw new NotFoundException();
     return user;
+  }
+
+  //verify the token
+  async verifyAsync(token: string): Promise<{ email: string }> {
+    return this.nestJwtService.verifyAsync<{ email: string }>(token);
   }
 }

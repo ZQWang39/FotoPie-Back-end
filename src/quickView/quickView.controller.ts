@@ -2,28 +2,31 @@ import {
   Controller,
   Get,
   Query,
-  Req,
+  Body,
   HttpCode,
   HttpStatus,
 } from "@nestjs/common";
 import { QuickViewService } from "./quickView.service";
 import * as path from "path";
-import { JwtAuthGuard } from "../auth/guards/jwt-auth.guards";
-import { UseGuards } from "@nestjs/common/decorators";
+// import { JwtAuthGuard } from "../auth/guards/jwt-auth.guards";
+// import { UseGuards } from "@nestjs/common/decorators";
 
 @Controller()
 export class QuickViewController {
   constructor(private quickViewService: QuickViewService) {}
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get("quickView")
   @HttpCode(HttpStatus.OK)
   async getPostInfo(
     @Query("filename") filename: string,
-    @Req() req: any
+    @Body("accessToken") token: { token: string }
   ): Promise<object> {
-    const login_user_email = req.user["email"];
+    // const login_user_email = req.user["email"];
 
+    const login_user_email = await this.quickViewService.getLoginUserEmail(
+      token
+    );
     const user_name = await this.quickViewService.getUsername(filename);
     const user_id = await this.quickViewService.getUserId(filename);
     const avatar = await this.quickViewService.getAvatar(filename);
