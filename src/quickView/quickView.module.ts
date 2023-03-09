@@ -6,6 +6,7 @@ import { User, UserSchema } from "../user/schemas/user.schema";
 import { Posts, PostsSchema } from "./schema/post.schema";
 import { Like, LikeSchema } from "./schema/like.schema";
 import { Collect, CollectSchema } from "./schema/collect.schema";
+import { JwtModule } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -13,6 +14,10 @@ import { Collect, CollectSchema } from "./schema/collect.schema";
     MongooseModule.forFeature([{ name: Posts.name, schema: PostsSchema }]),
     MongooseModule.forFeature([{ name: Like.name, schema: LikeSchema }]),
     MongooseModule.forFeature([{ name: Collect.name, schema: CollectSchema }]),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET_KEY,
+      signOptions: { expiresIn: "15m" },
+    }),
   ],
   controllers: [QuickViewController],
   providers: [QuickViewService],
