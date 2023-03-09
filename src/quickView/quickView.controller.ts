@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Post,
   Query,
   Body,
   HttpCode,
@@ -16,11 +17,11 @@ export class QuickViewController {
   constructor(private quickViewService: QuickViewService) {}
 
   // @UseGuards(JwtAuthGuard)
-  @Get("quickView")
+  @Post("quickView")
   @HttpCode(HttpStatus.OK)
   async getPostInfo(
     @Query("filename") filename: string,
-    @Body("accessToken") token: { token: string }
+    @Body("accessToken") token: { accessToken: string }
   ): Promise<object> {
     // const login_user_email = req.user["email"];
 

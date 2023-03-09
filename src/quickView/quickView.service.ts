@@ -60,7 +60,7 @@ export class QuickViewService {
 
     // const like_status = status ? true : false;
     // return like_status;
-    let like_status = null;
+    let like_status: boolean | null = null;
     if (!status) {
       like_status = false;
     } else {
@@ -82,8 +82,8 @@ export class QuickViewService {
     return collect_status;
   }
 
-  async getLoginUserEmail(token: { token: string }): Promise<string> {
-    const decodedToken = await this.verifyAsync(token.token);
+  async getLoginUserEmail(token: { accessToken: string }): Promise<string> {
+    const decodedToken = await this.verifyAsync(token.accessToken);
     const login_user_email = decodedToken.email;
     return login_user_email;
   }
