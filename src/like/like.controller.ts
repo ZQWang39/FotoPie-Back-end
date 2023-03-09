@@ -21,7 +21,7 @@ export class LikeController {
     like.liked_user_email = await this.likeService.findEmailByFilename(createLikeDto);
     like.filename = createLikeDto.filename;
     console.log("like1"+like);
-    this.likeService.checkLike(like);
+    await this.likeService.checkLike(like);
     return this.likeService.numberLike(createLikeDto)
 }
 }
