@@ -14,6 +14,6 @@ export class Like {
   liked_user_email: string;
 
   @Prop()
-  fileName: string;
+  filename: string;
 }
 export const LikeSchema = SchemaFactory.createForClass(Like);

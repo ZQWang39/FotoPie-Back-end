@@ -22,6 +22,13 @@ export class QuickViewService {
     return user_name;
   }
 
+  async getUserId(filename: string): Promise<string> {
+    const post = await this.findPostByFilename(filename);
+    const user = await this.findUserByEmail(post.userEmail);
+    const user_id = user._id.toString();
+    return user_id;
+  }
+
   async getAvatar(filename: string): Promise<string> {
     const post = await this.findPostByFilename(filename);
     const user = await this.findUserByEmail(post.userEmail);
@@ -38,6 +45,32 @@ export class QuickViewService {
   async getCollects(filename: string): Promise<number> {
     const collects = await this.collectModel.count({ filename });
     return collects;
+  }
+
+  async getLikeStatus(
+    filename: string,
+    login_user_email: string
+  ): Promise<boolean> {
+    const status = await this.likeModel.find({
+      like_user_email: login_user_email,
+      filename: filename,
+    });
+
+    const like_status = status ? true : false;
+    return like_status;
+  }
+
+  async getCollectStatus(
+    filename: string,
+    login_user_email: string
+  ): Promise<boolean> {
+    const status = await this.collectModel.find({
+      like_user_email: login_user_email,
+      filename: filename,
+    });
+
+    const collect_status = status ? true : false;
+    return collect_status;
   }
 
   async findPostByFilename(filename: string): Promise<Posts> {

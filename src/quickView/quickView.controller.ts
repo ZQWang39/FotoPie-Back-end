@@ -1,25 +1,69 @@
-import { Controller, Get, Query, HttpCode, HttpStatus } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Query,
+  Req,
+  HttpCode,
+  HttpStatus,
+} from "@nestjs/common";
 import { QuickViewService } from "./quickView.service";
 import * as path from "path";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guards";
+import { UseGuards } from "@nestjs/common/decorators";
 
 @Controller()
 export class QuickViewController {
   constructor(private quickViewService: QuickViewService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get("quickView")
   @HttpCode(HttpStatus.OK)
-  async getPostInfo(@Query("filename") filename: string): Promise<object> {
+  async getPostInfo(
+    @Query("filename") filename: string,
+    @Req() req: any
+  ): Promise<object> {
+    const login_user_email = req.user["email"];
+
     const user_name = await this.quickViewService.getUsername(filename);
+    const user_id = await this.quickViewService.getUserId(filename);
     const avatar = await this.quickViewService.getAvatar(filename);
-    const likes = await this.quickViewService.getLikes(filename);
-    const collects = await this.quickViewService.getCollects(filename);
+    const like_count = await this.quickViewService.getLikes(filename);
+    const collect_count = await this.quickViewService.getCollects(filename);
+    const like_status = await this.quickViewService.getLikeStatus(
+      login_user_email,
+      filename
+    );
+    const collect_status = await this.quickViewService.getCollectStatus(
+      login_user_email,
+      filename
+    );
 
     //photo and avatar path
-    const photo_url = path.join(process.env.BUCKET_PHOTO_PREFIX, filename);
+    const photo_url = path.join(
+      process.env.BUCKET_PHOTO_COMPRESSION_PREFIX,
+      filename
+    );
     const avatar_url = path.join(process.env.BUCKET_AVATAR_PREFIX, avatar);
 
-    //send response to front end: user_name, likes, collects, photo_url, avatar_url
-    console.log({ user_name, likes, collects, photo_url, avatar_url });
-    return { user_name, likes, collects, photo_url, avatar_url };
+    console.log({
+      user_name,
+      user_id,
+      like_count,
+      like_status,
+      collect_count,
+      collect_status,
+      photo_url,
+      avatar_url,
+    });
+    return {
+      user_name,
+      user_id,
+      like_count,
+      like_status,
+      collect_count,
+      collect_status,
+      photo_url,
+      avatar_url,
+    };
   }
 }
