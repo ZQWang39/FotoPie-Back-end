@@ -17,6 +17,34 @@ export class QuickViewService {
     private readonly nestJwtService: NestJwtService
   ) {}
 
+  async getPostData(
+    filename: string,
+    token: { accessToken: string }
+  ): Promise<object> {
+    const login_user_email = await this.getLoginUserEmail(token);
+    const user_name = await this.getUsername(filename);
+    const user_id = await this.getUserId(filename);
+    const avatar = await this.getAvatar(filename);
+    const like_count = await this.getLikes(filename);
+    const collect_count = await this.getCollects(filename);
+    const like_status = await this.getLikeStatus(login_user_email, filename);
+    const collect_status = await this.getCollectStatus(
+      login_user_email,
+      filename
+    );
+
+    const post_data = {
+      user_name,
+      user_id,
+      like_count,
+      like_status,
+      collect_count,
+      collect_status,
+      photo_url,
+      avatar_url,
+    };
+  }
+
   async getUsername(filename: string): Promise<string> {
     const post = await this.findPostByFilename(filename);
     const user = await this.findUserByEmail(post.userEmail);

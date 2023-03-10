@@ -24,6 +24,8 @@ export class QuickViewController {
   ): Promise<object> {
     // const login_user_email = req.user["email"];
 
+    const post_data = await this.quickViewService.getPostData(filename, token);
+
     const login_user_email = await this.quickViewService.getLoginUserEmail(
       token
     );
