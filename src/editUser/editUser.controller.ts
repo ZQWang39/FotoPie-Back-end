@@ -1,6 +1,5 @@
-
 import { FileInterceptor } from "@nestjs/platform-express";
-import { Request, Response } from "express";
+import { Request, Response, Express } from "express";
 import * as multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import * as sharp from "sharp";
