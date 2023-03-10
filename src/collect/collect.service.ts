@@ -19,7 +19,7 @@ export class CollectService {
   async findEmailByFilename(
     createCollectDto: CreateCollectDto
   ): Promise<string> {
-    const post = await this.postModel.findOne({ createCollectDto });
+    const post = await this.postModel.findOne(createCollectDto);
     if (!post) throw new NotFoundException();
     return post.userEmail;
   }
@@ -32,14 +32,16 @@ export class CollectService {
 
   //delete a collect
   async deleteCollect(userCollectDto: UserCollectDto) {
-    return await this.collectModel.deleteOne({ userCollectDto });
+    return await this.collectModel.deleteOne(userCollectDto);
   }
 
-  // async checkCollect(CollectDTO: CollectDTO) {
   async checkCollect(userCollectDto: UserCollectDto) {
     const checkCollectData = await this.collectModel.findOne(userCollectDto);
-    if (checkCollectData) return this.deleteCollect(userCollectDto);
-    if (!checkCollectData) return this.addCollect(userCollectDto);
+    if (checkCollectData) {
+      return this.deleteCollect(userCollectDto);
+    } else {
+      return this.addCollect(userCollectDto);
+    }
   }
 
   //get collect number

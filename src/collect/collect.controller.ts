@@ -21,7 +21,7 @@ export class CollectController {
     collect.collected_user_email =
       await this.collectService.findEmailByFilename(createCollectDto);
     collect.filename = createCollectDto.filename;
-    this.collectService.checkCollect(collect);
+    await this.collectService.checkCollect(collect);
     return this.collectService.collectNumber(createCollectDto);
   }
 }
