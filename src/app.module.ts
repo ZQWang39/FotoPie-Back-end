@@ -9,6 +9,7 @@ import { EditUserModule } from "./editUser/editUser.module";
 import { ResetModule } from "./reset/reset.module";
 import { LikeController } from "./like/like.controller";
 import { LikeModule } from "./like/like.module";
+import { CollectModule } from "./collect/collect.module";
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { LikeModule } from "./like/like.module";
     EditUserModule,
     ResetModule,
     LikeModule,
+    CollectModule,
   ],
 })
 export class AppModule {}
