@@ -7,6 +7,8 @@ import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
 import { EditUserModule } from "./editUser/editUser.module";
 import { ResetModule } from "./reset/reset.module";
+import { LikeController } from "./like/like.controller";
+import { LikeModule } from "./like/like.module";
 import { CollectModule } from "./collect/collect.module";
 
 @Module({
@@ -22,6 +24,7 @@ import { CollectModule } from "./collect/collect.module";
     AuthModule,
     EditUserModule,
     ResetModule,
+    LikeModule,
     CollectModule,
   ],
 })
