@@ -7,8 +7,8 @@ import {
   HttpStatus,
 } from "@nestjs/common";
 import { ResetService } from "./reset.service";
-import { ResetRequestDto } from "./dto/resetRequest.dto";
-import { ResetPasswordDto } from "./dto/ResetPassword.dto";
+import { ResetRequestDto } from "./dto/reset-request.dto";
+import { ResetPasswordDto } from "./dto/reset-password.dto";
 
 @Controller("reset")
 export class ResetController {
