@@ -51,7 +51,7 @@ export class EditUserController {
 
     return res.status(HttpStatus.OK).json({
       message: "success",
-      updatedData,
+      data: { updatedData },
     });
   }
 
@@ -69,11 +69,7 @@ export class EditUserController {
 
     return res.status(HttpStatus.OK).json({
       message: "success",
-      firstName,
-      lastName,
-      avatar,
-      avatarPath,
-      id: _id,
+      data: { firstName, lastName, avatar, avatarPath, id: _id },
     });
   }
 
@@ -152,8 +148,7 @@ export class EditUserController {
 
     return res.status(HttpStatus.OK).json({
       message: "success",
-      avatar,
-      avatarPath,
+      data: { avatar, avatarPath },
     });
   }
 }
