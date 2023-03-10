@@ -12,7 +12,4 @@ export class UserLikeDto {
     @IsNotEmpty()
     @IsString()
     readonly filename: string;
-
-
-
 }

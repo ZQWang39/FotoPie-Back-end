@@ -4,7 +4,4 @@ export class CreateLikeDto {
 
     @IsNotEmpty()
     readonly filename: string;
-
-
-
 }
