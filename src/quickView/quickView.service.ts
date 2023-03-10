@@ -6,6 +6,8 @@ import { User } from "../user/schemas/user.schema";
 import { Collect } from "./schema/collect.schema";
 import { Like } from "./schema/like.schema";
 import { JwtService as NestJwtService } from "@nestjs/jwt";
+import * as path from "path";
+import { Post_Data } from "./types/post-data.type";
 
 @Injectable()
 export class QuickViewService {
@@ -20,7 +22,7 @@ export class QuickViewService {
   async getPostData(
     filename: string,
     token: { accessToken: string }
-  ): Promise<object> {
+  ): Promise<Post_Data> {
     const login_user_email = await this.getLoginUserEmail(token);
     const user_name = await this.getUsername(filename);
     const user_id = await this.getUserId(filename);
@@ -33,6 +35,12 @@ export class QuickViewService {
       filename
     );
 
+    const photo_url = path.join(
+      process.env.BUCKET_PHOTO_COMPRESSION_PREFIX,
+      filename
+    );
+    const avatar_url = path.join(process.env.BUCKET_AVATAR_PREFIX, avatar);
+
     const post_data = {
       user_name,
       user_id,
@@ -43,6 +51,8 @@ export class QuickViewService {
       photo_url,
       avatar_url,
     };
+
+    return post_data;
   }
 
   async getUsername(filename: string): Promise<string> {
