@@ -1,21 +1,25 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
+
 
 export type NotificationDocument = HydratedDocument<Notification>;
 
-@Schema()
+
+@Schema({ timestamps: true, versionKey: false })
+
 export class Notification {
-  @Prop()
-  type: string;
 
-  @Prop()
-  fromUser: string;
+_id: mongoose.Schema.Types.ObjectId;  // The unique identifier for the notification.
 
-  @Prop()
-  toUser: string;
+@Prop()
+like_user_email: string;  
 
-  @Prop({default: Date.now() })
-  createdAt: Date;
+@Prop()
+liked_user_email: string;
+
+@Prop()
+filename: string;  // The filename of the post that was liked.
+
+
 }
-
 export const NotificationSchema = SchemaFactory.createForClass(Notification);

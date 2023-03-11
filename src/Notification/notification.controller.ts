@@ -1,40 +1,27 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { NotificationService } from './notification.service';
+import { CreateNotificationDto } from './dto/createNotification.dto';
 
-@Controller('notifications')
+@Controller('notification')
+@UseGuards(JwtAuthGuard)
 export class NotificationController {
-  constructor(private notificationService: NotificationService) {}
+  constructor(private readonly notificationService: NotificationService) {}
 
-  @Post()
-  async createNotification(
-    @Body('type') type: string,
-    @Body('fromUser') fromUser: string,
-    @Body('toUser') toUser: string,
-    @Body('createdAt') createdAt: Date,
-  ) {
-    return this.notificationService.createNotification({
-      type,
-      fromUser,
-      toUser,
-      createdAt,
-    });
-  }
 
-  @Put(':id')
-  async updateNotification(
-    @Param('id') id: string,
-    @Body() update: any,
-  ) {
-    return this.notificationService.updateNotificationById(id, update);
-  }
-
+  // "find all" is used to retrieve existing data
   @Get()
-  async getAllNotifications() {
-    return this.notificationService.getAllNotifications();
+  async findAll() {
+    return this.notificationService.findAll();
   }
 
-  @Get(':id')
-  async getNotificationById(@Param('id') id: string) {
-    return this.notificationService.getNotificationById(id);
+  // "create notification" is used to create new data in response to events or actions.
+  @Post("new")
+  async create(@Body() createNotificationDto: CreateNotificationDto) {
+    const notification = await this.notificationService.create(createNotificationDto);
+    const count = await this.notificationService.getNotificationCount();
+    return { notification, count };
   }
+
+
 }
