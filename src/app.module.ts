@@ -6,6 +6,7 @@ import { AdminAuthModule } from "./admin-auth/admin-auth.module";
 import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
 import { ResetModule } from "./reset/reset.module";
+import { NotificationModule } from "./Notification/notification.module";
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ResetModule } from "./reset/reset.module";
     UserModule,
     AuthModule,
     ResetModule,
+    NotificationModule,
   ],
 })
 export class AppModule {}
