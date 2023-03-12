@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Posts } from "./schema/post.schema";
@@ -65,9 +61,6 @@ export class QuickViewService {
 
       // decode token
       const decodedToken = await this.verifyToken(token);
-
-      // if the user has logged in
-
       const login_user_email = decodedToken.email;
 
       // check if user liked this post before
@@ -112,36 +105,41 @@ export class QuickViewService {
   }
 
   async getLikeStatus(
-    filename: string,
-    login_user_email: string
+    login_user_email: string,
+    filename: string
   ): Promise<boolean> {
-    const status = await this.likeModel.find({
+    const like = await this.likeModel.findOne({
       like_user_email: login_user_email,
       filename: filename,
     });
 
-    // const like_status = status ? true : false;
-    // return like_status;
     let like_status: boolean | null = null;
-    if (!status) {
+    if (like === null) {
       like_status = false;
+      return like_status;
     } else {
       like_status = true;
+      return like_status;
     }
-    return like_status;
   }
 
   async getCollectStatus(
-    filename: string,
-    login_user_email: string
+    login_user_email: string,
+    filename: string
   ): Promise<boolean> {
-    const status = await this.collectModel.find({
-      like_user_email: login_user_email,
+    const collect = await this.collectModel.findOne({
+      collect_user_email: login_user_email,
       filename: filename,
     });
 
-    const collect_status = status ? true : false;
-    return collect_status;
+    let collect_status: boolean | null = null;
+    if (collect === null) {
+      collect_status = false;
+      return collect_status;
+    } else {
+      collect_status = true;
+      return collect_status;
+    }
   }
 
   async findPostByFilename(filename: string): Promise<Posts> {
