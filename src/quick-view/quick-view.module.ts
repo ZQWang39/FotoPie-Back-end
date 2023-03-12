@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { QuickViewService } from "./quickView.service";
-import { QuickViewController } from "./quickView.controller";
+import { QuickViewService } from "./quick-view.service";
+import { QuickViewController } from "./quick-view.controller";
 import { MongooseModule } from "@nestjs/mongoose";
 import { User, UserSchema } from "../user/schemas/user.schema";
 import { Posts, PostsSchema } from "./schema/post.schema";
@@ -15,7 +15,7 @@ import { JwtModule } from "@nestjs/jwt";
     MongooseModule.forFeature([{ name: Like.name, schema: LikeSchema }]),
     MongooseModule.forFeature([{ name: Collect.name, schema: CollectSchema }]),
     JwtModule.register({
-      secret: process.env.JWT_SECRET_KEY,
+      secret: process.env.JWT_ACTIVIATE_SECRET_KEY,
       signOptions: { expiresIn: "15m" },
     }),
   ],

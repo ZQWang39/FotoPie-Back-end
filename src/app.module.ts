@@ -6,7 +6,7 @@ import { AdminAuthModule } from "./admin-auth/admin-auth.module";
 import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
 import { ResetModule } from "./reset/reset.module";
-import { QuickViewModule } from "./quickView/quickView.module";
+import { QuickViewModule } from "./quick-view/quick-view.module";
 
 @Module({
   imports: [
