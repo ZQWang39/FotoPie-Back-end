@@ -50,7 +50,6 @@ export class EditUserController {
     }
 
     return res.status(HttpStatus.OK).json({
-      message: "success",
       updatedData,
     });
   }
@@ -68,7 +67,6 @@ export class EditUserController {
     const { firstName, lastName, avatar, avatarPath, _id } = user;
 
     return res.status(HttpStatus.OK).json({
-      message: "success",
       firstName,
       lastName,
       avatar,
@@ -151,7 +149,6 @@ export class EditUserController {
     }
 
     return res.status(HttpStatus.OK).json({
-      message: "success",
       avatar,
       avatarPath,
     });
