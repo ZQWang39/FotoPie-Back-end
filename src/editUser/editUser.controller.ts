@@ -9,6 +9,8 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  MaxFileSizeValidator,
+  ParseFilePipe,
   Patch,
   Req,
   Res,
@@ -97,7 +99,12 @@ export class EditUserController {
     })
   )
   async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 })], // 10MB
+      })
+    )
+    file: Express.Multer.File,
     @Req() req: Request,
     @Res() res: Response
   ) {
