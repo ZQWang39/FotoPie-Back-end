@@ -26,7 +26,9 @@ export class UserService {
   }
 
   findAll() {
-    return `This action returns all user`;
+    const users = this.userModel.find().exec();
+    if (!users) throw new NotFoundException();
+    return users;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
@@ -38,13 +40,13 @@ export class UserService {
   }
 
   async findByEmail(email: string): Promise<User> {
-    const user = await this.userModel.findOne({ email });
+    const user = await this.userModel.findOne({ email }).exec();
     if (!user) throw new NotFoundException();
     return user;
   }
 
-  async findById(id: mongoose.Schema.Types.ObjectId): Promise<User> {
-    const user = await this.userModel.findOne({ id });
+  async findById(_id: string): Promise<User> {
+    const user = await this.userModel.findOne({ _id }).exec();
     if (!user) throw new NotFoundException();
     return user;
   }
@@ -114,13 +116,13 @@ export class UserService {
       throw new ConflictException("User already exist");
     } else {
       try {
-        const createduser = await this.userModel.create({
+        const createduser = new this.userModel({
           firstName,
           lastName,
           password: hash,
           email,
         });
-        return { createduser };
+        return await createduser.save();
       } catch (error) {
         throw new UnauthorizedException("Invalid Token");
       }
