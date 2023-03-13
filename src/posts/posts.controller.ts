@@ -97,7 +97,6 @@ export class PostsController {
    const posts= new Posts()
    posts.userEmail = req.user["email"];
    posts.filename = PostDTO.filename;
-   posts.path = PostDTO.path;
    posts.tag = PostDTO.tag;
    posts.price = PostDTO.price;
    posts.description = PostDTO.description;
