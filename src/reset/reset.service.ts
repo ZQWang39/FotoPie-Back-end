@@ -8,8 +8,8 @@ import { User } from "./schemas/user.schema";
 import { hash as bcryptHash } from "bcryptjs";
 import { JwtService as NestJwtService } from "@nestjs/jwt";
 import { InjectModel } from "@nestjs/mongoose";
-import { ResetPasswordDto } from "./dto/ResetPassword.dto";
-import { ResetRequestDto } from "./dto/resetRequest.dto";
+import { ResetPasswordDto } from "./dto/reset-password.dto";
+import { ResetRequestDto } from "./dto/reset-request.dto";
 import * as mailgun from "mailgun-js";
 
 @Injectable({})

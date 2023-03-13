@@ -23,5 +23,6 @@ npm-debug.log
 # env
 .env
 
-# misc
 .DS_Store
+.vscode
+
