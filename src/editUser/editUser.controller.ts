@@ -50,8 +50,7 @@ export class EditUserController {
     }
 
     return res.status(HttpStatus.OK).json({
-      message: "success",
-      data: { updatedData },
+      updatedData,
     });
   }
 
@@ -68,8 +67,11 @@ export class EditUserController {
     const { firstName, lastName, avatar, avatarPath, _id } = user;
 
     return res.status(HttpStatus.OK).json({
-      message: "success",
-      data: { firstName, lastName, avatar, avatarPath, id: _id },
+      firstName,
+      lastName,
+      avatar,
+      avatarPath,
+      id: _id,
     });
   }
 
@@ -147,8 +149,8 @@ export class EditUserController {
     }
 
     return res.status(HttpStatus.OK).json({
-      message: "success",
-      data: { avatar, avatarPath },
+      avatar,
+      avatarPath,
     });
   }
 }
