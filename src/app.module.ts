@@ -26,6 +26,9 @@ import { UserPostModule } from "./user-post/user-post.module";
     EditUserModule,
     ResetModule,
     UserPostModule,
+    QuickViewModule,
+    LikeModule,
+    CollectModule,
   ],
 })
 export class AppModule {}
