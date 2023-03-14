@@ -15,7 +15,7 @@ export class UserPostService {
     const user = await this.userModel.findOne({ _id }).exec();
     if (!user) {
       throw new NotFoundException();
-    }
+    }    
     return user.email;
   }
   async getPostsByUserEmail(userEmail: string): Promise<Posts[]> {
