@@ -10,6 +10,7 @@ import { ResetModule } from "./reset/reset.module";
 import { QuickViewModule } from "./quick-view/quick-view.module";
 import { LikeModule } from "./like/like.module";
 import { CollectModule } from "./collect/collect.module";
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CollectModule } from "./collect/collect.module";
     QuickViewModule,
     LikeModule,
     CollectModule,
+    CommentModule,
   ],
 })
 export class AppModule {}
