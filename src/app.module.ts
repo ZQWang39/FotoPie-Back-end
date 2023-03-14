@@ -7,7 +7,9 @@ import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
 import { EditUserModule } from "./editUser/editUser.module";
 import { ResetModule } from "./reset/reset.module";
-import { UserPostModule } from "./user-post/user-post.module";
+import { QuickViewModule } from "./quick-view/quick-view.module";
+import { LikeModule } from "./like/like.module";
+import { CollectModule } from "./collect/collect.module";
 
 @Module({
   imports: [
@@ -22,7 +24,6 @@ import { UserPostModule } from "./user-post/user-post.module";
     AuthModule,
     EditUserModule,
     ResetModule,
-    UserPostModule
   ],
 })
 export class AppModule {}

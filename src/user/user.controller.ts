@@ -61,10 +61,7 @@ export class UserController {
 
     res.status(HttpStatus.OK).json({
       message: "success",
-      id: _id,
-      firstName,
-      lastName,
-      avatarPath,
+      data: { id: _id, firstName, lastName, avatarPath },
     });
   }
 

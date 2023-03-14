@@ -1,15 +1,17 @@
-
 import { FileInterceptor } from "@nestjs/platform-express";
-import { Request, Response } from "express";
+import { Request, Response, Express } from "express";
 import * as multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import * as sharp from "sharp";
 import {
   Body,
   Controller,
+  FileTypeValidator,
   Get,
   HttpException,
   HttpStatus,
+  MaxFileSizeValidator,
+  ParseFilePipe,
   Patch,
   Req,
   Res,
@@ -51,7 +53,6 @@ export class EditUserController {
     }
 
     return res.status(HttpStatus.OK).json({
-      message: "success",
       updatedData,
     });
   }
@@ -69,7 +70,6 @@ export class EditUserController {
     const { firstName, lastName, avatar, avatarPath, _id } = user;
 
     return res.status(HttpStatus.OK).json({
-      message: "success",
       firstName,
       lastName,
       avatar,
@@ -84,23 +84,18 @@ export class EditUserController {
   @UseInterceptors(
     FileInterceptor("file", {
       storage: multer.memoryStorage(),
-      fileFilter: (req, file, cb) => {
-        if (file.mimetype.startsWith("image")) {
-          cb(null, true);
-        } else {
-          cb(
-            new HttpException(
-              "Not an image! Please upload only images.",
-              HttpStatus.BAD_REQUEST
-            ),
-            false
-          );
-        }
-      },
     })
   )
   async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 }), // 10MB
+          new FileTypeValidator({ fileType: "image" }),
+        ], // 10MB
+      })
+    )
+    file: Express.Multer.File,
     @Req() req: Request,
     @Res() res: Response
   ) {
@@ -152,7 +147,6 @@ export class EditUserController {
     }
 
     return res.status(HttpStatus.OK).json({
-      message: "success",
       avatar,
       avatarPath,
     });
