@@ -6,6 +6,7 @@ import * as sharp from "sharp";
 import {
   Body,
   Controller,
+  FileTypeValidator,
   Get,
   HttpException,
   HttpStatus,
@@ -83,25 +84,15 @@ export class EditUserController {
   @UseInterceptors(
     FileInterceptor("file", {
       storage: multer.memoryStorage(),
-      fileFilter: (req, file, cb) => {
-        if (file.mimetype.startsWith("image")) {
-          cb(null, true);
-        } else {
-          cb(
-            new HttpException(
-              "Not an image! Please upload only images.",
-              HttpStatus.BAD_REQUEST
-            ),
-            false
-          );
-        }
-      },
     })
   )
   async uploadFile(
     @UploadedFile(
       new ParseFilePipe({
-        validators: [new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 })], // 10MB
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 }), // 10MB
+          new FileTypeValidator({ fileType: "image" }),
+        ], // 10MB
       })
     )
     file: Express.Multer.File,
