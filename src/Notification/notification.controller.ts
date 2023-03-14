@@ -10,13 +10,13 @@ export class NotificationController {
 
 
   // "find all" is used to retrieve existing data
-  @Get()
-  async findAll() {
-    return this.notificationService.findAll();
-  }
+  // @Get()
+  // async findAll() {
+  //   return this.notificationService.findAll();
+  // }
 
   // "create notification" is used to create new data in response to events or actions.
-  @Post("new")
+  @Post("newNotification")
   async create(@Body() createNotificationDto: CreateNotificationDto) {
     const notification = await this.notificationService.create(createNotificationDto);
     const count = await this.notificationService.getNotificationCount();

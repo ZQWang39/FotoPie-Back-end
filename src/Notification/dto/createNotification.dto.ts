@@ -3,11 +3,11 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class CreateNotificationDto {
   @IsNotEmpty()
   @IsString()
-  like_user_email: string;
+  fromUser: string;
 
   @IsNotEmpty()
   @IsString()
-  liked_user_email: string;
+  toUser: string;
 
   @IsNotEmpty()
   @IsString()

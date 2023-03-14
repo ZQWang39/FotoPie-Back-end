@@ -11,9 +11,9 @@ export class NotificationService {
     private notificationModel: Model<NotificationDocument>,
   ) {}
 
-  async findAll(): Promise<Notification[]> {
-    return this.notificationModel.find().exec();
-  }
+  // async findAll(): Promise<Notification[]> {
+  //   return this.notificationModel.find().exec();
+  // }
 
   async create(createNotificationDto: CreateNotificationDto): Promise<Notification> {
     const newNotification = new this.notificationModel(createNotificationDto);
