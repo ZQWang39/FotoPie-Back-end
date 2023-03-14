@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Collect } from "./schema/collect.schema";
 import { User } from "src/user/schemas/user.schema";
+import { Query } from "express-serve-static-core";
 
 @Injectable()
 export class UserCollectionService {
@@ -19,8 +20,15 @@ export class UserCollectionService {
     return user.email;
   }
   async getCollectedPostsIdByCollectUserEmail(
-    collect_user_email: string
+    collect_user_email: string,
+    query: Query
   ): Promise<Collect[]> {
-    return this.collectModel.find({ collect_user_email });
+    const resPerPage = Number(query.limit);
+    const currentPage = Number(query.page) || 1;
+    const skip = resPerPage * (currentPage - 1);
+    return this.collectModel
+      .find({ collect_user_email })
+      .limit(resPerPage)
+      .skip(skip);
   }
 }
