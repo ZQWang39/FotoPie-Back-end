@@ -3,12 +3,14 @@ import {
   NotFoundException,
   UnauthorizedException,
   ConflictException,
+  HttpException,
+  HttpStatus,
 } from "@nestjs/common";
 import { Model } from "mongoose";
 import { Subscription } from "./schemas/subscription.schema";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateSubscriptionDto } from "./dto/CreateSubscription.dto";
-
+import { Stripe } from "stripe";
 
 @Injectable({})
 export class SubscriptionService {
