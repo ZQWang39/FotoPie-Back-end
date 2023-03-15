@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
 import { User } from "src/user/schemas/user.schema";
+import { CommentDto } from "../Dto/comment.dto";
 export type CommentDocument = HydratedDocument<Comment>;
 
 @Schema({timestamps: true, versionKey: false})
@@ -14,10 +15,10 @@ export class Comment {
     filename:string;
 
     @Prop({required:true})
-    commentUser:User;
+    commentUser:string;
 
-    @Prop()
-    replyUser:User;
+    // @Prop()
+    // replyUser:string;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
