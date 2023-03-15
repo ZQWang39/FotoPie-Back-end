@@ -23,6 +23,15 @@ export class User {
 
   @Prop({ default: "user", type: String, enum: ["user", "admin"] })
   role: string;
+
+  @Prop({ default: "default_avatar.png", type: String })
+  avatar: string;
+
+  @Prop({
+    default: `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/default_avatar.png`,
+    type: String,
+  })
+  avatarPath: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -8,6 +8,12 @@ import { AuthModule } from "./auth/auth.module";
 import { PostsModule } from "./posts/posts.module";
 import { config } from "./config/config";
 import { mongoConfig } from "./config/mongoConfig";
+import { EditUserModule } from "./editUser/editUser.module";
+import { ResetModule } from "./reset/reset.module";
+import { QuickViewModule } from "./quick-view/quick-view.module";
+import { LikeModule } from "./like/like.module";
+import { CollectModule } from "./collect/collect.module";
+import { UserPostModule } from "./user-post/user-post.module";
 
 @Module({
   imports: [
@@ -24,6 +30,12 @@ import { mongoConfig } from "./config/mongoConfig";
     UserModule,
     AuthModule,
     PostsModule,
+    EditUserModule,
+    ResetModule,
+    UserPostModule,
+    QuickViewModule,
+    LikeModule,
+    CollectModule,
   ],
 })
 export class AppModule {}
