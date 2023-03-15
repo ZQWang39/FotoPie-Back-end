@@ -1,27 +1,57 @@
-### Mongoose sample
+### FotoPie
 
-### Installation
+#### Project Introduction
 
+The goal of this project is to create a full-stack web-based app where users can post, view, download, purchase, and reply to discussions on various photography works. The app will feature a user-friendly interface, allowing users to easily navigate and interact with different photography posts.
 
-`npm install`
+#### Stack
 
-### Running
+- React and Next.js for the frontend
+- Node.js and Nest.js for the backend
+- TypeScript for both frontend and backend
+- MongoDB for the database
 
-This example requires docker or a local mongodb installation.  If using a local mongodb, see `app.module.ts` for connection options, and make sure there are matching options for the mongodb installation and the source code.
+#### Front-end Repo
 
-#### Docker
+https://github.com/Go-Husky-FotoPie/FotoPie-Front-end.git
 
-There is a `docker-compose.yml` file for starting Docker.
+#### Getting Started
 
-`docker-compose up`
+1. Clone the repository to your local machine:
+   git clone -b dev https://github.com/Go-Husky-FotoPie/FotoPie-Back-end.git
 
-After running the sample, you can stop the Docker container with
+2. Install dependencies:
+   cd FotoPie-Back-end,
+   npm install
 
-`docker-compose down`
+3. Add .env file
 
-### Run the sample
+4. Start the Server:
+   npm run start:dev
 
-Then, run Nest as usual:
+#### Authors: Team Go Husky
 
-`npm run start`
+Developers:
 
+- Jeremy(Zeyu) Liu
+- Yi(Cindy) Zhang
+- Mingyu(Harry) Chen
+- Yuchen(Evan) Ma
+- Yao Wu
+- Taiyi(Andy) Su
+- Kunhong(Edward) Chen
+- Olivia Cai
+- Adam Yang
+
+BA:
+
+- Han Chen
+
+DevOps:
+
+- Jane
+- Hang Zhao
+- Shelton Chin
+- Ziqi Wang
+- Shuting Xu
+- Charles Cheng
