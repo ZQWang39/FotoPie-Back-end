@@ -99,7 +99,7 @@ export class PostsController {
     return posts;
   }
   @Get()
-  getAllPosts(@Query() query: ExpressQuery): Promise<unknown> {
+  getAllPosts(@Query() query: ExpressQuery): Promise<PostDTO[]> {
     return this.PostsService.findAllPosts(query);
   }
 }
