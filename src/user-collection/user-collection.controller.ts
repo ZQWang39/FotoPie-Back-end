@@ -18,7 +18,7 @@ export class UserCollection {
       await this.userCollectionService.getCollectedPostsIdByCollectUserEmail(
         collect_user_email,query
       );
-    const s3Url = process.env.AWS_S3_URL;
+    const s3Url = process.env.BUCKET_PHOTO_COMPRESSION_PREFIX;
 
     return collectedPosts.map(
       ({ _id, filename, collect_user_email, collected_user_email }) => {
