@@ -33,6 +33,7 @@ import { UserCollectionModule } from "./user-collection/user-collection.module";
     PostsModule,
     EditUserModule,
     ResetModule,
+    UserCollectionModule
   ],
 })
 export class AppModule {}
