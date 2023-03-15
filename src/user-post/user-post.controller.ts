@@ -1,6 +1,9 @@
-import { Controller, Get, HttpException, HttpStatus, Param, Res } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Param,
+} from "@nestjs/common";
 import { UserPostService } from "./user-post.service";
-
 
 @Controller("profile")
 export class UserPost {
