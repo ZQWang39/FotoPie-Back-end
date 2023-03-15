@@ -33,7 +33,7 @@ export class SubscriptionService {
         return newSubscription.save();
       } catch (error) {
         throw new UnauthorizedException(
-          "Creating New Subscripton in DB Failed"
+          "Creating New Subscription in DB Failed"
         );
       }
     }

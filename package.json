@@ -27,7 +27,6 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/mongoose": "9.2.0",
     "@nestjs/passport": "^9.0.3",
-    "@nestjs/platform-express": "^9.0.1",
     "@nestjs/serve-static": "^3.0.1",
     "@stripe/stripe-js": "^1.48.0",
     "@types/stripe": "^8.0.417",
