@@ -28,15 +28,10 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/mongoose": "9.2.0",
     "@nestjs/passport": "^9.0.3",
-<<<<<<< HEAD
-||||||| 98505f7
-    "@nestjs/platform-express": "^9.0.1",
-=======
     "@nestjs/platform-express": "^9.3.9",
     "aws-sdk": "^2.1326.0",
     "@types/mailgun-js": "^0.22.13",
     "aws-sdk": "^2.1325.0",
->>>>>>> dev
     "@nestjs/serve-static": "^3.0.1",
     "@stripe/stripe-js": "^1.48.0",
     "@types/stripe": "^8.0.417",
@@ -58,16 +53,10 @@
     "rimraf": "3.0.2",
     "rxjs": "7.5.5",
     "sharp": "^0.31.3",
-<<<<<<< HEAD
     "stripe": "^11.14.0",
-    "uuid": "^9.0.0"
-||||||| 98505f7
-    "uuid": "^9.0.0"
-=======
     "uuid": "^9.0.0",
     "sharp": "^0.31.3",
     "uuidv4": "^6.2.13"
->>>>>>> dev
   },
   "devDependencies": {
     "@nestjs/cli": "9.0.0",
