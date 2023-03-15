@@ -64,8 +64,10 @@ export class UserController {
     const { _id, firstName, lastName, avatarPath } = user;
 
     res.status(HttpStatus.OK).json({
-      message: "success",
-      data: { id: _id, firstName, lastName, avatarPath },
+      id: _id,
+      firstName,
+      lastName,
+      avatarPath,
     });
   }
 
