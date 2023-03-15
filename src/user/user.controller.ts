@@ -22,6 +22,10 @@ import { HttpStatus } from "@nestjs/common/enums";
 import { JwtService } from "@nestjs/jwt";
 import { ConfirmEmailDto } from "./dto/confirmEmail.dto";
 import { ObjectId } from "mongoose";
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UseInterceptors, UploadedFile } from '@nestjs/common'
+import { diskStorage } from 'multer';
+import { Observable } from "rxjs";
 
 @Controller("user")
 export class UserController {

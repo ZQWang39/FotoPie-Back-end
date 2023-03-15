@@ -28,15 +28,19 @@ export class AuthController {
   @Post("refresh")
   @HttpCode(HttpStatus.OK)
   refreshAccessToken(@Req() req: Request) {
-    const user = req.body;
-    return this.authService.refresh(user["email"], user["refreshToken"]);
+    const user = req.user;
+    const localRfreshToken = req.body;
+    return this.authService.refresh(
+      user["email"],
+      localRfreshToken["refreshToken"]
+    );
   }
 
   @UseGuards(JwtAuthGuard)
   @Post("logout")
   @HttpCode(HttpStatus.OK)
   logout(@Req() req: Request) {
-    const user = req.body;
+    const user = req.user;
     return this.authService.logout(user["email"]);
   }
 }
