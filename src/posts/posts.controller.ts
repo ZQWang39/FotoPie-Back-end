@@ -16,75 +16,71 @@ import {
 } from "@nestjs/common";
 import { Req, Res } from "@nestjs/common";
 import { PostDTO } from "./dto/post.dto";
-import { Observable } from "rxjs";
-
-import Image from "./interface/Image.interface";
-
+import * as multer from "multer";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
-
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UseInterceptors, UploadedFile } from "@nestjs/common";
-import { diskStorage } from "multer";
 import { UseGuards } from "@nestjs/common/decorators";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guards";
-
-import * as path from "path";
-import { Request } from "express";
+import * as sharp from "sharp";
 import { Query as ExpressQuery } from "express-serve-static-core";
-import { join } from "path";
+
 // var path = require('path')
 
 @Controller("posts")
 export class PostsController {
   constructor(private readonly PostsService: PostsService) {}
 
-  @Post("upload")
-  @UseInterceptors(
-    FileInterceptor("file", {
-      // limits: {
-      // fileSize: +process.env.MAX_FILE_SIZE,
+  @Patch("upload")
+  @UseInterceptors(FileInterceptor("file", { storage: multer.memoryStorage() }))
+  async upload(@UploadedFile() file, @Res() res, @Req() req) {
+    const filename = `${uuidv4()}.jpeg`;
 
-      // },
-      fileFilter: (req: any, file: any, cb: any) => {
-        if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
-          // Allow storage of file
-          cb(null, true);
-        } else {
-          // Reject file
-          cb(
-            new HttpException(
-              `Unsupported file type ${path.extname(file.originalname)}`,
-              HttpStatus.BAD_REQUEST
-            ),
-            false
-          );
-        }
+    const fileBuffer = await sharp(file.buffer)
+      .toFormat("jpeg")
+      .jpeg({ quality: 50 })
+      .toBuffer();
+
+    // S3 upload
+    const bucketNameOrginial = process.env.AWS_BUCKET_NAME_PHOTO;
+    const bucketNameCompression = process.env.AWS_BUCKET_NAME_PHOTO_compression;
+    const bucketRegion = process.env.AWS_BUCKET_REGION_PHOTO;
+    const accessKey = process.env.AWS_PHOTO_ACCESS_KEY as string;
+    const secretAccessKey = process.env.AWS_PHOTO_SECRECT_KEY as string;
+
+    const s3Clinet = new S3Client({
+      region: bucketRegion,
+      credentials: {
+        accessKeyId: accessKey,
+        secretAccessKey: secretAccessKey,
       },
-      storage: diskStorage({
-        destination: "./files",
-        filename: (req, file, callback) => {
-          const uniqueSufix = uuidv4();
-          // const uniqueSufix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const ext = path.extname(file.originalname);
-          const filename = `${uniqueSufix}${ext}`;
-          callback(null, `${filename}`);
-        },
-      }),
-    })
-  )
-  async upload(@UploadedFile() file, @Res() res): Promise<Image> {
-    console.log(file);
+    });
+
+    await s3Clinet.send(
+      new PutObjectCommand({
+        Bucket: bucketNameOrginial,
+        Body: file.buffer,
+        Key: filename,
+        ContentType: file.mimetype,
+      })
+    );
+
+    await s3Clinet.send(
+      new PutObjectCommand({
+        Bucket: bucketNameCompression,
+        Body: fileBuffer,
+        Key: filename,
+        ContentType: "image/jpeg",
+      })
+    );
 
     return res.status(HttpStatus.OK).json({
       message: "Confirmed ",
-      filename: file.filename,
-      path: file.path,
+      filename: filename,
+      original_path: `https://${bucketNameOrginial}.s3.${bucketRegion}.amazonaws.com/${filename}`,
+      compression_path: `https://${bucketNameCompression}.s3.${bucketRegion}.amazonaws.com/${filename}`,
     });
-  }
-
-  @Get(":imagename")
-  findImage(@Param("imagename") imagename, @Res() res): Observable<Image> {
-    return res.sendFile(path.join(process.cwd(), "./files/" + imagename));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -93,15 +89,15 @@ export class PostsController {
     const posts = new Posts();
     posts.userEmail = req.user["email"];
     posts.filename = PostDTO.filename;
-    posts.path = PostDTO.path;
     posts.tag = PostDTO.tag;
     posts.price = PostDTO.price;
+    posts.description = PostDTO.description;
+    posts.compressFilePath = PostDTO.compressFilePath;
+    posts.orginalFilePath = PostDTO.orginalFilePath;
 
     await this.PostsService.create(posts);
-
     return posts;
   }
-
   @Get()
   getAllPosts(@Query() query: ExpressQuery): Promise<unknown> {
     return this.PostsService.findAllPosts(query);

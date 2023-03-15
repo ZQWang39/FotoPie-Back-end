@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { HydratedDocument } from "mongoose";
+import mongoose, { HydratedDocument, NumberExpression } from "mongoose";
 import { User,UserSchema } from "../../user/schemas/user.schema"
 
 
@@ -20,14 +20,20 @@ path: string;
 tag: string;
     
 @Prop()
-price: GLfloat
-    
+price: number;
+
+@Prop()
+description: string;
+
+@Prop()
+orginalFilePath: string;
+
+@Prop()
+compressFilePath: string;
 
 @Prop()
 userEmail: string;
 
-// @Prop({ type:UserSchema,  ref: "User" })
-// user: string;
   
 }
 

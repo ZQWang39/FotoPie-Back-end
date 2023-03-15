@@ -1,15 +1,21 @@
-import {   IsNotEmpty } from "class-validator";
+import {   IsNotEmpty , IsString} from "class-validator";
 import { Decimal128 } from "mongoose";
 import { User } from "../../user/schemas/user.schema"
 
 export class PostDTO {
-    @ IsNotEmpty()
+    @IsNotEmpty()
     filename: string;
+  
    
-    email: string;
-    path: string;
+    @IsString()
     tag: string;
-    price:GLfloat
+   
+    price: number;
+    description: string;
+    @IsNotEmpty()
+    orginalFilePath: string;
+    @IsNotEmpty()
+    compressFilePath: string;
 
 
   
