@@ -28,7 +28,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/mongoose": "9.2.0",
     "@nestjs/passport": "^9.0.3",
-    "@nestjs/platform-express": "^^9.3.9",
+    "@nestjs/platform-express": "^9.3.9",
     "aws-sdk": "^2.1326.0",
     "@types/mailgun-js": "^0.22.13",
     "aws-sdk": "^2.1325.0",
