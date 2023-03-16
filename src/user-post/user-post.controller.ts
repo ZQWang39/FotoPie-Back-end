@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Controller, Delete, Get, Param } from "@nestjs/common";
 import { UserPostService } from "./user-post.service";
 
 @Controller("profile")
@@ -33,5 +33,20 @@ export class UserPost {
         };
       }
     );
+  }
+
+  @Delete(":filename")
+  async deletePost(@Param("filename") filename: string) {
+    try {
+      const deleted = await this.userPostService.deletePostByFilename(filename);
+
+      if (!deleted) {
+        return { message: "Post not found" };
+      }
+
+      return { message: "Post deleted successfully" };
+    } catch (error) {
+      return { error: error.message };
+    }
   }
 }

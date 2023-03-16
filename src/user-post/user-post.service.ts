@@ -15,10 +15,23 @@ export class UserPostService {
     const user = await this.userModel.findOne({ _id }).exec();
     if (!user) {
       throw new NotFoundException();
-    }    
+    }
     return user.email;
   }
   async getPostsByUserEmail(userEmail: string): Promise<Posts[]> {
     return this.postModel.find({ userEmail });
+  }
+
+  async deletePostByFilename(filename: string): Promise<boolean> {
+    try {
+      const post = await this.postModel.findOne({ filename });
+      if (!post) {
+        throw new Error("Post not found");
+      }
+      await post.deleteOne();
+      return true;
+    } catch (error) {
+      throw new Error(`Error deleting post: ${error}`);
+    }
   }
 }
