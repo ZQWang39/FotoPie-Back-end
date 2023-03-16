@@ -4,7 +4,6 @@ import { NotificationController } from "./notification.controller";
 import { MongooseModule } from "@nestjs/mongoose";
 import { UserModule } from "src/user/user.module";
 import { Like, LikeSchema } from '../like/schemas/like.schema'
-import { LikeService } from 'src/like/like.service';
 import { LikeModule } from "src/like/like.module";
 import { Posts, PostSchema } from '../like/schemas/post.schema';
 

@@ -1,12 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Notification, NotificationDocument } from './schemas/notification.schema';
-import { CreateNotificationDto } from './dto/createNotification.dto';
 import { User, UserDocument } from "../user/schemas/user.schema";
 import { Posts, PostDocument } from 'src/like/schemas/post.schema';
 import { LikeService } from 'src/like/like.service';
-import { UserLikeDto } from 'src/like/Dto/UserLike.dto';
 import { Like, LikeDocument } from '../like/schemas/like.schema';
 
 
@@ -57,53 +54,11 @@ export class NotificationService {
   }
 
 
-
-  // async getNewLikes(since: Date): Promise<Like[]> {
-  //   return this.LikeModel
-  //     .find({ createdAt: { $gte: since } })
-  //     .sort({ createdAt: -1 })
-  //     .exec();
-  // }
-
-  // async getNotifications(): Promise<{ userAvatar: string; userFirstName: string; postLiked: string }[]> {
-  //   const notifications = await this.notificationModel.find().exec();
-  //   const users = await this.userModel.find().exec();
-
-  //   const userIdToUserMap = users.reduce<{ [userId: string]: UserDocument }>((acc, user) => {
-  //     acc[user._id.toString()] = user;
-  //     return acc;
-  //   }, {});
-
-
-  //   return notifications.map(({ fromUser, filename }) => ({
-  //     userAvatar: userIdToUserMap[fromUser.toString()].avatar,
-  //     userFirstName: userIdToUserMap[fromUser.toString()].firstName,
-  //     postLiked: filename,
-  //   }));
-  // }
-
-  // async create(createNotificationDto: CreateNotificationDto): Promise<Notification> {
-  //   const newNotification = new this.notificationModel(createNotificationDto);
-  //   return this.notificationModel.create(newNotification);
-  // }
-
   // async getNotificationCount(): Promise<number> {
   //   const count = await this.notificationModel.countDocuments();
   //   return count;
   // }
 
-  // async createLikeNotification(userLikeDto: UserLikeDto): Promise<Notification> {
-  //   const email = await this.likeService.findEmailByFilename(userLikeDto);
-  //   const user = await this.userModel.findOne({ email }).exec();
 
-  //   const createNotificationDto: CreateNotificationDto = {
-  //     fromUser: user._id,
-  //     toUser: user._id,
-  //     filename: userLikeDto.filename,
-  //   };
-
-  //   const newNotification = new this.notificationModel(createNotificationDto);
-  //   return this.notificationModel.create(newNotification);
-  // }
 
 }

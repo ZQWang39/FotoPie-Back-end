@@ -1,10 +1,6 @@
 import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { NotificationService } from './notification.service';
-import { CreateNotificationDto } from './dto/createNotification.dto';
-import { Like, LikeDocument } from '../like/schemas/like.schema';
-import { User, UserDocument } from "../user/schemas/user.schema";
-import { ListBucketIntelligentTieringConfigurationsCommand } from '@aws-sdk/client-s3';
 
 @Controller('notification')
 
