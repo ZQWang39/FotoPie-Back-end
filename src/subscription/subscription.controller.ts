@@ -16,6 +16,7 @@ import { CreateSubscriptionDto } from "./dto/CreateSubscription.dto";
 import { Stripe } from "stripe";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guards";
 import { UseGuards } from "@nestjs/common/decorators";
+import * as fs from "fs";
 
 // const stripe = new Stripe("process.env.STRIPE_TEST_MODE_API_KEY", {
 //   apiVersion: "2022-11-15",
@@ -38,10 +39,7 @@ export class SubscriptionController {
     // const user_email = req.user['email']
     // console.log(user_email)
 
-    console.log(process.env.STRIPE_SECRET_KEY);
-
-    const priceId = process.env.PRICE_ID;
-    console.log(priceId);
+    const priceId = "price_1MitMoCWJBDJNhy8OQeBC2pY";
 
     // Create a new checkout session
     try {
@@ -59,11 +57,8 @@ export class SubscriptionController {
         cancel_url: "http://localhost:3000/subscription/cancel",
       });
 
-      console.log(session.url);
       // redirect frontend page to the stripe pre-build checkout page
-      // res.redirect(303, session.url);
-      res.status(303);
-      return res.send({ session_url: session.url });
+      res.json({ session_url: session.url });
     } catch (e) {
       res.status(400);
       return res.send({
@@ -75,38 +70,39 @@ export class SubscriptionController {
   }
 
   // @UseGuards(JwtAuthGuard)
-  // @Post("customer-portal")
-  // @HttpCode(HttpStatus.OK)
-  // async createCustomerPortal(
-  //   @Body() body: string | Buffer,
-  //   @Req() req,
-  //   @Res() res
-  // ) {
-  //   const { sessionId } = req.body;
-  //   const checkoutSession = await this.stripe.checkout.sessions.retrieve(
-  //     sessionId
-  //   );
+  @Post("create-portal-session")
+  @HttpCode(HttpStatus.OK)
+  async createCustomerPortal(
+    @Body() body: { sessionId: string },
+    @Req() req,
+    @Res() res
+  ) {
+    const { sessionId } = body;
+    const checkoutSession = await this.stripe.checkout.sessions.retrieve(
+      sessionId
+    );
 
-  //   const returnUrl = "http://localhost:3000";
+    const returnUrl = "http://localhost:3000";
 
-  //   const portalSession = await this.stripe.billingPortal.sessions.create({
-  //     customer: checkoutSession.customer,
-  //     return_url: returnUrl,
-  //   });
+    const portalSession = await this.stripe.billingPortal.sessions.create({
+      customer: checkoutSession.customer as string,
+      return_url: returnUrl,
+    });
 
-  //   res.redirect(303, portalSession.url);
-  // }
+    res.json({ portalSession_url: portalSession.url });
+  }
 
   @Post("webhook")
   @HttpCode(HttpStatus.OK)
   async handleWebhook(@Body() body: string | Buffer, @Req() req, @Res() res) {
     // Verify the request signature to ensure it came from Stripe
     const signature = req.headers["stripe-signature"];
-    // console.log(signature);
+    console.log(signature);
+    console.log(req.headers);
     // console.log(body);
 
     const webhook_secret = process.env.WEBHOOK_SIGNING_SECRET;
-    // console.log(webhook_secret);
+    console.log(webhook_secret);
 
     let event;
     try {
