@@ -1,27 +1,32 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { NotificationService } from './notification.service';
 import { CreateNotificationDto } from './dto/createNotification.dto';
+import { Like, LikeDocument } from '../like/schemas/like.schema';
+import { User, UserDocument } from "../user/schemas/user.schema";
+import { ListBucketIntelligentTieringConfigurationsCommand } from '@aws-sdk/client-s3';
 
 @Controller('notification')
-@UseGuards(JwtAuthGuard)
+
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
-
-
-  // "find all" is used to retrieve existing data
-  // @Get()
-  // async findAll() {
-  //   return this.notificationService.findAll();
-  // }
-
-  // "create notification" is used to create new data in response to events or actions.
-  @Post("newNotification")
-  async create(@Body() createNotificationDto: CreateNotificationDto) {
-    const notification = await this.notificationService.create(createNotificationDto);
-    const count = await this.notificationService.getNotificationCount();
-    return { notification, count };
+  @UseGuards(JwtAuthGuard)
+  @Get('/latest')
+  async getLatestLikes(): Promise<any> {
+    const likes = await this.notificationService.getLatestLikes(10);
+    const notifications = await Promise.all(
+      likes.map(async (like) => {
+        const users = await this.notificationService.getLikeUsers(like);
+        const posts = await this.notificationService.getLikePosts(like);
+        const user = users[0];
+        const post = posts[0];
+        return {
+          userAvatar: user?.avatarPath,
+          userName: user?.firstName,
+          post: post?.compressFilePath,
+        };
+      }),
+    );
+    return notifications;
   }
-
-
 }

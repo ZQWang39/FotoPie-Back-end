@@ -2,14 +2,14 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateNotificationDto {
   @IsNotEmpty()
-  @IsString()
-  fromUser: string;
+  // @IsString()
+  fromUser: object;
 
   @IsNotEmpty()
   @IsString()
   toUser: string;
 
   @IsNotEmpty()
-  @IsString()
-  filename: string;
+  // @IsString()
+  filename: object;
 }
