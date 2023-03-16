@@ -33,7 +33,11 @@ import { UserCollectionModule } from "./user-collection/user-collection.module";
     PostsModule,
     EditUserModule,
     ResetModule,
-    UserCollectionModule
+    QuickViewModule,
+    LikeModule,
+    CollectModule,
+    UserCollectionModule,
+    UserPostModule
   ],
 })
 export class AppModule {}
