@@ -32,7 +32,8 @@ export class CollectService {
 
   //delete a collect
   async deleteCollect(userCollectDto: UserCollectDto) {
-    return await this.collectModel.deleteOne(userCollectDto);
+    await this.collectModel.deleteOne(userCollectDto);
+    return
   }
 
   async checkCollect(userCollectDto: UserCollectDto) {

@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { ResetService } from "./reset.service";
 import { ResetController } from "./reset.controller";
 import { MongooseModule } from "@nestjs/mongoose";
-import { User, UserSchema } from "./schemas/user.schema";
+import { User, UserSchema } from "../user/schemas/user.schema";
 import { JwtModule } from "@nestjs/jwt";
 
 @Module({
