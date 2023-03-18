@@ -25,4 +25,12 @@ export class NotificationController {
     );
     return notifications;
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/count')
+  async getLikeCount(): Promise<any> {
+    const count = await this.notificationService.getLikeCount();
+    return { count };
+  }
+
 }

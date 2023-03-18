@@ -53,12 +53,8 @@ export class NotificationService {
     }
   }
 
+  async getLikeCount(): Promise<number> {
+    return this.LikeModel.countDocuments().exec();
 
-  // async getNotificationCount(): Promise<number> {
-  //   const count = await this.notificationModel.countDocuments();
-  //   return count;
-  // }
-
-
-
+  }
 }
