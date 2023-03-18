@@ -1,8 +1,10 @@
-import { Controller, Post, UseGuards, Body, Delete, Param, Get } from '@nestjs/common';
+import { Controller, Post, UseGuards, Body, Delete, Param, Get, Query } from '@nestjs/common';
+import { query } from 'express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { CommentService } from './comment.service';
 import { CommentDto } from './Dto/comment.dto';
 import { Comment } from './schemas/comment.schema';
+import { Query as ExpressQuery } from "express-serve-static-core"
 
 @Controller('comment')
 export class CommentController {
@@ -20,8 +22,8 @@ export class CommentController {
     }
 
     @Get()
-    findAllComment(fileName){
-        return this.commentService.findAllComment(fileName)
+    findAllComment(@Query() query:ExpressQuery,filename){
+        return this.commentService.findAllComment(query,filename)
     }
 
     
