@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 // import { S3 } from "aws-sdk";
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { fromIni } from "@aws-sdk/credential-providers";
+// import { fromIni } from "@aws-sdk/credential-providers";
 import { HttpRequest } from "@aws-sdk/protocol-http";
 import {
   getSignedUrl,
