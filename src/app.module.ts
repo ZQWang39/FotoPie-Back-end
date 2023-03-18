@@ -11,6 +11,7 @@ import { QuickViewModule } from "./quick-view/quick-view.module";
 import { LikeModule } from "./like/like.module";
 import { CollectModule } from "./collect/collect.module";
 import { UserPostModule } from "./user-post/user-post.module";
+import { DownloadModule } from "./download/download.module";
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { UserPostModule } from "./user-post/user-post.module";
     QuickViewModule,
     LikeModule,
     CollectModule,
+    DownloadModule,
   ],
 })
 export class AppModule {}
