@@ -9,7 +9,22 @@ export class Subscription {
   _id: mongoose.Schema.Types.ObjectId;
 
   @Prop({ required: true })
-  userEmail: string;
+  customer_email: string;
+
+  @Prop()
+  customer: string;
+
+  @Prop()
+  payment_intent: string;
+
+  @Prop()
+  payment_method_types: string;
+
+  @Prop()
+  payment_status: string;
+
+  @Prop()
+  subscription: string;
 }
 
 export const SubscriptionSchema = SchemaFactory.createForClass(Subscription);

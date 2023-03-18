@@ -2,8 +2,15 @@ import { IsNotEmpty } from "class-validator";
 
 export class CreateSubscriptionDto {
   @IsNotEmpty()
-  readonly id: string
+  readonly customer_email: string;
 
-  @IsNotEmpty()
-  readonly userEmail: string
+  readonly customer: string;
+
+  readonly payment_intent: string;
+
+  readonly payment_method_types: string;
+
+  readonly payment_status: string;
+
+  readonly subscription: string;
 }

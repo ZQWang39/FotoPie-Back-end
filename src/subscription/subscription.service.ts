@@ -1,16 +1,8 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-  ConflictException,
-  HttpException,
-  HttpStatus,
-} from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { Model } from "mongoose";
 import { Subscription } from "./schemas/subscription.schema";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateSubscriptionDto } from "./dto/CreateSubscription.dto";
-import { Stripe } from "stripe";
 
 @Injectable({})
 export class SubscriptionService {
@@ -21,21 +13,36 @@ export class SubscriptionService {
 
   async createSubscription(
     createSubscriptionDto: CreateSubscriptionDto
-  ): Promise<object> {
-    const email = createSubscriptionDto.userEmail;
-    if (await this.subscriptionModel.findOne({ email })) {
-      throw new ConflictException("Already Subscribed");
-    } else {
-      try {
+  ): Promise<CreateSubscriptionDto> {
+    const customer_email = createSubscriptionDto.customer_email;
+    try {
+      const isSubscribed = await this.subscriptionModel.findOne({
+        customer_email,
+      });
+
+      if (isSubscribed) {
+        await this.subscriptionModel.updateOne({
+          updatedAt: new Date(),
+          customer: createSubscriptionDto.customer,
+          payment_intent: createSubscriptionDto.payment_intent,
+          payment_method_types: createSubscriptionDto.payment_method_types,
+          payment_status: createSubscriptionDto.payment_status,
+          subscription: createSubscriptionDto.subscription,
+        });
+      } else {
         const newSubscription = new this.subscriptionModel(
           createSubscriptionDto
         );
         return newSubscription.save();
-      } catch (error) {
-        throw new UnauthorizedException(
-          "Creating New Subscription in DB Failed"
-        );
       }
+    } catch (error) {
+      throw new UnauthorizedException("Creating New Subscription in DB Failed");
     }
+  }
+
+  async findCustomerByEmail(user_email: string): Promise<string> {
+    const subscription = await this.subscriptionModel.findOne({ user_email });
+    const customer = subscription.customer;
+    return customer;
   }
 }
