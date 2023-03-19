@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   Body,
+  RawBodyRequest,
   Req,
   Res,
   HttpCode,
@@ -11,6 +12,7 @@ import { SubscriptionService } from "./subscription.service";
 import { Stripe } from "stripe";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guards";
 import { UseGuards } from "@nestjs/common/decorators";
+import mongoose from "mongoose";
 
 // const stripe = new Stripe("process.env.STRIPE_TEST_MODE_API_KEY", {
 //   apiVersion: "2022-11-15",
@@ -31,7 +33,6 @@ export class SubscriptionController {
   @HttpCode(HttpStatus.OK)
   async createSubscription(@Req() req, @Res() res) {
     const user_email = req.user["email"];
-    console.log(user_email);
 
     const priceId = "price_1MitMoCWJBDJNhy8OQeBC2pY";
 
@@ -70,48 +71,43 @@ export class SubscriptionController {
   async createCustomerPortal(@Req() req, @Res() res) {
     // Get user email from Guard
     const user_email = req.user["email"];
-    console.log(user_email);
 
+    // Using email to find the customer info in DB
     const customer = await this.subscriptionService.findCustomerByEmail(
       user_email
     );
 
     const returnUrl = "http://localhost:3000";
 
+    // Create a billing portal with stripe
     const portalSession = await this.stripe.billingPortal.sessions.create({
       customer: customer,
       return_url: returnUrl,
     });
 
+    // Send the billing port url to front end for redirection
     res.json({ portalSession_url: portalSession.url });
   }
 
   @Post("webhook")
   @HttpCode(HttpStatus.OK)
-  async handleWebhook(@Body() body: string | Buffer, @Req() req, @Res() res) {
+  async handleWebhook(
+    @Body() body: string | Buffer,
+    @Req() req: RawBodyRequest<Request>,
+    @Res() res
+  ) {
+    const raw_body = req.rawBody;
     // Extract signature from request header
     const signature = req.headers["stripe-signature"];
-    console.log(signature);
-    // console.log(req.headers);
-    console.log(body);
-
-    const webhook_secret = process.env.WEBHOOK_SIGNING_SECRET;
-
-    // Get all necessary data from stripe request payload(body)
-    const customer_email = req.body.data.object.customer_email;
-    const customer = req.body.data.object.customer;
-    const payment_intent = req.body.data.object.payment_intent;
-    const payment_method_types = req.body.data.object.payment_method_types;
-    const payment_status = req.body.data.object.payment_status;
-    const subscription = req.body.data.object.subscription;
+    const webhook_signing_secret = process.env.WEBHOOK_SIGNING_SECRET;
 
     // Verify signature
     let event;
     try {
       event = this.stripe.webhooks.constructEvent(
-        body,
+        raw_body,
         signature,
-        webhook_secret
+        webhook_signing_secret
       );
     } catch (err) {
       //Invalid signature or body or webhook_secret
@@ -119,6 +115,13 @@ export class SubscriptionController {
       res.status(400).send(`Webhook Error: ${err.message}`);
       return;
     }
+
+    // Get all necessary data from stripe request payload(body)
+    const customer_email = event.data.object.customer_email;
+    const customer = event.data.object.customer;
+    const payment_method_types = event.data.object.payment_method_types;
+    const payment_status = event.data.object.payment_status;
+    const subscription = event.data.object.subscription;
 
     // Handle the event data based on the event type
     let intent = null;
@@ -128,9 +131,9 @@ export class SubscriptionController {
         console.log("Payment Successful", intent.id);
         // Add this subscription info to db
         const subscriptionData = {
+          _id: new mongoose.Types.ObjectId(),
           customer_email,
           customer,
-          payment_intent,
           payment_method_types,
           payment_status,
           subscription,

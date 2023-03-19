@@ -5,7 +5,7 @@ export type SubscriptionDocument = HydratedDocument<Subscription>;
 
 @Schema({ timestamps: true, versionKey: false })
 export class Subscription {
-  @Prop({ required: true })
+  @Prop()
   _id: mongoose.Schema.Types.ObjectId;
 
   @Prop({ required: true })
@@ -13,12 +13,6 @@ export class Subscription {
 
   @Prop()
   customer: string;
-
-  @Prop()
-  payment_intent: string;
-
-  @Prop()
-  payment_method_types: string;
 
   @Prop()
   payment_status: string;
