@@ -22,16 +22,8 @@ export class UserPostService {
     return this.postModel.find({ userEmail });
   }
 
-  async deletePostByFilename(filename: string): Promise<boolean> {
-    try {
-      const post = await this.postModel.findOne({ filename });
-      if (!post) {
-        throw new Error("Post not found");
-      }
-      await post.deleteOne();
-      return true;
-    } catch (error) {
-      throw new Error(`Error deleting post: ${error}`);
-    }
+
+  async deletePostByFilename(filename: string): Promise<void> {
+    await this.postModel.deleteOne({ filename }).exec();
   }
 }

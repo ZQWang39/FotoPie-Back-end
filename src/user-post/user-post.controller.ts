@@ -36,17 +36,7 @@ export class UserPost {
   }
 
   @Delete(":filename")
-  async deletePost(@Param("filename") filename: string) {
-    try {
-      const deleted = await this.userPostService.deletePostByFilename(filename);
-
-      if (!deleted) {
-        return { message: "Post not found" };
-      }
-
-      return { message: "Post deleted successfully" };
-    } catch (error) {
-      return { error: error.message };
-    }
+  deletePost(@Param("filename") filename: string): Promise<void> {
+    return this.userPostService.deletePostByFilename(filename);
   }
 }
