@@ -27,8 +27,8 @@ export class CollectService {
   //add a collect
   async addCollect(userCollectDto) {
     const newCollect = new this.collectModel(userCollectDto);
-
-    return this.collectModel.create(newCollect);
+    await this.collectModel.create(newCollect);
+    return;
   }
 
   //delete a collect
