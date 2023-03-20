@@ -28,7 +28,7 @@ export class EditUserService {
 
   // get user info
   async findByEmail(userEmail: string): Promise<User> {
-    const user = await this.userModel.findOne({ userEmail }).exec();
+    const user = await this.userModel.findOne({ email: userEmail }).exec();
 
     return user;
   }

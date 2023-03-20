@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Model } from "mongoose";
-import { User } from "./schemas/user.schema";
+import { User } from "../user/schemas/user.schema";
 import { hash as bcryptHash } from "bcryptjs";
 import { JwtService as NestJwtService } from "@nestjs/jwt";
 import { InjectModel } from "@nestjs/mongoose";
@@ -23,28 +23,30 @@ export class ResetService {
   //---------------Main Services---------------
   //send reset request service
   async resetRequest({ email }: ResetRequestDto): Promise<{ message: string }> {
-    //Search the db and see if this email exists
-    const user = await this.findOneByEmail(email);
-    console.log(user);
+    try {
+      //Search the db and see if this email exists
+      const user = await this.findOneByEmail(email);
 
-    //if email does not exist, print not found
-    if (!user) {
-      console.log("User Not Found");
-      throw new NotFoundException("User not found");
+      //if email does not exist, print not found
+      if (!user) {
+        throw new NotFoundException("User not found");
+      }
+
+      //if the email exists, sign the JWT token with the secret key
+      const payload = {
+        email: email,
+      };
+      const token = await this.nestJwtService.sign(payload);
+      console.log(token);
+
+      //send the token via email
+      await this.sendPasswordResetEmail(email, token);
+
+      return { message: "Email Sent Successfully" };
+    } catch (e) {
+      console.log(e);
+      return { message: "User Not Found" };
     }
-
-    //if the email exists, sign the JWT token with the secret key
-    console.log("User exist!");
-    const payload = {
-      email: email,
-    };
-    const token = await this.nestJwtService.sign(payload);
-    console.log(token);
-
-    //send the token via email
-    await this.sendPasswordResetEmail(email, token);
-
-    return { message: "Email Sent Successfully" };
   }
 
   //reset password service
@@ -55,24 +57,20 @@ export class ResetService {
     //After user enters password and click submit, verify the token
     //valid:
     try {
-      //token = {token: "dsfhjkhwejkr32094732"}
+      //example: token = {token: "dsfhjkhwejkr32094732"}
       const decodedToken = await this.verifyAsync(token.token);
       // decodedToken = {
       //   email: string;  // user email
       // };
-      console.log(decodedToken);
 
       const userEmail = decodedToken.email;
       //hash the new password
       const hashedPassword = await this.hash(resetPasswordDto.password);
-      console.log(resetPasswordDto.password);
-      console.log(hashedPassword);
 
       //update the new password in db
       await this.userModel
         .findOneAndUpdate(
           { email: userEmail },
-
           { password: hashedPassword },
           { new: true }
         )
@@ -117,7 +115,7 @@ export class ResetService {
     token: string
   ): Promise<{ message: string }> {
     const api_key = process.env.MAILGUN_API_KEY;
-    const DOMAIN = process.env.MAILGUN_DOMAIN;
+    const DOMAIN = "sandbox1ab09aa8ec2848c895f612ef554ce1b7.mailgun.org";
 
     const mg = mailgun({
       apiKey: api_key,
@@ -125,9 +123,8 @@ export class ResetService {
     });
 
     const data = {
-      from: "FotoPie <unswmercury@gmail.com>",
-      to: "jeremy.zeyuliu@gmail.com",
-      // to: `${email}`,
+      from: "info@fotopie.net",
+      to: email,
       subject: "Email Verification",
       html: `
           <p>Hi,</p>
