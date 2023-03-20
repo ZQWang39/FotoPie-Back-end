@@ -22,7 +22,6 @@ export class UserPostService {
     return this.postModel.find({ userEmail });
   }
 
-
   async deletePostByFilename(filename: string): Promise<void> {
     await this.postModel.deleteOne({ filename }).exec();
   }
