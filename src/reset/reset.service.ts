@@ -115,7 +115,7 @@ export class ResetService {
     token: string
   ): Promise<{ message: string }> {
     const api_key = process.env.MAILGUN_API_KEY;
-    const DOMAIN = process.env.MAILGUN_DOMAIN;
+    const DOMAIN = "sandbox1ab09aa8ec2848c895f612ef554ce1b7.mailgun.org";
 
     const mg = mailgun({
       apiKey: api_key,
@@ -123,9 +123,8 @@ export class ResetService {
     });
 
     const data = {
-      from: process.env.SENDER_EMAIL,
-      to: "jeremy.zeyuliu@gmail.com",
-      // to: email,
+      from: "info@fotopie.net",
+      to: email,
       subject: "Email Verification",
       html: `
           <p>Hi,</p>
