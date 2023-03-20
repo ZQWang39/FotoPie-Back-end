@@ -16,6 +16,7 @@ import { CollectModule } from "./collect/collect.module";
 import { NotificationModule } from "./Notification/notification.module";
 import { UserPostModule } from "./user-post/user-post.module";
 import { UserCollectionModule } from "./user-collection/user-collection.module";
+import { CategoryModule } from "./category/category.module";
 
 @Module({
   imports: [
@@ -39,7 +40,8 @@ import { UserCollectionModule } from "./user-collection/user-collection.module";
     CollectModule,
     NotificationModule,
     UserCollectionModule,
-    UserPostModule
+    UserPostModule,
+    CategoryModule
   ],
 })
 export class AppModule {}
