@@ -1,10 +1,7 @@
 import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { NotificationService } from './notification.service';
-import { CreateNotificationDto } from './dto/createNotification.dto';
-import { Like, LikeDocument } from '../like/schemas/like.schema';
-import { User, UserDocument } from "../user/schemas/user.schema";
-import { ListBucketIntelligentTieringConfigurationsCommand } from '@aws-sdk/client-s3';
+import { Like } from '../like/schemas/like.schema'
 
 @Controller('notification')
 
@@ -12,8 +9,9 @@ export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
   @UseGuards(JwtAuthGuard)
   @Get('/latest')
-  async getLatestLikes(): Promise<any> {
-    const likes = await this.notificationService.getLatestLikes(10);
+  async getLatestLikes(@Req() req: any): Promise<any> {
+    const currentUserEmail= req.user["email"];
+    const likes = await this.notificationService.getLatestLikes(currentUserEmail);
     const notifications = await Promise.all(
       likes.map(async (like) => {
         const users = await this.notificationService.getLikeUsers(like);
@@ -24,9 +22,25 @@ export class NotificationController {
           userAvatar: user?.avatarPath,
           userName: user?.firstName,
           post: post?.compressFilePath,
+          // status: like?.status,
         };
       }),
     );
     return notifications;
+  }
+
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/count')
+  async getUnreadCount(): Promise<any> {
+    const count = await this.notificationService.getUnreadCount();
+    return { count };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/mark-read')
+  async markAllAsRead(): Promise<any> {
+    await this.notificationService.markAllAsRead();
+    return { message: 'Notifications marked as read' };
   }
 }
