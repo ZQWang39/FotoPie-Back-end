@@ -29,10 +29,9 @@ export class AuthService {
     if (!passwordMatch) {
       throw new ForbiddenException();
     }
-     const {_id} = user;
     const tokens = await this.getTokens(email);
     await this.updateRt(email, tokens.refresh_token);
-    return {...tokens, _id};
+    return tokens;
   }
 
   async logout(email: string) {
