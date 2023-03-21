@@ -25,7 +25,8 @@ export class NotificationService {
 
 
   async getLatestLikes(@Req() req: any): Promise<Like[]> {
-    const currentUserEmail= req.user["email"]
+
+    const currentUserEmail= req.user.email
     return this.LikeModel.find({ liked_user_email: currentUserEmail, status:false }).sort({ createdAt: -1 }).exec();
   }
 

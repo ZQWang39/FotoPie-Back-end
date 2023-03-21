@@ -10,10 +10,14 @@ export class NotificationController {
   @UseGuards(JwtAuthGuard)
   @Get('/latest')
   async getLatestLikes(@Req() req: any): Promise<any> {
+    const currentUserEmail= req.user["email"]
+    const likes = await this.notificationService.getLatestLikes(currentUserEmail);
 
-    const likes = await this.notificationService.getLatestLikes(10);
+    const filteredLikes = likes.filter(like => like.liked_user_email === currentUserEmail);
+
+
     const notifications = await Promise.all(
-      likes.map(async (like) => {
+      filteredLikes.map(async (like) => {
         const users = await this.notificationService.getLikeUsers(like);
         const posts = await this.notificationService.getLikePosts(like);
         const user = users[0];
