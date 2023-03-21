@@ -6,9 +6,12 @@ import * as sharp from "sharp";
 import {
   Body,
   Controller,
+  FileTypeValidator,
   Get,
   HttpException,
   HttpStatus,
+  MaxFileSizeValidator,
+  ParseFilePipe,
   Patch,
   Req,
   Res,
@@ -50,8 +53,7 @@ export class EditUserController {
     }
 
     return res.status(HttpStatus.OK).json({
-      message: "success",
-      data: { updatedData },
+      updatedData,
     });
   }
 
@@ -68,8 +70,11 @@ export class EditUserController {
     const { firstName, lastName, avatar, avatarPath, _id } = user;
 
     return res.status(HttpStatus.OK).json({
-      message: "success",
-      data: { firstName, lastName, avatar, avatarPath, id: _id },
+      firstName,
+      lastName,
+      avatar,
+      avatarPath,
+      id: _id,
     });
   }
 
@@ -79,23 +84,18 @@ export class EditUserController {
   @UseInterceptors(
     FileInterceptor("file", {
       storage: multer.memoryStorage(),
-      fileFilter: (req, file, cb) => {
-        if (file.mimetype.startsWith("image")) {
-          cb(null, true);
-        } else {
-          cb(
-            new HttpException(
-              "Not an image! Please upload only images.",
-              HttpStatus.BAD_REQUEST
-            ),
-            false
-          );
-        }
-      },
     })
   )
   async uploadFile(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 10 * 1024 * 1024 }), // 10MB
+          new FileTypeValidator({ fileType: "image" }),
+        ], // 10MB
+      })
+    )
+    file: Express.Multer.File,
     @Req() req: Request,
     @Res() res: Response
   ) {
@@ -147,8 +147,8 @@ export class EditUserController {
     }
 
     return res.status(HttpStatus.OK).json({
-      message: "success",
-      data: { avatar, avatarPath },
+      avatar,
+      avatarPath,
     });
   }
 }

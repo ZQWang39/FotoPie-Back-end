@@ -5,6 +5,7 @@ import { User, UserDocument } from "../user/schemas/user.schema";
 import { Posts, PostDocument } from 'src/like/schemas/post.schema';
 import { LikeService } from 'src/like/like.service';
 import { Like, LikeDocument } from '../like/schemas/like.schema';
+import { Req } from '@nestjs/common';
 
 
 
@@ -23,8 +24,9 @@ export class NotificationService {
   ) {}
 
 
-  async getLatestLikes(limit: number): Promise<Like[]> {
-    return this.LikeModel.find().sort({ createdAt: -1 }).limit(limit).exec();
+  async getLatestLikes(@Req() req: any): Promise<Like[]> {
+    const currentUserEmail= req.user["email"]
+    return this.LikeModel.find({ liked_user_email: currentUserEmail, status:false }).sort({ createdAt: -1 }).exec();
   }
 
 
@@ -44,17 +46,11 @@ export class NotificationService {
     return [post];
   }
 
-  async newLike(like: Like): Promise<void> {
-    const users = await this.getLikeUsers(like);
-    if (users.length > 0) {
-      const likeUser = users[0];
-      console.log(likeUser.avatarPath, likeUser.firstName);
-      // handle notification logic here
-    }
+  async markAllAsRead(): Promise<void> {
+    await this.LikeModel.updateMany({ status: 'unread' }, { $set: { status: 'read' } }).exec();
   }
 
-  async getLikeCount(): Promise<number> {
-    return this.LikeModel.countDocuments().exec();
-
+  async getUnreadCount(): Promise<number> {
+    return this.LikeModel.countDocuments({ status: 'unread' }).exec();
   }
 }
