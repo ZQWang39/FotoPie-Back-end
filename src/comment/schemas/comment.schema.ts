@@ -16,9 +16,6 @@ export class Comment {
 
     @Prop({required:true})
     commentUser:string;
-
-    // @Prop()
-    // replyUser:string;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);

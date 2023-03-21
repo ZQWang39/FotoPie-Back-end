@@ -16,6 +16,7 @@ import { CollectModule } from "./collect/collect.module";
 import { UserPostModule } from "./user-post/user-post.module";
 import { UserCollectionModule } from "./user-collection/user-collection.module";
 import { CommentModule } from './comment/comment.module';
+import { CategoryModule } from "./category/category.module";
 
 @Module({
   imports: [
@@ -40,6 +41,8 @@ import { CommentModule } from './comment/comment.module';
     UserPostModule,
     UserCollectionModule,
     CommentModule,
+    UserPostModule,
+    CategoryModule
   ],
 })
 export class AppModule {}
