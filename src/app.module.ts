@@ -15,6 +15,7 @@ import { LikeModule } from "./like/like.module";
 import { CollectModule } from "./collect/collect.module";
 import { UserPostModule } from "./user-post/user-post.module";
 import { UserCollectionModule } from "./user-collection/user-collection.module";
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -37,7 +38,9 @@ import { UserCollectionModule } from "./user-collection/user-collection.module";
     LikeModule,
     CollectModule,
     UserCollectionModule,
-    UserPostModule
+    UserPostModule,
+    SearchModule
   ],
+  controllers: [],
 })
 export class AppModule {}
