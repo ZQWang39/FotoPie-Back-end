@@ -1,4 +1,12 @@
-import { Controller, Post, Param, Req } from "@nestjs/common";
+import {
+  Controller,
+  Post,
+  Param,
+  Req,
+  Res,
+  HttpCode,
+  HttpStatus,
+} from "@nestjs/common";
 import { UseGuards } from "@nestjs/common/decorators";
 
 import { CreateCollectDto } from "./dto/createCollect.dto";
@@ -12,6 +20,7 @@ export class CollectController {
 
   @UseGuards(JwtAuthGuard)
   @Post(":filename")
+  @HttpCode(HttpStatus.OK)
   async getCollect(
     @Param() createCollectDto: CreateCollectDto,
     @Req() req: any
@@ -22,6 +31,9 @@ export class CollectController {
       await this.collectService.findEmailByFilename(createCollectDto);
     collect.filename = createCollectDto.filename;
     await this.collectService.checkCollect(collect);
-    return this.collectService.collectNumber(createCollectDto);
+    const collectNumber = await this.collectService.collectNumber(
+      createCollectDto
+    );
+    return { userCollects: collectNumber };
   }
 }
