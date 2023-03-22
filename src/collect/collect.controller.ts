@@ -3,7 +3,6 @@ import {
   Post,
   Param,
   Req,
-  Res,
   HttpCode,
   HttpStatus,
 } from "@nestjs/common";
@@ -20,7 +19,7 @@ export class CollectController {
 
   @UseGuards(JwtAuthGuard)
   @Post(":filename")
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   async getCollect(
     @Param() createCollectDto: CreateCollectDto,
     @Req() req: any
