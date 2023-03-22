@@ -19,8 +19,8 @@ export class LikeService {
       }
 
     async deleteLike(userLikeDto: UserLikeDto){
-      await this.likeModel.deleteOne({ userLikeDto });
-      return;
+      return await this.likeModel.deleteOne({ userLikeDto });
+      
     }
 
     async checkLike(userLikeDto: UserLikeDto){
