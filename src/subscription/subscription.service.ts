@@ -6,7 +6,7 @@ import {
 import { Model } from "mongoose";
 import { Subscription } from "./schemas/subscription.schema";
 import { InjectModel } from "@nestjs/mongoose";
-import { CreateSubscriptionDto } from "./dto/CreateSubscription.dto";
+import { CreateSubscriptionDto } from "./dto/create-subscription.dto";
 
 @Injectable({})
 export class SubscriptionService {
