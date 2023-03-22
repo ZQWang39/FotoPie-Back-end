@@ -24,6 +24,7 @@ export class UserCollection {
       ({ _id, filename, collect_user_email, collected_user_email }) => {
         return {
           _id,
+          filename,
           imageUrl: `${s3Url}/${filename}`,
           collect_user_email,
           collected_user_email,
