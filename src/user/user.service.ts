@@ -26,7 +26,6 @@ export class UserService {
   }
 
   findAll() {
-    
     const users = this.userModel.find().exec();
     if (!users) throw new NotFoundException();
     return users;
@@ -87,18 +86,21 @@ export class UserService {
     };
     const token = this.jwtService.sign(payload, {
       secret: process.env.JWT_ACTIVIATE_SECRET_KEY,
-      expiresIn: process.env.EXPIRE,
+      expiresIn: "20m",
     });
 
-    const url = `${process.env.EMAIL_CONFIRMATION_URL}/${token}`;
+    const url = "http://localhost:3000/activated/${token}";
 
     const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
-    const DOMAIN = process.env.DOMAIN;
-    const mg = mailgun({ apiKey: process.env.MAILGUN_APIKEY, domain: DOMAIN });
+
+    const mg = mailgun({
+      apiKey: process.env.MAILGUN_API_KEY,
+      domain: "fotopie.net",
+    });
 
     try {
       return mg.messages().send({
-        from: process.env.EMAIL_SEND,
+        from: process.env.SENDER_EMAIL,
         to: email,
         subject: "Email confirmation",
         text,
