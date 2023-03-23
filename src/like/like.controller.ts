@@ -18,6 +18,7 @@ export class LikeController {
     like.like_user_email = req.user["email"];
     like.liked_user_email = await this.likeService.findEmailByFilename(createLikeDto);
     like.filename = createLikeDto.filename;
+    like.status = false;
     await this.likeService.checkLike(like);
     const likeNumber = await this.likeService.numberLike(createLikeDto)
     return { userLikes:likeNumber }

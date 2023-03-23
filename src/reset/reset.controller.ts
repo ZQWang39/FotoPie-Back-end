@@ -1,14 +1,6 @@
-import {
-  Controller,
-  Query,
-  Post,
-  Body,
-  HttpCode,
-  HttpStatus,
-} from "@nestjs/common";
+import { Controller, Post, Body, HttpCode, HttpStatus } from "@nestjs/common";
 import { ResetService } from "./reset.service";
 import { ResetRequestDto } from "./dto/reset-request.dto";
-import { ResetPasswordDto } from "./dto/reset-password.dto";
 
 @Controller("reset")
 export class ResetController {
@@ -25,9 +17,11 @@ export class ResetController {
   @Post("resetPassword")
   @HttpCode(HttpStatus.OK)
   async resetPassword(
-    @Query() token: { token: string },
-    @Body() newPassword: ResetPasswordDto
+    @Body() credentials: { token: string; password: string }
   ): Promise<{ message: string }> {
-    return this.resetService.resetPassword(token, newPassword);
+    return this.resetService.resetPassword(
+      credentials.token,
+      credentials.password
+    );
   }
 }
