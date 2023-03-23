@@ -26,7 +26,7 @@ export class NotificationService {
 
   async getLatestLikes(@Req() req: any): Promise<Like[]> {
 
-    return this.LikeModel.find({status:false }).sort({ createdAt: -1 }).exec();
+    return this.LikeModel.find({ status:false }).sort({ createdAt: -1 }).exec();
   }
 
 
@@ -46,11 +46,22 @@ export class NotificationService {
     return [post];
   }
 
-  async markAllAsRead(): Promise<void> {
-    await this.LikeModel.updateMany({ status: 'unread' }, { $set: { status: 'read' } }).exec();
+  async getUnreadCount(currentUserEmail: string): Promise<number> {
+    const count = await this.LikeModel.countDocuments(
+      {
+      "liked_user_email": currentUserEmail,
+      "status": false
+      }).exec();
+    return count;
   }
 
-  async getUnreadCount(): Promise<number> {
-    return this.LikeModel.countDocuments({ status: 'unread' }).exec();
+  async markAllAsRead(currentUserEmail: string): Promise<void> {
+    await this.LikeModel.updateMany(
+      {
+        "liked_user_email": currentUserEmail,
+        "status": false
+      },
+      { $set: { "status": true } }
+    ).exec();
   }
 }

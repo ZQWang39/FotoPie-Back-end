@@ -26,25 +26,27 @@ export class NotificationController {
           userAvatar: user?.avatarPath,
           userName: user?.firstName,
           post: post?.compressFilePath,
-          // status: like?.status,
+          directFilename: post?.filename,
+          status: like?.status
         };
       }),
     );
     return notifications;
   }
 
-
   @UseGuards(JwtAuthGuard)
   @Get('/count')
-  async getUnreadCount(): Promise<any> {
-    const count = await this.notificationService.getUnreadCount();
+  async getUnreadCount(@Req() req: any): Promise<any> {
+    const currentUserEmail= req.user["email"]
+    const count = await this.notificationService.getUnreadCount(currentUserEmail);
     return { count };
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('/mark-read')
-  async markAllAsRead(): Promise<any> {
-    await this.notificationService.markAllAsRead();
+  async markAllAsRead(@Req() req: any): Promise<any> {
+    const currentUserEmail= req.user["email"]
+    await this.notificationService.markAllAsRead(currentUserEmail);
     return { message: 'Notifications marked as read' };
   }
 }
