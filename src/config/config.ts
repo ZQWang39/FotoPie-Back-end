@@ -1,5 +1,5 @@
 export const config = () => ({
-  port: parseInt(process.env.SERVER_PORT) || 8080,
+  port: 9090 || 8080,
 
   host: process.env.MONGO_URL,
 

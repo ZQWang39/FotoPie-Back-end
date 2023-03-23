@@ -20,7 +20,7 @@ liked_user_email: string;
 @Prop()
 filename: string;
 
-@Prop({ default: false })
+@Prop({ default: false, type: Boolean})
 status: boolean;
 
 }
