@@ -9,11 +9,11 @@ export class DownloadController {
   @HttpCode(HttpStatus.OK)
   async getPresignedUrl(
     @Query("filename") filename: string
-  ): Promise<{ preSignedUrl: string }> {
+  ): Promise<{ url: string }> {
     const preSignedUrl = await this.downloadService.generatePresignedUrl(
       filename
     );
     console.log("preSignedUrl", preSignedUrl);
-    return { preSignedUrl };
+    return { url: preSignedUrl };
   }
 }
