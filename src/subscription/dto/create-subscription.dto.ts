@@ -9,6 +9,4 @@ export class CreateSubscriptionDto {
   readonly payment_status: string;
 
   readonly subscription: string;
-
-  // readonly updateAt: Date;
 }

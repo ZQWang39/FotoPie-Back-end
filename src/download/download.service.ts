@@ -1,10 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  UnauthorizedException,
-  Res,
-  NotAcceptableException,
-  HttpException,
   ForbiddenException,
 } from "@nestjs/common";
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
@@ -12,7 +8,6 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Subscription } from "../subscription/schemas/subscription.schema";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-// import { DownloadDto } from "./dto/download.dto";
 
 @Injectable()
 export class DownloadService {
@@ -48,11 +43,6 @@ export class DownloadService {
         return signedUrl;
       }
     } catch (err) {
-      // console.log(err.message);
-      // return {
-      //   message: "Not subscribed",
-      // };
-      // throw new UnauthorizedException("No subscription found");
       throw new ForbiddenException("No subscription found");
     }
   }

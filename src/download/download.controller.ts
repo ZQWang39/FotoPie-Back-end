@@ -5,7 +5,6 @@ import {
   HttpCode,
   HttpStatus,
   Req,
-  UnauthorizedException,
 } from "@nestjs/common";
 import { DownloadService } from "./download.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guards";
@@ -17,7 +16,7 @@ export class DownloadController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  // @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.OK)
   async getPresignedUrl(
     @Query("filename") filename: string,
     @Req() req: any
