@@ -24,15 +24,10 @@ export class DownloadController {
   ): Promise<{ url: string }> {
     const userEmail = req.user["email"];
 
-    // try {
-      const preSignedUrl = await this.downloadService.generatePresignedUrl(
-        filename,
-        userEmail
-      );
-      return { url: preSignedUrl };
-    // } catch (err) {
-      // throw new UnauthorizedException("No subscription found");
-      // return err.message("no subscription found");
-    // }
+    const preSignedUrl = await this.downloadService.generatePresignedUrl(
+      filename,
+      userEmail
+    );
+    return { url: preSignedUrl };
   }
 }

@@ -3,6 +3,9 @@ import {
   NotFoundException,
   UnauthorizedException,
   Res,
+  NotAcceptableException,
+  HttpException,
+  ForbiddenException,
 } from "@nestjs/common";
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -45,10 +48,12 @@ export class DownloadService {
         return signedUrl;
       }
     } catch (err) {
-      console.log(err.message);
-      throw new UnauthorizedException("No subscription found");
-      // return err.message
-      // res.status(401)
+      // console.log(err.message);
+      // return {
+      //   message: "Not subscribed",
+      // };
+      // throw new UnauthorizedException("No subscription found");
+      throw new ForbiddenException("No subscription found");
     }
   }
 
