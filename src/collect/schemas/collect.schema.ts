@@ -8,15 +8,15 @@ export class Collect {
   _id: mongoose.Schema.Types.ObjectId;
 
   //User A
-  @Prop({required:true})
+  @Prop({ required: true })
   collect_user_email: string; //from guard
 
   //User B
-  @Prop({required:true})
+  @Prop({ required: true })
   collected_user_email: string; //from post.userEmail
 
   //User B posts
-  @Prop({required:true})
+  @Prop({ required: true })
   filename: string; //from front end
 }
 

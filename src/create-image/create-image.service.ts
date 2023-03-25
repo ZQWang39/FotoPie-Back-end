@@ -35,4 +35,36 @@ export class CreateImageService {
       return { message: "Image Generation Failed" };
     }
   }
+
+  //Generate image variations
+  async createImageVariation(fileBuffer): Promise<any> {
+    try {
+      const imageFile: any = fileBuffer;
+      imageFile.name = "image.png";
+      const response = await this.openai.createImageVariation(
+        //fs.createReadStream( fileBuffer ) as any,
+        imageFile,
+
+        2,
+        "512x512"
+      );
+      //console.log(fileBuffer, "debug");
+      console.log(imageFile, "debug");
+
+      //const image_url = response.data.data[0].url;
+
+      //return image_url;
+      console.log(response.data.data[0].url);
+      console.log(response.data.data[1].url);
+      const urls = {
+        url_1: response.data.data[0].url,
+        url_2: response.data.data[1].url,
+      };
+      return urls;
+      //return response.data.data;
+    } catch (error) {
+      console.error(error.response);
+      throw new Error("Failed to create image variation.");
+    }
+  }
 }
