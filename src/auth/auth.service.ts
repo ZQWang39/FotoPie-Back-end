@@ -18,6 +18,7 @@ export class AuthService {
     private configService: ConfigService
   ) {}
 
+  // This is the method that is called when the user logs in
   async login({ email, password }: LoginUserDto): Promise<Tokens> {
     const user = await this.userService.findByEmail(email);
 
@@ -34,20 +35,23 @@ export class AuthService {
     return tokens;
   }
 
+  // This is the method that is called when the user logs out
   async logout(email: string) {
     await this.updateRt(email, "");
   }
 
-  async refresh(email: string, rt: string) {
-    const user = await this.userService.findByEmail(email);
-
-    if (!user || !user.refreshToken) throw new NotFoundException();
-
+  // This is the method that is called when the user refreshes the access token
+  async refresh(rt: string) {
     const decoded = await this.jwtService.verify(rt, {
       secret: this.configService.get("refresh_token_key_public"),
     });
-
     if (!decoded || typeof decoded === "string") throw new NotFoundException();
+
+    const { email } = decoded;
+
+    const user = await this.userService.findByEmail(email);
+
+    if (!user || !user.refreshToken) throw new NotFoundException();
 
     if (user.refreshToken !== rt) throw new ForbiddenException();
 
@@ -65,6 +69,7 @@ export class AuthService {
     return { access_token: newAccessToken };
   }
 
+  // verify refresh token
   async verifyRt(rt: string) {
     const decoded = this.jwtService.verify(rt, {
       secret: this.configService.get("refresh_token_key_public"),
@@ -74,10 +79,12 @@ export class AuthService {
     return decoded;
   }
 
+  // update refresh token
   async updateRt(email: string, rt: string): Promise<void> {
     await this.userService.updateRefreshTokenByEmail(email, rt);
   }
 
+  // get access token and refresh token
   async getTokens(email: string) {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
