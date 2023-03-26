@@ -20,8 +20,8 @@ liked_user_email: string;
 @Prop()
 filename: string;
 
-// @Prop({type:Date})
-// updatedAt: Date;
+@Prop({ default: false, type: Boolean})
+status: boolean;
 
 }
 export const LikeSchema = SchemaFactory.createForClass(Like);
