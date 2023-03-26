@@ -19,6 +19,9 @@ export class Subscription {
 
   @Prop()
   subscription: string;
+
+  @Prop()
+  updatedAt: Date;
 }
 
 export const SubscriptionSchema = SchemaFactory.createForClass(Subscription);
