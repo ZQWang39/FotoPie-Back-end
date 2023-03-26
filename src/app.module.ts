@@ -43,7 +43,10 @@ import { CategoryModule } from "./category/category.module";
     CollectModule,
     UserCollectionModule,
     UserPostModule,
-    CategoryModule
+    CategoryModule,
+    NotificationModule,
+    SubscriptionModule,
+    CreateImageModule,
   ],
 })
 export class AppModule {}
