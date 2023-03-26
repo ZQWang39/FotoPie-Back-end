@@ -1,5 +1,5 @@
 import { IsMongoId, IsNotEmpty } from "class-validator";
-import { ObjectId } from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 export class CommentDto{
     @IsNotEmpty()
@@ -9,5 +9,5 @@ export class CommentDto{
     readonly fileName: string;
 
     // @IsMongoId()
-    readonly contentId: ObjectId ;
+    readonly _id: mongoose.Types.ObjectId;
 }

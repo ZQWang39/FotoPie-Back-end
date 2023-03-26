@@ -64,7 +64,7 @@ export class PostsService {
    async deleteComment(contentData:CommentDto):Promise<void>{
       await this.postModel.findOneAndUpdate(
       {filename: contentData.fileName},
-      {$pull: {comments:{_id: contentData.contentId}}},
+      {$pull: {comments:{_id: contentData._id}}},
     )
    }
 
