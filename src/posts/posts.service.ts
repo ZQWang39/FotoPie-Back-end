@@ -43,6 +43,8 @@ export class PostsService {
       .skip(skip);
 
     return paginatedImage;
+
+    
   }
   //to add this comments
    async createComment(contentData:CommentDto, userEmail):Promise<Posts>{

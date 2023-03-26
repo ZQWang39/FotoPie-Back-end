@@ -15,5 +15,8 @@ export class Like {
 
   @Prop()
   filename: string;
+
+  @Prop({ default: false, type: Boolean})
+  status: boolean;
 }
 export const LikeSchema = SchemaFactory.createForClass(Like);

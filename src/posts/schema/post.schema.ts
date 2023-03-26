@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { HydratedDocument, NumberExpression } from "mongoose";
+import mongoose, { HydratedDocument, NumberExpression, ObjectId } from "mongoose";
 import { User,UserSchema } from "../../user/schemas/user.schema"
 
 
