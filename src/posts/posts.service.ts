@@ -1,6 +1,6 @@
-import { ConflictException } from "@nestjs/common";
+import { ConflictException, Req } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import {
   BadRequestException,
   Injectable,
@@ -13,6 +13,8 @@ import { PostDTO } from "./dto/post.dto";
 import { User, UserDocument } from "../user/schemas/user.schema";
 import { Query } from "express-serve-static-core";
 import { join } from "path";
+import { CommentDto } from "./dto/comment.dto";
+
 
 // const slugify = require(slugify)
 
@@ -20,19 +22,9 @@ import { join } from "path";
 export class PostsService {
   constructor(
     @InjectModel(Posts.name) private readonly postModel: Model<PostDocument>,
-    private userService: UserService
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    private userService: UserService,
   ) {}
-
-  // public async create(UserEmail:string, PostDTO: PostDTO){
-  //     const post = await this.postModel.create(PostDTO, User)
-  //     return post
-  //    const user  = await this.postModel.findOne({email: UserEmail})
-
-  //     const post = new this.postModel(PostDTO, {email: UserEmail})
-
-  //     return post.save();
-
-  // }
 
   public async create(posts: Posts) {
     const newPosts = new this.postModel(posts);
@@ -52,4 +44,42 @@ export class PostsService {
 
     return paginatedImage;
   }
+  //to add this comments
+   async createComment(contentData:CommentDto, userEmail):Promise<Posts>{
+    const {firstName} = await this.userService.findByEmail(userEmail)
+    const newComment = {
+      _id: new mongoose.Types.ObjectId(),
+      content: contentData.content,
+      commentUser: firstName,
+    }
+
+    const post = await this.postModel.findOneAndUpdate(
+      {filename: contentData.fileName},
+      {$push: { comments: newComment } },
+      {new: true}
+    )
+    return post
+   }
+   //to delete this comments
+   async deleteComment(contentData:CommentDto):Promise<void>{
+      await this.postModel.findOneAndUpdate(
+      {filename: contentData.fileName},
+      {$pull: {comments:{_id: contentData.contentId}}},
+    )
+   }
+
+   //find all comment through pagination
+   async findAllComment(query:Query):Promise<PostDocument[]>{
+    const resPerPage = Number(query.limit);
+    const currentPage = Number(query.page) || 1
+    const skip = resPerPage * (currentPage-1);
+
+    const paginatedImage = this.postModel
+      .find()
+      .skip(skip)
+      .limit(resPerPage)
+      .exec()
+
+    return paginatedImage
+   }
 }

@@ -9,11 +9,13 @@ import { MulterModule } from '@nestjs/platform-express/multer';
 
 import { UserModule } from "../user/user.module"
 import { AuthModule } from '../auth/auth.module';
+import { User, UserSchema } from 'src/user/schemas/user.schema';
 
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Posts.name, schema: PostSchema }]),  MulterModule.register({ dest: './upload' }),UserModule, AuthModule
+    MongooseModule.forFeature([{ name: Posts.name, schema: PostSchema }]),  MulterModule.register({ dest: './upload' }),UserModule, AuthModule,
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     
 
    

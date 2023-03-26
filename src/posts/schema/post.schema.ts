@@ -34,7 +34,19 @@ compressFilePath: string;
 @Prop()
 userEmail: string;
 
-  
+@Prop({
+  type: [{
+    content: String,
+    commentUser: String,
+  }],
+  default: []
+})
+comments:{
+  _id: mongoose.Types.ObjectId,
+  content: string,
+  commentUser: string,
+}[]
 }
+
 
 export const PostSchema = SchemaFactory.createForClass(Posts);

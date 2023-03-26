@@ -25,6 +25,7 @@ import { UseGuards } from "@nestjs/common/decorators";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guards";
 import * as sharp from "sharp";
 import { Query as ExpressQuery } from "express-serve-static-core";
+import { CommentDto } from "./dto/comment.dto";
 
 // var path = require('path')
 
@@ -102,4 +103,22 @@ export class PostsController {
   getAllPosts(@Query() query: ExpressQuery): Promise<PostDTO[]> {
     return this.PostsService.findAllPosts(query);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("addcomment")
+  async createComment(@Body() contentData:CommentDto, @Req() req: any){
+    const userEmail = req.user["email"]
+    return this.PostsService.createComment(contentData, userEmail)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete("deletecomment")
+  async deleteComment(@Body() contentData:CommentDto){
+    return this.PostsService.deleteComment(contentData)
+  }
+  @Get("findcomment")
+  async findAllComment(@Query() query: ExpressQuery){
+    return this.PostsService.findAllComment(query)
+  }
+  
 }
