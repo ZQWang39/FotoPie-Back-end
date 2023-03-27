@@ -102,4 +102,6 @@ export class PostsController {
   getAllPosts(@Query() query: ExpressQuery): Promise<PostDTO[]> {
     return this.PostsService.findAllPosts(query);
   }
+
+  
 }

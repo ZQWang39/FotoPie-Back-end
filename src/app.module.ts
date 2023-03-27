@@ -13,11 +13,14 @@ import { ResetModule } from "./reset/reset.module";
 import { QuickViewModule } from "./quick-view/quick-view.module";
 import { LikeModule } from "./like/like.module";
 import { CollectModule } from "./collect/collect.module";
+import { NotificationModule } from "./Notification/notification.module";
 import { UserPostModule } from "./user-post/user-post.module";
+import { DownloadModule } from "./download/download.module";
 import { SubscriptionModule } from "./subscription/subscription.module";
 import { UserCollectionModule } from "./user-collection/user-collection.module";
-import { CategoryModule } from "./category/category.module";
+
 import { CreateImageModule } from "./create-image/create-image.module";
+import { CategoryModule } from "./category/category.module";
 
 @Module({
   imports: [
@@ -39,10 +42,13 @@ import { CreateImageModule } from "./create-image/create-image.module";
     QuickViewModule,
     LikeModule,
     CollectModule,
+    DownloadModule,
     SubscriptionModule,
     UserCollectionModule,
     UserPostModule,
     CategoryModule,
+    NotificationModule,
+    SubscriptionModule,
     CreateImageModule,
   ],
 })
