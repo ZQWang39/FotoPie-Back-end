@@ -52,7 +52,6 @@ export class SubscriptionController {
         cancel_url: "http://localhost:3000/subscription/cancel",
       });
 
-      console.log("Checkout session created!");
       // redirect frontend page to the stripe pre-build checkout page
       res.json({ session_url: session.url });
     } catch (e) {
@@ -111,7 +110,7 @@ export class SubscriptionController {
       );
     } catch (err) {
       //Invalid signature or body or webhook_secret
-      console.log("Webhook signature verification failed");
+
       res.status(400).send(`Webhook Error: ${err.message}`);
       return;
     }
@@ -128,7 +127,7 @@ export class SubscriptionController {
     switch (event.type) {
       case "checkout.session.completed":
         intent = event.data.object;
-        console.log("Payment Successful", intent.id);
+
         // Add this subscription info to db
         const subscriptionData = {
           _id: new mongoose.Types.ObjectId(),
@@ -142,14 +141,10 @@ export class SubscriptionController {
 
       case "invoice.paid":
         intent = event.data.object;
-        console.log("Payment Successful", intent.id);
         break;
 
       case "invoice.payment_failed":
         intent = event.data.object;
-        const message =
-          intent.last_payment_error && intent.last_payment_error.message;
-        console.log("Payment Failed:", intent.id, message);
         break;
     }
 

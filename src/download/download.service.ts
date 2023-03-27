@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  ForbiddenException,
-} from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Subscription } from "../subscription/schemas/subscription.schema";
@@ -43,7 +39,11 @@ export class DownloadService {
         return signedUrl;
       }
     } catch (err) {
-      throw new ForbiddenException("No subscription found");
+      if (err instanceof NotFoundException) {
+        console.error("generatePresignedUrl", err);
+      }
+      console.error("unexpected error", err);
+      throw err;
     }
   }
 
@@ -52,12 +52,12 @@ export class DownloadService {
     const subscription = await this.subscriptionModel.findOne({
       customer_email: email,
     });
-    if (!subscription) throw new NotFoundException();
+    if (!subscription) throw new NotFoundException("no subscription found");
     return subscription;
   }
 
   //check if the user subscription is within one month
-  async isWithinOneMonth(updatedAt: Date): Promise<boolean> {
+  isWithinOneMonth(updatedAt: Date): boolean {
     const currentTime = new Date();
     const oneMonthAgo = new Date(currentTime);
     oneMonthAgo.setMonth(currentTime.getMonth() - 1);
