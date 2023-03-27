@@ -19,9 +19,13 @@ export class CategoryService {
     const resPerPage = Number(query.limit);
     const currentPage = Number(query.page) || 1;
     const skip = resPerPage * (currentPage - 1);
-    return this.postModel
+    const result = this.postModel
       .find({ tag })
       .limit(resPerPage)
       .skip(skip);
+    if (!result) {
+      throw new NotFoundException("User collection posts not found");
+    }
+    return result;
   }
 }
