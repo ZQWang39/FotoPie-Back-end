@@ -2,6 +2,7 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from "@nestjs/common";
 import { LoginUserDto } from "./dto/login-user.dto";
 import * as bcrypt from "bcryptjs";
@@ -46,15 +47,20 @@ export class AuthService {
     const decoded = await this.jwtService.verify(rt, {
       secret: this.configService.get("refresh_token_key_public"),
     });
-    if (!decoded || typeof decoded === "string") throw new NotFoundException();
+    if (!decoded || typeof decoded === "string")
+      throw new UnauthorizedException("Invalid refresh token");
 
     const { email } = decoded;
 
     const user = await this.userService.findByEmail(email);
 
-    if (!user || !user.refreshToken) throw new NotFoundException();
+    if (!user || !user.refreshToken)
+      throw new UnauthorizedException(
+        "refresh token not found or user not found"
+      );
 
-    if (user.refreshToken !== rt) throw new ForbiddenException();
+    if (user.refreshToken !== rt)
+      throw new UnauthorizedException("refresh token not match");
 
     const newAccessToken = this.jwtService.sign(
       {
