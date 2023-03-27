@@ -19,7 +19,7 @@ export class Category {
     );
     const compressed_s3Url = process.env.BUCKET_PHOTO_COMPRESSION_PREFIX;
 
-    return categoryPosts.map(({ _id, filename, userEmail, price, tag, description }) => {
+    const result = categoryPosts.map(({ _id, filename, userEmail, price, tag, description }) => {
       return {
         _id,
         compressed_imageUrl: `${compressed_s3Url}/${filename}`,
@@ -30,5 +30,6 @@ export class Category {
         filename
       };
     });
+    return result;
   }
 }
