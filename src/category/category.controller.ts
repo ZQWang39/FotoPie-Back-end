@@ -19,18 +19,17 @@ export class Category {
     const compressed_s3Url =
       "https://fotopie-photo-compression.s3.ap-southeast-2.amazonaws.com";
 
-    return categoryPosts.map(
-      ({ _id, filename, userEmail, price, tag, description }) => {
-        return {
-          _id,
-          compressed_imageUrl: `${compressed_s3Url}/${filename}`,
-          userEmail,
-          price,
-          tag,
-          description,
-          filename,
-        };
-      }
-    );
+    const result = categoryPosts.map(({ _id, filename, userEmail, price, tag, description }) => {
+      return {
+        _id,
+        compressed_imageUrl: `${compressed_s3Url}/${filename}`,
+        userEmail,
+        price,
+        tag,
+        description,
+        filename
+      };
+    });
+    return result;
   }
 }

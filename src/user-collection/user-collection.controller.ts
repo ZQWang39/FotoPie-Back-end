@@ -22,7 +22,7 @@ export class UserCollection {
     const compressed_s3Url =
       "https://fotopie-photo-compression.s3.ap-southeast-2.amazonaws.com";
 
-    return collectedPosts.map(
+    const result = collectedPosts.map(
       ({ _id, filename, collect_user_email, collected_user_email }) => {
         return {
           _id,
@@ -33,5 +33,6 @@ export class UserCollection {
         };
       }
     );
+    return result;
   }
 }
