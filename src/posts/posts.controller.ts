@@ -1,3 +1,4 @@
+import { ConfigService } from "@nestjs/config";
 import { HttpStatus } from "@nestjs/common/enums";
 import { Posts } from "./schema/post.schema";
 import { PostsService } from "./posts.service";
@@ -30,7 +31,10 @@ import { Query as ExpressQuery } from "express-serve-static-core";
 
 @Controller("posts")
 export class PostsController {
-  constructor(private readonly PostsService: PostsService) {}
+  constructor(
+    private readonly PostsService: PostsService,
+    private ConfigService: ConfigService
+  ) {}
 
   @Patch("upload")
   @UseInterceptors(FileInterceptor("file", { storage: multer.memoryStorage() }))
@@ -43,23 +47,17 @@ export class PostsController {
       .toBuffer();
 
     // S3 upload
-    const bucketNameOrginial = process.env.AWS_BUCKET_NAME_PHOTO;
-    const bucketNameCompression = process.env.AWS_BUCKET_NAME_PHOTO_compression;
-    const bucketRegion = process.env.AWS_BUCKET_REGION_PHOTO;
-    const accessKey = process.env.AWS_PHOTO_ACCESS_KEY as string;
-    const secretAccessKey = process.env.AWS_PHOTO_SECRECT_KEY as string;
-
     const s3Clinet = new S3Client({
-      region: bucketRegion,
+      region: "ap-southeast-2",
       credentials: {
-        accessKeyId: accessKey,
-        secretAccessKey: secretAccessKey,
+        accessKeyId: this.ConfigService.get("aws_access_key_id"),
+        secretAccessKey: this.ConfigService.get("aws_access_key_secret"),
       },
     });
 
     await s3Clinet.send(
       new PutObjectCommand({
-        Bucket: bucketNameOrginial,
+        Bucket: "fotopie-photo",
         Body: file.buffer,
         Key: filename,
         ContentType: file.mimetype,
@@ -68,7 +66,7 @@ export class PostsController {
 
     await s3Clinet.send(
       new PutObjectCommand({
-        Bucket: bucketNameCompression,
+        Bucket: "fotopie-photo-compression",
         Body: fileBuffer,
         Key: filename,
         ContentType: "image/jpeg",
@@ -78,8 +76,8 @@ export class PostsController {
     return res.status(HttpStatus.OK).json({
       message: "Confirmed ",
       filename: filename,
-      original_path: `https://${bucketNameOrginial}.s3.${bucketRegion}.amazonaws.com/${filename}`,
-      compression_path: `https://${bucketNameCompression}.s3.${bucketRegion}.amazonaws.com/${filename}`,
+      original_path: `https://fotopie-photo.s3.ap-southeast-2.amazonaws.com/${filename}`,
+      compression_path: `https://fotopie-photo-compression.s3.ap-southeast-2.amazonaws.com/${filename}`,
     });
   }
 
@@ -102,6 +100,4 @@ export class PostsController {
   getAllPosts(@Query() query: ExpressQuery): Promise<PostDTO[]> {
     return this.PostsService.findAllPosts(query);
   }
-
-  
 }

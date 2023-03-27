@@ -49,11 +49,14 @@ export class QuickViewService {
 
     // photo_url
     const photo_url = path.join(
-      process.env.BUCKET_PHOTO_COMPRESSION_PREFIX,
+      "https://fotopie-photo-compression.s3.ap-southeast-2.amazonaws.com",
       filename
     );
     // avatar_url
-    const avatar_url = path.join(process.env.BUCKET_AVATAR_PREFIX, avatar);
+    const avatar_url = path.join(
+      "https://fotopie-avatar.s3.ap-southeast-2.amazonaws.com",
+      avatar
+    );
 
     if (accessToken) {
       // accessToken in Header starts with 'Bearer', need to split it our and get the real token

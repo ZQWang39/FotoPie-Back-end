@@ -29,7 +29,7 @@ export class User {
   avatar: string;
 
   @Prop({
-    default: `https://${process.env.BUCKET_NAME}.s3.${process.env.BUCKET_REGION}.amazonaws.com/default_avatar.png`,
+    default: `https://fotopie-avatar.s3.ap-southeast-2.amazonaws.com/default_avatar.png`,
     type: String,
   })
   avatarPath: string;
