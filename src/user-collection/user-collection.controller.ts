@@ -20,7 +20,7 @@ export class UserCollection {
       );
     const compressed_s3Url = process.env.BUCKET_PHOTO_COMPRESSION_PREFIX;
 
-    return collectedPosts.map(
+    const result = collectedPosts.map(
       ({ _id, filename, collect_user_email, collected_user_email }) => {
         return {
           _id,
@@ -31,5 +31,6 @@ export class UserCollection {
         };
       }
     );
+    return result;
   }
 }
