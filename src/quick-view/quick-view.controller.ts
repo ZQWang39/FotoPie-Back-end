@@ -29,8 +29,6 @@ export class QuickViewController {
     @Query("filename") filename: string,
     @Headers("Authorization") accessToken: string
   ): Promise<Post_Data> {
-    console.log(filename);
-    console.log(accessToken);
     const post_data = await this.quickViewService.getPostData(
       filename,
       accessToken
