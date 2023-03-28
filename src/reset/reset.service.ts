@@ -6,13 +6,15 @@ import { JwtService as NestJwtService } from "@nestjs/jwt";
 import { InjectModel } from "@nestjs/mongoose";
 import { ResetRequestDto } from "./dto/reset-request.dto";
 import * as mailgun from "mailgun-js";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable({})
 export class ResetService {
   private readonly mailgunClient: mailgun.Mailgun;
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    private readonly nestJwtService: NestJwtService
+    private readonly nestJwtService: NestJwtService,
+    private ConfigService: ConfigService
   ) {}
 
   //---------------Main Services---------------
@@ -100,7 +102,7 @@ export class ResetService {
     email: string,
     token: string
   ): Promise<{ message: string }> {
-    const api_key = process.env.MAILGUN_API_KEY;
+    const api_key = this.ConfigService.get("mailgun_api_key");
     const DOMAIN = "fotopie.net";
 
     const mg = mailgun({

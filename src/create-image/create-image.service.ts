@@ -1,9 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { Configuration, OpenAIApi } from "openai";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable({})
 export class CreateImageService {
   private openai: OpenAIApi;
+  private ConfigService: ConfigService;
 
   // Connect with OpenAI with the API Key
   constructor() {

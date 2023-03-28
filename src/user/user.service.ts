@@ -14,12 +14,14 @@ import { JwtService } from "@nestjs/jwt";
 import VerificationTokenPayload from "./interface/verificationTokenPayload.interface";
 import * as bcrypt from "bcryptjs";
 import * as mailgun from "mailgun-js";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private ConfigService: ConfigService
   ) {}
   create(createUserDto: CreateUserDto) {
     return "This action adds a new user";
@@ -85,7 +87,7 @@ export class UserService {
       password,
     };
     const token = this.jwtService.sign(payload, {
-      secret: process.env.JWT_ACTIVIATE_SECRET_KEY,
+      secret: this.ConfigService.get("jwt_activate_secret_key"),
       expiresIn: "20m",
     });
 
@@ -94,13 +96,13 @@ export class UserService {
     const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
 
     const mg = mailgun({
-      apiKey: process.env.MAILGUN_API_KEY,
+      apiKey: this.ConfigService.get("mailgun_api_key"),
       domain: "fotopie.net",
     });
 
     try {
       return mg.messages().send({
-        from: process.env.SENDER_EMAIL,
+        from: "info@fotopie.net",
         to: email,
         subject: "Email confirmation",
         text,
@@ -112,7 +114,7 @@ export class UserService {
 
   public async decodeConfirmationToken(token: string) {
     const payload = await this.jwtService.verify(token, {
-      secret: process.env.JWT_ACTIVIATE_SECRET_KEY,
+      secret: this.ConfigService.get("jwt_activate_secret_key"),
     });
 
     const { firstName, lastName, email, password } = payload;

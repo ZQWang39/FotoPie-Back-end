@@ -7,6 +7,7 @@ import { Collect } from "./schema/collect.schema";
 import { Like } from "./schema/like.schema";
 import { JwtService } from "@nestjs/jwt";
 import * as path from "path";
+import { ConfigService } from "@nestjs/config";
 
 interface Post_Data {
   user_name: string;
@@ -26,7 +27,8 @@ export class QuickViewService {
     @InjectModel("User") private readonly userModel: Model<User>,
     @InjectModel("Like") private readonly likeModel: Model<Like>,
     @InjectModel("Collect") private readonly collectModel: Model<Collect>,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private ConfigService: ConfigService
   ) {}
 
   async getPostData(filename: string, accessToken: string): Promise<Post_Data> {
@@ -160,7 +162,7 @@ export class QuickViewService {
   //verify the token
   async verifyToken(token: string): Promise<{ email: string }> {
     const decodedToken = this.jwtService.verify(token, {
-      secret: process.env.ACCESS_TOKEN_SECRET_PUBLIC,
+      secret: this.ConfigService.get("access_token_key_public"),
     });
     if (!decodedToken || typeof decodedToken === "string")
       throw new NotFoundException();

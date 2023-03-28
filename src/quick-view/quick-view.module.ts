@@ -7,6 +7,7 @@ import { Posts, PostsSchema } from "./schema/post.schema";
 import { Like, LikeSchema } from "./schema/like.schema";
 import { Collect, CollectSchema } from "./schema/collect.schema";
 import { JwtModule } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { JwtModule } from "@nestjs/jwt";
     MongooseModule.forFeature([{ name: Like.name, schema: LikeSchema }]),
     MongooseModule.forFeature([{ name: Collect.name, schema: CollectSchema }]),
     JwtModule.register({
-      secret: process.env.JWT_ACTIVIATE_SECRET_KEY,
+      secret: process.env.JWT_ACTIVATE_SECRET_KEY,
       signOptions: { expiresIn: "15m" },
     }),
   ],
