@@ -1,3 +1,4 @@
+import { ConfigService } from "@nestjs/config";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -9,20 +10,21 @@ import { InjectModel } from "@nestjs/mongoose";
 export class DownloadService {
   constructor(
     @InjectModel(Subscription.name)
-    private readonly subscriptionModel: Model<Subscription>
+    private readonly subscriptionModel: Model<Subscription>,
+    private ConfigService: ConfigService
   ) {}
 
   async generatePresignedUrl(filename: string, userEmail: string) {
     //create a new S3Client
     const s3Client = new S3Client({
-      region: process.env.BUCKET_REGION,
+      region: "ap-southeast-2",
       credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_ACCESS_KEY_SECRET,
+        accessKeyId: this.ConfigService.get("aws_access_key_id"),
+        secretAccessKey: this.ConfigService.get("aws_access_key_secret"),
       },
     });
     const bucketParams = {
-      Bucket: process.env.AWS_BUCKET_NAME_PHOTO,
+      Bucket: "fotopie-photo",
       Key: filename,
       Body: "BODY",
     };

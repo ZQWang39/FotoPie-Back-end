@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from "@nestjs/common";
 import { UserCollectionService } from "./user-collection.service";
-import { Query} from "@nestjs/common/decorators";
+import { Query } from "@nestjs/common/decorators";
 import { Query as ExpressQuery } from "express-serve-static-core";
 
 @Controller("user-collect")
@@ -16,9 +16,11 @@ export class UserCollection {
       await this.userCollectionService.getUserEmailById(id);
     const collectedPosts =
       await this.userCollectionService.getCollectedPostsIdByCollectUserEmail(
-        collect_user_email,query
+        collect_user_email,
+        query
       );
-    const compressed_s3Url = process.env.BUCKET_PHOTO_COMPRESSION_PREFIX;
+    const compressed_s3Url =
+      "https://fotopie-photo-compression.s3.ap-southeast-2.amazonaws.com";
 
     const result = collectedPosts.map(
       ({ _id, filename, collect_user_email, collected_user_email }) => {

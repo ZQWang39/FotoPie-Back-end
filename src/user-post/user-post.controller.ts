@@ -1,5 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Controller, Delete, Get, Param } from "@nestjs/common";
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+} from "@nestjs/common";
 import { UserPostService } from "./user-post.service";
 
 @Controller("profile")
