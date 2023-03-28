@@ -5,8 +5,6 @@ import { AuthService } from "./auth.service";
 import { refreshTokenStrategy } from "./strategies/refreshToken-strategy";
 import { accessTokenStrategy } from "./strategies/accessToken-strategy";
 import { JwtModule } from "@nestjs/jwt";
-import { MongooseModule } from "@nestjs/mongoose";
-import { User, UserSchema } from "src/user/schemas/user.schema";
 
 @Module({
   imports: [UserModule, JwtModule.register({})],

@@ -9,7 +9,6 @@ import {
 } from "@nestjs/common";
 import { LoginUserDto } from "./dto/login-user.dto";
 import { Tokens } from "./types/tokens.type";
-import { AuthGuard } from "@nestjs/passport";
 import { Request } from "express";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./guards/jwt-auth.guards";
