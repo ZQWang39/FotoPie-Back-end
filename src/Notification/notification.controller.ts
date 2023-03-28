@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 import { NotificationService } from './notification.service';
 import { Like } from '../like/schemas/like.schema'
+import { Request } from 'express';
 
 @Controller('notification')
 
@@ -36,7 +37,7 @@ export class NotificationController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/count')
-  async getUnreadCount(@Req() req: any): Promise<any> {
+  async getUnreadCount(@Req() req: Request): Promise< {count: number}> {
     const currentUserEmail= req.user["email"]
     const count = await this.notificationService.getUnreadCount(currentUserEmail);
     return { count };
@@ -44,9 +45,9 @@ export class NotificationController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/mark-read')
-  async markAllAsRead(@Req() req: any): Promise<any> {
+  async markAllAsRead(@Req() req: Request): Promise<{ acknowledged: boolean}> {
     const currentUserEmail= req.user["email"]
-    await this.notificationService.markAllAsRead(currentUserEmail);
-    return { message: 'Notifications marked as read' };
+    const acknowledged = await this.notificationService.markAllAsRead(currentUserEmail);
+    return { acknowledged };
   }
 }
