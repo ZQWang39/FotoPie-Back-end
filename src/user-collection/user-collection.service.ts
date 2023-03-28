@@ -26,9 +26,13 @@ export class UserCollectionService {
     const resPerPage = Number(query.limit);
     const currentPage = Number(query.page) || 1;
     const skip = resPerPage * (currentPage - 1);
-    return this.collectModel
+    const result= this.collectModel
       .find({ collect_user_email })
       .limit(resPerPage)
       .skip(skip);
+    if (!result) {
+      throw new NotFoundException("User collection posts not found")
+    }
+    return result;
   }
 }
