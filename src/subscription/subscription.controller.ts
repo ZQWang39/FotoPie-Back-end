@@ -157,7 +157,7 @@ export class SubscriptionController {
 
   // Check if the user is subscribed
   @UseGuards(JwtAuthGuard)
-  @Get("get-subscription-stauts")
+  @Get("get-subscription-status")
   @HttpCode(HttpStatus.OK)
   async getSubscriptionStatus(@Req() req, @Res() res) {
     const user_email = req.user["email"];
