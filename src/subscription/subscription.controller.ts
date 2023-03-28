@@ -14,14 +14,12 @@ import { Stripe } from "stripe";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guards";
 import { UseGuards } from "@nestjs/common/decorators";
 import mongoose from "mongoose";
-
-// const stripe = new Stripe("process.env.STRIPE_TEST_MODE_API_KEY", {
-//   apiVersion: "2022-11-15",
-// });
+import { ConfigService } from "@nestjs/config";
 
 @Controller("subscription")
 export class SubscriptionController {
   private readonly stripe: Stripe;
+  private ConfigService: ConfigService;
 
   constructor(private subscriptionService: SubscriptionService) {
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
@@ -101,7 +99,9 @@ export class SubscriptionController {
     const raw_body = req.rawBody;
     // Extract signature from request header
     const signature = req.headers["stripe-signature"];
-    const webhook_signing_secret = process.env.WEBHOOK_SIGNING_SECRET;
+    const webhook_signing_secret = this.ConfigService.get(
+      "webhook_signing_secret"
+    );
 
     // Verify signature
     let event;
