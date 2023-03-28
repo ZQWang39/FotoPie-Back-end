@@ -51,4 +51,24 @@ export class SubscriptionService {
       throw new NotFoundException("Customer has not subscribed yet");
     return subscription.customer;
   }
+
+  //check if the user is subscribed
+  async isSubscribed(user_email: string): Promise<boolean> {
+    const subscription = await this.subscriptionModel.findOne({
+      customer_email: user_email,
+    });
+    if (subscription) {
+      const currentTime = new Date();
+      const oneMonthAgo = new Date(currentTime);
+      oneMonthAgo.setMonth(currentTime.getMonth() - 1);
+
+      if (subscription.updatedAt >= oneMonthAgo) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 }
