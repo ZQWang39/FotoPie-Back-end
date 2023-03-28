@@ -3,7 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 
 import { Collect, CollectDocument } from "./schemas/collect.schema";
-import { Posts } from "./schemas/post.schema";
+import { Posts } from "../posts/schema/post.schema";
 import { CreateCollectDto } from "./dto/createCollect.dto";
 import { UserCollectDto } from "./dto/userCollect.dto";
 

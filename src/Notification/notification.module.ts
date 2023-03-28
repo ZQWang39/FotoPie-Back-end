@@ -5,7 +5,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { UserModule } from "src/user/user.module";
 import { Like, LikeSchema } from '../like/schemas/like.schema'
 import { LikeModule } from "src/like/like.module";
-import { Posts, PostSchema } from '../like/schemas/post.schema';
+import { Posts, PostSchema } from '../posts/schema/post.schema';
 
 @Module({
   imports: [
