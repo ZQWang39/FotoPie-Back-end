@@ -4,7 +4,7 @@ import mongoose, { Model } from "mongoose";
 import { CreateLikeDto } from "./Dto/createLike.dto";
 import { UserLikeDto } from "./Dto/UserLike.dto";
 import { Like, LikeDocument } from "./schemas/like.schema";
-import { Posts } from "./schemas/post.schema";
+import { Posts } from "../posts/schema/post.schema";
 
 @Injectable()
 export class LikeService {
@@ -20,14 +20,16 @@ export class LikeService {
   }
 
   async deleteLike(userLikeDto: UserLikeDto) {
-    await this.likeModel.deleteOne({ userLikeDto });
+    await this.likeModel.deleteOne( userLikeDto );
     return;
   }
 
   async checkLike(userLikeDto: UserLikeDto) {
     const checkLikeData = await this.likeModel.findOne(userLikeDto);
-    if (checkLikeData) return this.deleteLike(userLikeDto);
-    else return this.addLike(userLikeDto);
+    if (checkLikeData) 
+    {return this.deleteLike(userLikeDto)}
+    else 
+    {return this.addLike(userLikeDto)};
   }
 
   async numberLike(createLikeDto: CreateLikeDto) {

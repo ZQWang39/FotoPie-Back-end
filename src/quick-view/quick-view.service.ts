@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { Posts } from "./schema/post.schema";
+import { Posts } from "../posts/schema/post.schema";
 import { User } from "../user/schemas/user.schema";
-import { Collect } from "./schema/collect.schema";
-import { Like } from "./schema/like.schema";
+import { Collect } from "../collect/schemas/collect.schema";
+import { Like } from "../like/schemas/like.schema";
 import { JwtService } from "@nestjs/jwt";
 import * as path from "path";
 import { ConfigService } from "@nestjs/config";

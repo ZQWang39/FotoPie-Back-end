@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { User, UserDocument } from "../user/schemas/user.schema";
-import { Posts, PostDocument } from "src/like/schemas/post.schema";
+import { Posts, PostDocument } from "../posts/schema/post.schema";
 import { LikeService } from "src/like/like.service";
 import { Like, LikeDocument } from "../like/schemas/like.schema";
 import { Req } from "@nestjs/common";
