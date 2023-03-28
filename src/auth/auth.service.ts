@@ -31,7 +31,6 @@ export class AuthService {
     if (!passwordMatch) {
       throw new ForbiddenException();
     }
-
     const tokens = await this.getTokens(email);
     await this.updateRt(email, tokens.refresh_token);
     return tokens;

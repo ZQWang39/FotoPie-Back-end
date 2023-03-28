@@ -15,10 +15,14 @@ export class UserPostService {
     const user = await this.userModel.findOne({ _id }).exec();
     if (!user) {
       throw new NotFoundException();
-    }    
+    }
     return user.email;
   }
   async getPostsByUserEmail(userEmail: string): Promise<Posts[]> {
     return this.postModel.find({ userEmail });
+  }
+
+  async deletePostByFilename(filename: string): Promise<void> {
+    await this.postModel.deleteOne({ filename }).exec();
   }
 }
