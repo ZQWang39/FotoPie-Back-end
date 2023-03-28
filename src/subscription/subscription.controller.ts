@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Get,
   Body,
   RawBodyRequest,
   Req,
@@ -28,12 +29,12 @@ export class SubscriptionController {
     });
   }
 
+  // create-checkout-session
   @UseGuards(JwtAuthGuard)
   @Post("create-checkout-session")
   @HttpCode(HttpStatus.OK)
   async createSubscription(@Req() req, @Res() res) {
     const user_email = req.user["email"];
-
     const priceId = "price_1MitMoCWJBDJNhy8OQeBC2pY";
 
     // Create a new checkout session
@@ -64,6 +65,7 @@ export class SubscriptionController {
     }
   }
 
+  // create-portal-session
   @UseGuards(JwtAuthGuard)
   @Post("create-portal-session")
   @HttpCode(HttpStatus.OK)
@@ -88,6 +90,7 @@ export class SubscriptionController {
     res.json({ portalSession_url: portalSession.url });
   }
 
+  // webhook
   @Post("webhook")
   @HttpCode(HttpStatus.OK)
   async handleWebhook(
@@ -150,5 +153,17 @@ export class SubscriptionController {
 
     // Send a response back to Stripe to acknowledge receipt of the webhook
     res.sendStatus(200);
+  }
+
+  // Check if the user is subscribed
+  @UseGuards(JwtAuthGuard)
+  @Get("get-subscription-stauts")
+  @HttpCode(HttpStatus.OK)
+  async getSubscriptionStatus(@Req() req, @Res() res) {
+    const user_email = req.user["email"];
+    const subscription_status = await this.subscriptionService.isSubscribed(
+      user_email
+    );
+    res.json({ subscription_status });
   }
 }
