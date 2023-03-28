@@ -15,7 +15,8 @@ export class LikeService {
 
   async addLike(userLikeDto) {
     const newLike = new this.likeModel(userLikeDto);
-    return this.likeModel.create(newLike);
+    await this.likeModel.create(newLike);
+    return;
   }
 
   async deleteLike(userLikeDto: UserLikeDto) {
