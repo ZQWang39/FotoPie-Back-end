@@ -18,7 +18,7 @@ import { UserPostModule } from "./user-post/user-post.module";
 import { DownloadModule } from "./download/download.module";
 import { SubscriptionModule } from "./subscription/subscription.module";
 import { UserCollectionModule } from "./user-collection/user-collection.module";
-import { SearchModule } from './search/search.module';
+import { SearchModule } from "./search/search.module";
 
 import { CreateImageModule } from "./create-image/create-image.module";
 import { CategoryModule } from "./category/category.module";
@@ -47,7 +47,7 @@ import { CategoryModule } from "./category/category.module";
     SubscriptionModule,
     UserCollectionModule,
     UserPostModule,
-    SearchModule
+    SearchModule,
     CategoryModule,
     NotificationModule,
     SubscriptionModule,
