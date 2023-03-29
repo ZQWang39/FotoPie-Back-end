@@ -14,5 +14,5 @@ export class UserLikeDto {
     readonly filename: string;
 
     @IsBoolean()
-    readonly status: boolean;
+    readonly status?: boolean;
 }

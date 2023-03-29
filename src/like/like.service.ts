@@ -24,12 +24,13 @@ export class LikeService {
     return;
   }
 
-  async checkLike(userLikeDto: UserLikeDto) {
-    const checkLikeData = await this.likeModel.findOne(userLikeDto);
-    if (checkLikeData) 
-    {return this.deleteLike(userLikeDto)}
-    else 
-    {return this.addLike(userLikeDto)};
+  async checkLike({like_user_email, liked_user_email, filename}:Pick<UserLikeDto, 'like_user_email' | 'liked_user_email' | 'filename'>){
+    const checkLikeData = await this.likeModel.findOne({like_user_email, liked_user_email, filename});
+    if(checkLikeData){
+      return this.deleteLike({like_user_email, liked_user_email, filename})
+    } else {
+      return this.addLike({like_user_email, liked_user_email, filename})
+    }
   }
 
   async numberLike(createLikeDto: CreateLikeDto) {
