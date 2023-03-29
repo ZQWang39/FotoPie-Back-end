@@ -18,12 +18,12 @@ export class SearchController {
       tag,
       query
     );
-    const s3Url = process.env.BUCKET_PHOTO_COMPRESSION_PREFIX;
+    const compressed_s3Url = process.env.BUCKET_PHOTO_COMPRESSION_PREFIX;
 
     return categoryPosts.map(({ _id, filename, userEmail, price, tag, description }) => {
       return {
         _id,
-        imageUrl: `${s3Url}/${filename}`,
+        compressed_imageUrl: `${compressed_s3Url}/${filename}`,
         userEmail,
         price,
         tag,
