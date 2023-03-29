@@ -99,7 +99,7 @@ export class EditUserController {
     @Res() res: Response
   ) {
     // set file name
-    const fileName = `user-${uuidv4()}.jpeg`;
+    const fileName = `user-${uuidv4()}-${Date.now()}.jpeg`;
 
     // resize image
     const fileBuffer = await sharp(file.buffer)
