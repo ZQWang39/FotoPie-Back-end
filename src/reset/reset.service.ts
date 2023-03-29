@@ -1,27 +1,24 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { Model } from "mongoose";
 import { User } from "../user/schemas/user.schema";
 import { hash as bcryptHash } from "bcryptjs";
 import { JwtService as NestJwtService } from "@nestjs/jwt";
 import { InjectModel } from "@nestjs/mongoose";
-import { ResetPasswordDto } from "./dto/reset-password.dto";
 import { ResetRequestDto } from "./dto/reset-request.dto";
 import * as mailgun from "mailgun-js";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable({})
 export class ResetService {
   private readonly mailgunClient: mailgun.Mailgun;
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
-    private readonly nestJwtService: NestJwtService
+    private readonly nestJwtService: NestJwtService,
+    private ConfigService: ConfigService
   ) {}
 
   //---------------Main Services---------------
-  //send reset request service
+  //send reset request
   async resetRequest({ email }: ResetRequestDto): Promise<{ message: string }> {
     try {
       //Search the db and see if this email exists
@@ -29,43 +26,39 @@ export class ResetService {
 
       //if email does not exist, print not found
       if (!user) {
-        throw new NotFoundException("User not found");
+        return { message: "User Not Found" };
+      } else {
+        //if the email exists, sign the JWT token with the secret key
+        const payload = {
+          email: email,
+        };
+        const token = await this.nestJwtService.sign(payload);
+
+        //send the token via email
+        await this.sendPasswordResetEmail(email, token);
+
+        return { message: "Email Sent Successfully" };
       }
-
-      //if the email exists, sign the JWT token with the secret key
-      const payload = {
-        email: email,
-      };
-      const token = await this.nestJwtService.sign(payload);
-      console.log(token);
-
-      //send the token via email
-      await this.sendPasswordResetEmail(email, token);
-
-      return { message: "Email Sent Successfully" };
     } catch (e) {
       console.log(e);
-      return { message: "User Not Found" };
+      return { message: "Email Send Error" };
     }
   }
 
-  //reset password service
+  //reset password
   async resetPassword(
-    token: { token: string },
-    resetPasswordDto: ResetPasswordDto
+    token: string,
+    password: string
   ): Promise<{ message: string }> {
     //After user enters password and click submit, verify the token
     //valid:
     try {
-      //example: token = {token: "dsfhjkhwejkr32094732"}
-      const decodedToken = await this.verifyAsync(token.token);
-      // decodedToken = {
-      //   email: string;  // user email
-      // };
+      const decodedToken = await this.nestJwtService.verify(token);
 
       const userEmail = decodedToken.email;
+
       //hash the new password
-      const hashedPassword = await this.hash(resetPasswordDto.password);
+      const hashedPassword = await this.hash(password);
 
       //update the new password in db
       await this.userModel
@@ -104,18 +97,13 @@ export class ResetService {
     return this.nestJwtService.sign(payload);
   }
 
-  //verify the token
-  async verifyAsync(token: string): Promise<{ email: string }> {
-    return this.nestJwtService.verifyAsync<{ email: string }>(token);
-  }
-
   //email service
   async sendPasswordResetEmail(
     email: string,
     token: string
   ): Promise<{ message: string }> {
-    const api_key = process.env.MAILGUN_API_KEY;
-    const DOMAIN = process.env.MAILGUN_DOMAIN;
+    const api_key = this.ConfigService.get("mailgun_api_key");
+    const DOMAIN = "fotopie.net";
 
     const mg = mailgun({
       apiKey: api_key,
@@ -123,14 +111,13 @@ export class ResetService {
     });
 
     const data = {
-      from: process.env.SENDER_EMAIL,
-      to: "jeremy.zeyuliu@gmail.com",
-      // to: email,
+      from: "info@fotopie.net",
+      to: email,
       subject: "Email Verification",
       html: `
           <p>Hi,</p>
           <p>You have requested to reset your password. Please click the link below to reset your password:</p>
-          <p><a href="http://localhost:3000/reset-password?token=${token}">Reset Password</a></p>
+          <p><a href="http://localhost:3000/reset/reset-password?token=${token}">Reset Password</a></p>
           <p>If you did not make this request, you can safely ignore this email.</p>
           <p>Best regards,</p>
           <p>FotoPie Support Team</p>

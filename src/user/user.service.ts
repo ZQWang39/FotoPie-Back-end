@@ -14,19 +14,20 @@ import { JwtService } from "@nestjs/jwt";
 import VerificationTokenPayload from "./interface/verificationTokenPayload.interface";
 import * as bcrypt from "bcryptjs";
 import * as mailgun from "mailgun-js";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private ConfigService: ConfigService
   ) {}
   create(createUserDto: CreateUserDto) {
     return "This action adds a new user";
   }
 
   findAll() {
-    
     const users = this.userModel.find().exec();
     if (!users) throw new NotFoundException();
     return users;
@@ -86,19 +87,22 @@ export class UserService {
       password,
     };
     const token = this.jwtService.sign(payload, {
-      secret: process.env.JWT_ACTIVIATE_SECRET_KEY,
-      expiresIn: process.env.EXPIRE,
+      secret: this.ConfigService.get("jwt_activate_secret_key"),
+      expiresIn: "20m",
     });
 
-    const url = `${process.env.EMAIL_CONFIRMATION_URL}/${token}`;
+    const url = "http://localhost:3000/activated/${token}";
 
     const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
-    const DOMAIN = process.env.DOMAIN;
-    const mg = mailgun({ apiKey: process.env.MAILGUN_APIKEY, domain: DOMAIN });
+
+    const mg = mailgun({
+      apiKey: this.ConfigService.get("mailgun_api_key"),
+      domain: "fotopie.net",
+    });
 
     try {
       return mg.messages().send({
-        from: process.env.EMAIL_SEND,
+        from: "info@fotopie.net",
         to: email,
         subject: "Email confirmation",
         text,
@@ -110,7 +114,7 @@ export class UserService {
 
   public async decodeConfirmationToken(token: string) {
     const payload = await this.jwtService.verify(token, {
-      secret: process.env.JWT_ACTIVIATE_SECRET_KEY,
+      secret: this.ConfigService.get("jwt_activate_secret_key"),
     });
 
     const { firstName, lastName, email, password } = payload;

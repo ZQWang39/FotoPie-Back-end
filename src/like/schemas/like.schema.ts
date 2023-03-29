@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
 import {User} from "../../user/schemas/user.schema"
-import { Posts } from "./post.schema";
+import { Posts } from "../../posts/schema/post.schema";
 
 export type LikeDocument = HydratedDocument<Like>;
 
@@ -11,17 +11,17 @@ export class Like {
 
 _id: mongoose.Schema.Types.ObjectId;
 
-@Prop()
+@Prop({ required: true })
 like_user_email: string;
 
-@Prop()
+@Prop({ required: true })
 liked_user_email: string;
 
-@Prop()
+@Prop({ required: true })
 filename: string;
 
-// @Prop({type:Date})
-// updatedAt: Date;
+@Prop({ default: false, type: Boolean})
+status: boolean;
 
 }
 export const LikeSchema = SchemaFactory.createForClass(Like);

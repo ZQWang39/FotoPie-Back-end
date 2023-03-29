@@ -1,12 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { Posts } from "./schema/post.schema";
+import { Posts } from "../posts/schema/post.schema";
 import { User } from "../user/schemas/user.schema";
-import { Collect } from "./schema/collect.schema";
-import { Like } from "./schema/like.schema";
+import { Collect } from "../collect/schemas/collect.schema";
+import { Like } from "../like/schemas/like.schema";
 import { JwtService } from "@nestjs/jwt";
 import * as path from "path";
+import { ConfigService } from "@nestjs/config";
 
 interface Post_Data {
   user_name: string;
@@ -26,7 +27,8 @@ export class QuickViewService {
     @InjectModel("User") private readonly userModel: Model<User>,
     @InjectModel("Like") private readonly likeModel: Model<Like>,
     @InjectModel("Collect") private readonly collectModel: Model<Collect>,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private ConfigService: ConfigService
   ) {}
 
   async getPostData(filename: string, accessToken: string): Promise<Post_Data> {
@@ -49,11 +51,14 @@ export class QuickViewService {
 
     // photo_url
     const photo_url = path.join(
-      process.env.BUCKET_PHOTO_COMPRESSION_PREFIX,
+      "https://fotopie-photo-compression.s3.ap-southeast-2.amazonaws.com",
       filename
     );
     // avatar_url
-    const avatar_url = path.join(process.env.BUCKET_AVATAR_PREFIX, avatar);
+    const avatar_url = path.join(
+      "https://fotopie-avatar.s3.ap-southeast-2.amazonaws.com",
+      avatar
+    );
 
     if (accessToken) {
       // accessToken in Header starts with 'Bearer', need to split it our and get the real token
@@ -157,7 +162,7 @@ export class QuickViewService {
   //verify the token
   async verifyToken(token: string): Promise<{ email: string }> {
     const decodedToken = this.jwtService.verify(token, {
-      secret: process.env.ACCESS_TOKEN_SECRET_PUBLIC,
+      secret: this.ConfigService.get("access_token_key_public"),
     });
     if (!decodedToken || typeof decodedToken === "string")
       throw new NotFoundException();

@@ -24,16 +24,15 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { EditUserService } from "./editUser.service";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guards";
 import { EditUserDto } from "./dto/edit-user.dto";
-
-const bucketName = process.env.BUCKET_NAME;
-const bucketRegion = process.env.BUCKET_REGION;
-const accessKey = process.env.ACCESS_KEY as string;
-const secretAccessKey = process.env.SECRET_ACCESS_KEY as string;
+import { ConfigService } from "@nestjs/config";
 
 @UseGuards(JwtAuthGuard)
 @Controller("editUser")
 export class EditUserController {
-  constructor(private editUserService: EditUserService) {}
+  constructor(
+    private editUserService: EditUserService,
+    private configService: ConfigService
+  ) {}
 
   // update user name
   @Patch("/updateName")
@@ -100,7 +99,7 @@ export class EditUserController {
     @Res() res: Response
   ) {
     // set file name
-    const fileName = `user-${uuidv4()}.jpeg`;
+    const fileName = `user-${uuidv4()}-${Date.now()}.jpeg`;
 
     // resize image
     const fileBuffer = await sharp(file.buffer)
@@ -111,17 +110,17 @@ export class EditUserController {
 
     // S3 upload
     const s3Clinet = new S3Client({
-      region: bucketRegion,
+      region: "ap-southeast-2",
       credentials: {
-        accessKeyId: accessKey,
-        secretAccessKey: secretAccessKey,
+        accessKeyId: this.configService.get("aws_access_key_id"),
+        secretAccessKey: this.configService.get("aws_access_key_secret"),
       },
     });
 
     try {
       await s3Clinet.send(
         new PutObjectCommand({
-          Bucket: bucketName,
+          Bucket: "fotopie-avatar",
           Body: fileBuffer,
           Key: fileName,
           ContentType: file.mimetype,
@@ -137,7 +136,7 @@ export class EditUserController {
     // update avatar in db
     const user = await this.editUserService.updateAvatarByEmail(userEmail, {
       avatar: fileName,
-      avatarPath: `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${fileName}`,
+      avatarPath: `https://fotopie-avatar.s3.ap-southeast-2.amazonaws.com/${fileName}`,
     });
 
     const { avatar, avatarPath } = user;

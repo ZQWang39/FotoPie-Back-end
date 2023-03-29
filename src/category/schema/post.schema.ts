@@ -1,7 +1,8 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument } from "mongoose";
 
-export type PostsDocument = HydratedDocument<Posts>;
+
+export type PostDocument = HydratedDocument<Posts>;
 
 @Schema({ timestamps: true, versionKey: false })
 export class Posts {
@@ -11,13 +12,25 @@ export class Posts {
   filename: string;
 
   @Prop()
+  path: string;
+
+  @Prop()
   tag: string;
 
   @Prop()
   price: number;
 
   @Prop()
+  description: string;
+
+  @Prop()
+  orginalFilePath: string;
+
+  @Prop()
+  compressFilePath: string;
+
+  @Prop()
   userEmail: string;
 }
 
-export const PostsSchema = SchemaFactory.createForClass(Posts);
+export const PostSchema = SchemaFactory.createForClass(Posts);

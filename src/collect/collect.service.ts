@@ -3,7 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 
 import { Collect, CollectDocument } from "./schemas/collect.schema";
-import { Posts } from "./schemas/post.schema";
+import { Posts } from "../posts/schema/post.schema";
 import { CreateCollectDto } from "./dto/createCollect.dto";
 import { UserCollectDto } from "./dto/userCollect.dto";
 
@@ -27,12 +27,14 @@ export class CollectService {
   //add a collect
   async addCollect(userCollectDto) {
     const newCollect = new this.collectModel(userCollectDto);
-    return this.collectModel.create(newCollect);
+    await this.collectModel.create(newCollect);
+    return;
   }
 
   //delete a collect
   async deleteCollect(userCollectDto: UserCollectDto) {
-    return await this.collectModel.deleteOne(userCollectDto);
+    await this.collectModel.deleteOne(userCollectDto);
+    return;
   }
 
   async checkCollect(userCollectDto: UserCollectDto) {

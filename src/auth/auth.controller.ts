@@ -9,7 +9,6 @@ import {
 } from "@nestjs/common";
 import { LoginUserDto } from "./dto/login-user.dto";
 import { Tokens } from "./types/tokens.type";
-import { AuthGuard } from "@nestjs/passport";
 import { Request } from "express";
 import { AuthService } from "./auth.service";
 import { JwtAuthGuard } from "./guards/jwt-auth.guards";
@@ -24,16 +23,11 @@ export class AuthController {
     return this.authService.login(loginUserDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post("refresh")
   @HttpCode(HttpStatus.OK)
   refreshAccessToken(@Req() req: Request) {
-    const user = req.user;
     const localRfreshToken = req.body;
-    return this.authService.refresh(
-      user["email"],
-      localRfreshToken["refreshToken"]
-    );
+    return this.authService.refresh(localRfreshToken["refreshToken"]);
   }
 
   @UseGuards(JwtAuthGuard)

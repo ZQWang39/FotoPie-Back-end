@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsString } from "class-validator";
 
 export class UserLikeDto {
     @IsNotEmpty()
@@ -12,4 +12,7 @@ export class UserLikeDto {
     @IsNotEmpty()
     @IsString()
     readonly filename: string;
+
+    @IsBoolean()
+    readonly status?: boolean;
 }
