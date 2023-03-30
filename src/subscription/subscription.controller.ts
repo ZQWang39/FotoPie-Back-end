@@ -99,9 +99,7 @@ export class SubscriptionController {
     const raw_body = req.rawBody;
     // Extract signature from request header
     const signature = req.headers["stripe-signature"];
-    const webhook_signing_secret = this.ConfigService.get(
-      "webhook_signing_secret"
-    );
+    const webhook_signing_secret = process.env.WEBHOOK_SIGNING_SECRET;
 
     // Verify signature
     let event;
