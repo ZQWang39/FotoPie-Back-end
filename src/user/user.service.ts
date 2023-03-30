@@ -91,7 +91,7 @@ export class UserService {
       expiresIn: "20m",
     });
 
-    const url = "http://localhost:3000/activated/${token}";
+    const url = `http://localhost:3000/activated/${token}`;
 
     const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
 

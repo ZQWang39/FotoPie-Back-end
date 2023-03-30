@@ -23,7 +23,7 @@ export class NotificationService {
   ) {}
 
   async getLatestLikes(@Req() req: any): Promise<Like[]> {
-    return this.LikeModel.find({ status: false })
+    return this.LikeModel.find()
       .sort({ createdAt: -1 })
       .exec();
   }
@@ -40,7 +40,7 @@ export class NotificationService {
 
   async getLikePosts(like: Like): Promise<Posts[]> {
     const post = await this.postModel
-      .findOne({ filename: like.filename }, { compressFilePath: 1 })
+      .findOne({ filename: like.filename }, { compressFilePath: 1, filename: 1 })
       .exec();
     if (!post) {
       return [];
