@@ -24,12 +24,16 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
 
     if (!user) {
-      throw new NotFoundException('Invalid email or password, please try again.');
+      throw new NotFoundException(
+        "Invalid email or password, please try again."
+      );
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      throw new ForbiddenException('Invalid email or password, please try again.');
+      throw new ForbiddenException(
+        "Invalid email or password, please try again."
+      );
     }
     const tokens = await this.getTokens(email);
     await this.updateRt(email, tokens.refresh_token);
