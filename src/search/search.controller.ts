@@ -18,7 +18,8 @@ export class SearchController {
       tag,
       query
     );
-    const compressed_s3Url = process.env.BUCKET_PHOTO_COMPRESSION_PREFIX;
+    const compressed_s3Url =
+      "https://fotopie-photo-compression.s3.ap-southeast-2.amazonaws.com";
 
     return categoryPosts.map(({ _id, filename, userEmail, price, tag, description }) => {
       return {
