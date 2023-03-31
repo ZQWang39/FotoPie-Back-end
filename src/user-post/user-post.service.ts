@@ -23,7 +23,7 @@ export class UserPostService {
     return user.email;
   }
   async getPostsByUserEmail(userEmail: string): Promise<Posts[]> {
-    return this.postModel.find({ userEmail });
+    return this.postModel.find({ userEmail }).sort({ createdAt: "desc" });
   }
 
   async deletePostByFilename(filename: string): Promise<void> {

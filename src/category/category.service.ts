@@ -21,6 +21,7 @@ export class CategoryService {
     const skip = resPerPage * (currentPage - 1);
     const result = this.postModel
       .find({ tag })
+      .sort({ createdAt: "desc" })
       .limit(resPerPage)
       .skip(skip);
     if (!result) {
