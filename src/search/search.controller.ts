@@ -28,7 +28,8 @@ export class SearchController {
         userEmail,
         price,
         tag,
-        description
+        description,
+        filename
       };
     });
   }
