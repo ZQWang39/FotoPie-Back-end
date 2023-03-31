@@ -26,8 +26,9 @@ export class UserCollectionService {
     const resPerPage = Number(query.limit);
     const currentPage = Number(query.page) || 1;
     const skip = resPerPage * (currentPage - 1);
-    const result= this.collectModel
+    const result = this.collectModel
       .find({ collect_user_email })
+      .sort({ createdAt: "desc" })
       .limit(resPerPage)
       .skip(skip);
     if (!result) {
