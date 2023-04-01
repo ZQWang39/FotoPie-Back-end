@@ -47,8 +47,12 @@ export class SubscriptionController {
         currency: "AUD",
         customer_email: user_email,
         mode: "subscription",
-        success_url: "http://localhost:3000/subscription/success",
-        cancel_url: "http://localhost:3000/subscription/cancel",
+        success_url: `${this.ConfigService.get(
+          "frontend_url"
+        )}/subscription/success`,
+        cancel_url: `${this.ConfigService.get(
+          "frontend_url"
+        )}/subscription/cancel`,
       });
 
       // redirect frontend page to the stripe pre-build checkout page
@@ -76,7 +80,7 @@ export class SubscriptionController {
       user_email
     );
 
-    const returnUrl = "http://localhost:3000";
+    const returnUrl = this.ConfigService.get("frontend_url");
 
     // Create a billing portal with stripe
     const portalSession = await this.stripe.billingPortal.sessions.create({

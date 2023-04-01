@@ -117,7 +117,9 @@ export class ResetService {
       html: `
           <p>Hi,</p>
           <p>You have requested to reset your password. Please click the link below to reset your password:</p>
-          <p><a href="http://localhost:3000/reset/reset-password?token=${token}">Reset Password</a></p>
+          <p><a href="${this.ConfigService.get(
+            "frontend_url"
+          )}/reset/reset-password?token=${token}">Reset Password</a></p>
           <p>If you did not make this request, you can safely ignore this email.</p>
           <p>Best regards,</p>
           <p>FotoPie Support Team</p>
