@@ -2,6 +2,9 @@ export const config = () => ({
   // Server post
   port: 9090 || 8080,
 
+  // Frontend url
+  frontend_url: process.env.FRONTEND_URL,
+
   // MongoDB connection url
   host: process.env.MONGO_URL,
 
