@@ -43,7 +43,6 @@ export class UserService {
 
   async findByEmail(email: string): Promise<User> {
     const user = await this.userModel.findOne({ email }).exec();
-    if (!user) throw new NotFoundException();
     return user;
   }
 
@@ -91,7 +90,7 @@ export class UserService {
       expiresIn: "20m",
     });
 
-    const url = "http://localhost:3000/activated/${token}";
+    const url = `${this.ConfigService.get("frontend_url")}/activated/${token}`;
 
     const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
 

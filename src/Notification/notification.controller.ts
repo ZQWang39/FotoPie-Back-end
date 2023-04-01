@@ -10,7 +10,7 @@ export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
   @UseGuards(JwtAuthGuard)
   @Get('/latest')
-  async getLatestLikes(@Req() req: any): Promise<any> {
+  async getLatestLikes(@Req() req: Request) {
     const currentUserEmail= req.user["email"]
     const likes = await this.notificationService.getLatestLikes(currentUserEmail);
 
@@ -28,7 +28,8 @@ export class NotificationController {
           userName: user?.firstName,
           post: post?.compressFilePath,
           directFilename: post?.filename,
-          status: like?.status
+          status: like?.status,
+          id: like?._id
         };
       }),
     );

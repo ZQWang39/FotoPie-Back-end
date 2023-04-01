@@ -18,6 +18,7 @@ export class SearchService {
         const skip = resPerPage * (currentPage - 1);
         return this.postsModel
           .find({ tag })
+          .sort({ createdAt: "desc" })
           .limit(resPerPage)
           .skip(skip);
       }
