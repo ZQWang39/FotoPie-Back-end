@@ -47,12 +47,8 @@ export class SubscriptionController {
         currency: "AUD",
         customer_email: user_email,
         mode: "subscription",
-        success_url: `${this.ConfigService.get(
-          "frontend_url"
-        )}/subscription/success`,
-        cancel_url: `${this.ConfigService.get(
-          "frontend_url"
-        )}/subscription/cancel`,
+        success_url: `http://localhost:3000/subscription/success`,
+        cancel_url: `http://localhost:3000/subscription/cancel`,
       });
 
       // redirect frontend page to the stripe pre-build checkout page
