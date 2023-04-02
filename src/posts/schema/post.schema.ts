@@ -7,39 +7,42 @@ export type PostDocument = HydratedDocument<Posts>;
 
 @Schema({ timestamps: true, versionKey: false })
 export class Posts {
+  _id: mongoose.Schema.Types.ObjectId;
 
-_id: mongoose.Schema.Types.ObjectId;
-    
-@Prop()
-filename: string;  
+  @Prop()
+  filename: string;
 
-@Prop()
-path: string;   
+  @Prop()
+  path: string;
 
-@Prop()
-tag: string;
-    
-@Prop()
-price: number;
+  @Prop({ type: [String] })
+  tag: string[];
 
-@Prop()
-description: string;
+  @Prop()
+  price: number;
 
-@Prop()
-orginalFilePath: string;
+  @Prop()
+  description: string;
 
-@Prop()
-compressFilePath: string;
+  @Prop()
+  orginalFilePath: string;
 
-@Prop()
-userEmail: string;
+  @Prop()
+  compressFilePath: string;
 
-// @Prop()
-// comment:{
-//     _id: mongoose.Schema.Types.ObjectId;
-//     content: string;
-//     commentUser:string;
-// }  
+  @Prop()
+  userEmail: string;
+
+  // @Prop()
+  // comment:{
+  //     _id: mongoose.Schema.Types.ObjectId;
+  //     content: string;
+  //     commentUser:string;
+  // }
 }
 
 export const PostSchema = SchemaFactory.createForClass(Posts);
+PostSchema.index(
+  { tag: "text", description: "text" },
+  { default_language: "english", wildcardProjection: { "*": 1 } }
+);

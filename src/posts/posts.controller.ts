@@ -43,7 +43,7 @@ export class PostsController {
 
     const fileBuffer = await sharp(file.buffer)
       .toFormat("jpeg")
-      .jpeg({ quality: 10 })
+      .jpeg({ quality: 30 })
       .toBuffer();
 
     // S3 upload
