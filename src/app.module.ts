@@ -22,7 +22,7 @@ import { SearchModule } from "./search/search.module";
 
 import { CreateImageModule } from "./create-image/create-image.module";
 import { CategoryModule } from "./category/category.module";
-import { PostsnewModule } from "./postsnew/postsnew.module";
+
 
 @Module({
   imports: [
@@ -53,7 +53,6 @@ import { PostsnewModule } from "./postsnew/postsnew.module";
     NotificationModule,
     SubscriptionModule,
     CreateImageModule,
-    PostsnewModule,
   ],
   controllers: [],
 })
