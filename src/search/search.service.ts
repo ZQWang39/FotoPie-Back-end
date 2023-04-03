@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Posts } from "../posts/schema/post.schema";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
@@ -16,7 +16,7 @@ export class SearchService {
 
     //const regex = new RegExp(tag, "i");
 
-    return this.postsModel
+    const result = this.postsModel
       .find(
         { $text: { $search: tag }, tags: { $in: tag.split(" ") } },
         { score: { $meta: "textScore" } }
@@ -26,5 +26,9 @@ export class SearchService {
       .limit(resPerPage)
       .sort({ score: { $meta: "textScore" } })
       .skip(skip);
+    if (!result) {
+      throw new NotFoundException("User collection posts not found");
+    }
+    return result;
   }
 }
