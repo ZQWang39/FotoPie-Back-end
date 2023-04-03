@@ -6,7 +6,6 @@ import { User } from "../user/schemas/user.schema";
 import { Collect } from "../collect/schemas/collect.schema";
 import { Like } from "../like/schemas/like.schema";
 import { JwtService } from "@nestjs/jwt";
-import * as path from "path";
 import { ConfigService } from "@nestjs/config";
 
 interface Post_Data {
@@ -50,15 +49,9 @@ export class QuickViewService {
     const collect_count = await this.collectModel.count({ filename });
 
     // photo_url
-    const photo_url = path.join(
-      "https://fotopie-photo-compression.s3.ap-southeast-2.amazonaws.com",
-      filename
-    );
+    const photo_url = `https://fotopie-photo-compression.s3.ap-southeast-2.amazonaws.com/${filename}`;
     // avatar_url
-    const avatar_url = path.join(
-      "https://fotopie-avatar.s3.ap-southeast-2.amazonaws.com",
-      avatar
-    );
+    const avatar_url = `https://fotopie-avatar.s3.ap-southeast-2.amazonaws.com/${avatar}`;
 
     if (accessToken) {
       // accessToken in Header starts with 'Bearer', need to split it our and get the real token
