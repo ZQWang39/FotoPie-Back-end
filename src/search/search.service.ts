@@ -16,18 +16,24 @@ export class SearchService {
 
     //const regex = new RegExp(tag, "i");
 
+    const terms = tag.trim().split(/\s+/);
+    const regex = new RegExp(terms.join("|"), "i");
+
     const result = this.postsModel
-      .find(
-        { $text: { $search: tag }, tags: { $in: tag.split(" ") } },
-        { score: { $meta: "textScore" } }
-      )
-      //.find({tag})
+      .find({
+        $or: [
+          { $text: { $search: tag } },
+          { tags: { $in: tag.split(" ") } },
+          { description: { $regex: regex } },
+          { score: { $meta: "textScore" } },
+        ],
+      })
       .sort({ createdAt: "desc" })
       .limit(resPerPage)
       .sort({ score: { $meta: "textScore" } })
       .skip(skip);
     if (!result) {
-      throw new NotFoundException("User collection posts not found");
+      throw new NotFoundException("Searched posts not found");
     }
     return result;
   }
