@@ -19,19 +19,45 @@ export class SearchService {
     const terms = tag.trim().split(/\s+/);
     const regex = new RegExp(terms.join("|"), "i");
 
-    const result = this.postsModel
-      .find({
-        $or: [
-          { $text: { $search: tag } },
-          { tags: { $in: tag.split(" ") } },
-          { description: { $regex: regex } },
-          { score: { $meta: "textScore" } },
-        ],
-      })
+    // const result = this.postsModel
+    //   .find({
+    //     $or: [
+    //       { $text: { $search: tag } },
+    //       { tags: { $in: tag.split(" ") } },
+    //       { description: { $regex: regex } },
+    //       { score: { $meta: "textScore" } },
+    //     ],
+    //   })
+    //   .sort({ createdAt: "desc" })
+    //   .limit(resPerPage)
+    //   .sort({ score: { $meta: "textScore" } })
+    //   .skip(skip);
+    const result1 = this.postsModel
+      .find(
+        { description: { $regex: regex } },
+        //{ score: { $meta: "textScore" } }
+      )
+      .sort({ createdAt: "desc" })
+      .limit(resPerPage)
+      //.sort({ score: { $meta: "textScore" } })
+      .skip(skip);
+    const result2 = this.postsModel
+      .find(
+        {
+          $text: { $search: tag },
+          tags: { $in: tag.split(" ") },
+        },
+        { score: { $meta: "textScore" } }
+      )
       .sort({ createdAt: "desc" })
       .limit(resPerPage)
       .sort({ score: { $meta: "textScore" } })
       .skip(skip);
+    
+    const combinedResults = await Promise.all([result1, result2]);
+    const mergedResults = [...combinedResults[0], ...combinedResults[1]];
+    const result = mergedResults
+      
     if (!result) {
       throw new NotFoundException("Searched posts not found");
     }
