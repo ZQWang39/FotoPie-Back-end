@@ -43,6 +43,6 @@ export class Posts {
 
 export const PostSchema = SchemaFactory.createForClass(Posts);
 PostSchema.index(
-  { tag: "text"},
-  // { default_language: "english", wildcardProjection: { "*": 1 } }
+  { tag: "text",description:"text"},
+  { default_language: "english", wildcardProjection: { "*": 1 } }
 );
