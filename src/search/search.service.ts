@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Posts } from "../posts/schema/post.schema";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Query } from "express-serve-static-core";
+import { Client} from "@elastic/elasticsearch";
 import * as natural from "natural";
 import * as stopword from "stopword";
 
@@ -24,7 +25,6 @@ export class SearchService {
 
     const stemmedTerms = stopwords.map((term) => stemmer.stem(term));
     const searchText = stemmedTerms.join(" ");
-    
 
     const terms = tag.trim().split(/\s+/);
     const regex = new RegExp(terms.join("|"), "i");
@@ -44,7 +44,7 @@ export class SearchService {
     //   .skip(skip);
     const result1 = this.postsModel
       .find(
-        { description: { $regex: regex } },
+        { description: { $regex: regex } }
         //{ score: { $meta: "textScore" } }
       )
       .sort({ createdAt: "desc" })
@@ -63,11 +63,11 @@ export class SearchService {
       .limit(resPerPage)
       .sort({ score: { $meta: "textScore" } })
       .skip(skip);
-    
+
     const combinedResults = await Promise.all([result1, result2]);
     const mergedResults = [...combinedResults[0], ...combinedResults[1]];
-    const result = mergedResults
-      
+    const result = mergedResults;
+
     if (!result) {
       throw new NotFoundException("Searched posts not found");
     }
