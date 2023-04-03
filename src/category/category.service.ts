@@ -20,9 +20,13 @@ export class CategoryService {
     const currentPage = Number(query.page) || 1;
     const skip = resPerPage * (currentPage - 1);
     const result = this.postModel
-      .find({ tag })
+      .find(
+        { $text: { $search: tag }, tags: { $in: tag.split(" ") } },
+        { score: { $meta: "textScore" } }
+      )
       .sort({ createdAt: "desc" })
       .limit(resPerPage)
+      .sort({ score: { $meta: "textScore" } })
       .skip(skip);
     if (!result) {
       throw new NotFoundException("User collection posts not found");
