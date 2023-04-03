@@ -4,6 +4,7 @@ import { User, UserSchema } from "../../user/schemas/user.schema"
 import textSearch from "mongoose-text-search";
 
 
+
 export type PostDocument = HydratedDocument<Posts>;
 
 @Schema({ timestamps: true, versionKey: false })
