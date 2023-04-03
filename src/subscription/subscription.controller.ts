@@ -47,8 +47,8 @@ export class SubscriptionController {
         currency: "AUD",
         customer_email: user_email,
         mode: "subscription",
-        success_url: "http://localhost:3000/subscription/success",
-        cancel_url: "http://localhost:3000/subscription/cancel",
+        success_url: `http://localhost:3000/subscription/success`,
+        cancel_url: `http://localhost:3000/subscription/cancel`,
       });
 
       // redirect frontend page to the stripe pre-build checkout page
@@ -76,7 +76,7 @@ export class SubscriptionController {
       user_email
     );
 
-    const returnUrl = "http://localhost:3000";
+    const returnUrl = process.env.frontend_url;
 
     // Create a billing portal with stripe
     const portalSession = await this.stripe.billingPortal.sessions.create({
@@ -99,9 +99,7 @@ export class SubscriptionController {
     const raw_body = req.rawBody;
     // Extract signature from request header
     const signature = req.headers["stripe-signature"];
-    const webhook_signing_secret = this.ConfigService.get(
-      "webhook_signing_secret"
-    );
+    const webhook_signing_secret = process.env.WEBHOOK_SIGNING_SECRET;
 
     // Verify signature
     let event;
