@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Postsnew } from "../postsnew/schema/postnew.schema";
+import { Posts } from "../posts/schema/post.schema";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Query } from "express-serve-static-core";
@@ -7,9 +7,9 @@ import { Query } from "express-serve-static-core";
 @Injectable()
 export class SearchService {
   constructor(
-    @InjectModel(Postsnew.name) private readonly postsModel: Model<Postsnew>
+    @InjectModel(Posts.name) private readonly postsModel: Model<Posts>
   ) {}
-  async getSearchPostsIdByTag(tag: string, query: Query): Promise<Postsnew[]> {
+  async getSearchPostsIdByTag(tag: string, query: Query): Promise<Posts[]> {
     const resPerPage = Number(query.limit);
     const currentPage = Number(query.page) || 1;
     const skip = resPerPage * (currentPage - 1);
@@ -21,6 +21,7 @@ export class SearchService {
         { $text: { $search: tag }, tags: { $in: tag.split(" ") } },
         { score: { $meta: "textScore" } }
       )
+      //.find({tag})
       .sort({ createdAt: "desc" })
       .limit(resPerPage)
       .sort({ score: { $meta: "textScore" } })
