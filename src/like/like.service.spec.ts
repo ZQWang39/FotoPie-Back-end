@@ -54,7 +54,9 @@ import { LikeService } from './like.service';
           userEmail: 'test@example.com',
         };
   
-        jest.spyOn(postModel, 'findOne').mockReturnValueOnce(Promise.resolve(findResult as Posts));
+        jest.spyOn(postModel, 'findOne').mockReturnValueOnce({
+          exec: jest.fn().mockResolvedValueOnce(findResult)
+        } as any);
   
         const result = await service.findEmailByFilename(createLikeDto);
   
@@ -65,7 +67,7 @@ import { LikeService } from './like.service';
       it('should throw NotFoundException when post is not found', async () => {
         const createLikeDto = { filename: 'test.jpg' };
   
-        jest.spyOn(postModel, 'findOne').mockReturnValueOnce(Promise.resolve(null));
+        jest.spyOn(postModel, 'findOne').mockReturnValueOnce(null);
   
         await expect(service.findEmailByFilename(createLikeDto)).rejects.toThrow(NotFoundException);
       });

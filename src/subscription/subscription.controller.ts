@@ -76,7 +76,7 @@ export class SubscriptionController {
       user_email
     );
 
-    const returnUrl = this.ConfigService.get("frontend_url");
+    const returnUrl = process.env.frontend_url;
 
     // Create a billing portal with stripe
     const portalSession = await this.stripe.billingPortal.sessions.create({
