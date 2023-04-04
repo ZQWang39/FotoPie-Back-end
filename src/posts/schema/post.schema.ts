@@ -1,10 +1,9 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, {
-  HydratedDocument,
-  NumberExpression,
-  ObjectId,
-} from "mongoose";
-import { User, UserSchema } from "../../user/schemas/user.schema";
+import mongoose, { HydratedDocument, NumberExpression, ObjectId } from "mongoose";
+import { User, UserSchema } from "../../user/schemas/user.schema"
+
+
+
 
 export type PostDocument = HydratedDocument<Posts>;
 
@@ -46,6 +45,8 @@ export class Posts {
 
 export const PostSchema = SchemaFactory.createForClass(Posts);
 
+
+
 PostSchema.index(
   {
     tag: "text",
@@ -58,5 +59,8 @@ PostSchema.index(
       description: 2,
     },
     wildcardProjection: { "*": 1 },
-  }
+  },
+  
 );
+
+
