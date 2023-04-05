@@ -23,6 +23,9 @@ npm-debug.log
 # env
 .env
 
+# docker-compose.yml
+docker-compose.yml
+
 .DS_Store
 .vscode
 
