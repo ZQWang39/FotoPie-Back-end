@@ -34,6 +34,8 @@ export class SubscriptionController {
   async createSubscription(@Req() req, @Res() res) {
     const user_email = req.user["email"];
     const priceId = "price_1MitMoCWJBDJNhy8OQeBC2pY";
+    const success_link = process.env.FRONTEND_URL + "/subscription/success";
+    const cancel_link = process.env.FRONTEND_URL + "/subscription/cancel";
 
     // Create a new checkout session
     try {
@@ -47,8 +49,8 @@ export class SubscriptionController {
         currency: "AUD",
         customer_email: user_email,
         mode: "subscription",
-        success_url: `http://localhost:3000/subscription/success`,
-        cancel_url: `http://localhost:3000/subscription/cancel`,
+        success_url: success_link,
+        cancel_url: cancel_link,
       });
 
       // redirect frontend page to the stripe pre-build checkout page
