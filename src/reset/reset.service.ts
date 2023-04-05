@@ -40,7 +40,6 @@ export class ResetService {
         return { message: "Email Sent Successfully" };
       }
     } catch (e) {
-      console.log(e);
       return { message: "Email Send Error" };
     }
   }
@@ -69,12 +68,10 @@ export class ResetService {
         )
         .exec();
 
-      console.log("Password has been updated");
       return { message: "Password has been updated" };
 
       //invalid:
     } catch (error) {
-      console.log("Invalid token");
       throw new UnauthorizedException("Invalid Token");
     }
   }
@@ -128,10 +125,10 @@ export class ResetService {
 
     try {
       await mg.messages().send(data);
-      console.log("Email has been sent");
+      
       return { message: "Email has been sent" };
     } catch (error) {
-      console.log("Failed to send email", error);
+      
       throw new Error("Failed to send email");
     }
   }

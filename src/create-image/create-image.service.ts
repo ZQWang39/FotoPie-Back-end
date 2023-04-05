@@ -44,20 +44,14 @@ export class CreateImageService {
       const imageFile: any = fileBuffer;
       imageFile.name = "image.png";
       const response = await this.openai.createImageVariation(
-        //fs.createReadStream( fileBuffer ) as any,
         imageFile,
 
         2,
         "512x512"
       );
-      //console.log(fileBuffer, "debug");
-      console.log(imageFile, "debug");
-
-      //const image_url = response.data.data[0].url;
 
       //return image_url;
-      console.log(response.data.data[0].url);
-      console.log(response.data.data[1].url);
+
       const urls = {
         url_1: response.data.data[0].url,
         url_2: response.data.data[1].url,
