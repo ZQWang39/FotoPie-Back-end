@@ -1,0 +1,228 @@
+name: Build Nest.js backend and deploy to AWS ECR
+on:   
+  push:
+    branches: 
+      - 'WI**'
+      - fotopie-backend-**
+
+  pull_request:
+    branches: 
+      - 'fotopie-backend-**'
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  test-alert:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Run Snyk to check code vulnerabilities
+      uses: snyk/actions/node@master
+      continue-on-error: true
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high
+    
+    - name: Install Eslint
+      run: npm install eslint@8.19.0
+
+    # - name: Execute unit test
+    #   run: npm run test 
+
+    - name: Code Quality Check
+      # run: npx eslint src --max-warnings 0
+      run: npx eslint src 
+      continue-on-error: false
+  
+    - name: Send email on test failure
+      if: failure()
+      uses: dawidd6/action-send-mail@v2.2.0
+      env:
+        SENDER_EMAIL : ${{ vars.SENDER_EMAIL }}
+        RECIPIENT_EMAIL : ${{ vars.RECIPIENT_EMAIL }}
+      with:
+        server_address: smtp.gmail.com
+        server_port: 587
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+        subject: 'Test failed on ${{ github.repository }}'
+        body: 'The test suite failed for ${{ github.repository }}'
+        to: ${{ env.RECIPIENT_EMAIL }}
+        from: ${{ env.SENDER_EMAIL }}
+
+  build-and-deploy-uat:
+    # if: github.ref == 'refs/heads/fotopie-backend-uat'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/fotopie-backend-uat'
+
+    needs: test-alert
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      ECS_REGISTRY : ${{ secrets.ECS_REGISTRY }}
+      CLUSTER_NAME_UAT : ${{ vars.CLUSTER_NAME_UAT }}
+      SERVICE_NAME_UAT : ${{ vars.SERVICE_NAME_UAT }}
+      TASK_DEFINITION_UAT : ${{ vars.TASK_DEFINITION_UAT }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.FOTOPIE_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.FOTOPIE_AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Build docker image
+      env: 
+        FRONTEND_URL : ${{ secrets.FRONTEND_URL }}
+        JWT_ACTIVATE_SECRET_KEY : ${{ secrets.JWT_ACTIVIATE_SECRET_KEY }}
+        MONGO_URL: ${{ secrets.MONGO_URL }}
+        ACCESS_TOKEN_SECRET_PRIVATE: ${{ secrets.ACCESS_TOKEN_SECRET_PRIVATE }}
+        ACCESS_TOKEN_SECRET_PUBLIC: ${{ secrets.ACCESS_TOKEN_SECRET_PUBLIC }}
+        REFRESH_TOKEN_SECRET_PRIVATE: ${{ secrets.REFRESH_TOKEN_SECRET_PRIVATE }}
+        REFRESH_TOKEN_SECRET_PUBLIC: ${{ secrets.REFRESH_TOKEN_SECRET_PUBLIC }}
+        MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_ACCESS_KEY_SECRET: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+        STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+        WEBHOOK_SIGNING_SECRET: ${{ secrets.WEBHOOK_SIGNING_SECRET }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        
+        
+      # Use --build-arg option to pass in the values for the build-time variables. 
+      run: |
+        docker build \
+        --build-arg FRONTEND_URL="$FRONTEND_URL" \
+        --build-arg JWT_ACTIVATE_SECRET_KEY="$JWT_ACTIVATE_SECRET_KEY" \
+        --build-arg MONGO_URL="$MONGO_URL" \
+        --build-arg MAILGUN_API_KEY="$MAILGUN_API_KEY" \
+        --build-arg REFRESH_TOKEN_SECRET_PUBLIC="$REFRESH_TOKEN_SECRET_PUBLIC" \
+        --build-arg REFRESH_TOKEN_SECRET_PRIVATE="$REFRESH_TOKEN_SECRET_PRIVATE" \
+        --build-arg ACCESS_TOKEN_SECRET_PUBLIC="$ACCESS_TOKEN_SECRET_PUBLIC" \
+        --build-arg ACCESS_TOKEN_SECRET_PRIVATE="$ACCESS_TOKEN_SECRET_PRIVATE" \
+        --build-arg AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
+        --build-arg AWS_ACCESS_KEY_SECRET="$AWS_ACCESS_KEY_SECRET" \
+        --build-arg STRIPE_SECRET_KEY="$STRIPE_SECRET_KEY" \
+        --build-arg WEBHOOK_SIGNING_SECRET="$WEBHOOK_SIGNING_SECRET" \
+        --build-arg OPENAI_API_KEY="$OPENAI_API_KEY" \
+        -t ${{ env.ECS_REGISTRY }}/fotopie-uat:latest \
+        -t ${{ env.ECS_REGISTRY }}/fotopie-uat:${{ github.sha }} .
+
+    - name: Push docker image to AWS ECR
+      run: |
+        aws ecr get-login-password --region ${{ env.AWS_REGION}} | docker login --username AWS --password-stdin ${{ env.ECS_REGISTRY }}
+        docker push ${{ env.ECS_REGISTRY }}/fotopie-uat
+        docker push ${{ env.ECS_REGISTRY }}/fotopie-uat:${{ github.sha }}
+
+    - name: Update ECS service
+      run: |
+          aws ecs update-service \
+          --cluster $CLUSTER_NAME_UAT \
+          --service $SERVICE_NAME_UAT \
+          --task-definition $TASK_DEFINITION_UAT \
+          --force-new-deployment
+
+  build-and-deploy-prod:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/fotopie-backend-prod'
+    needs: test-alert
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      ECS_REGISTRY : ${{ secrets.ECS_REGISTRY }}
+      CLUSTER_NAME_PROD : ${{ vars.CLUSTER_NAME_PROD }}
+      SERVICE_NAME_PROD : ${{ vars.SERVICE_NAME_PROD }}
+      TASK_DEFINITION_PROD : ${{ vars.TASK_DEFINITION_PROD }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.FOTOPIE_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.FOTOPIE_AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    
+    - name: Build docker image
+      env: 
+        JWT_ACTIVATE_SECRET_KEY : ${{ secrets.JWT_ACTIVIATE_SECRET_KEY }}
+        MONGO_URL: ${{ secrets.MONGO_URL }}
+        ACCESS_TOKEN_SECRET_PRIVATE: ${{ secrets.ACCESS_TOKEN_SECRET_PRIVATE }}
+        ACCESS_TOKEN_SECRET_PUBLIC: ${{ secrets.ACCESS_TOKEN_SECRET_PUBLIC }}
+        REFRESH_TOKEN_SECRET_PRIVATE: ${{ secrets.REFRESH_TOKEN_SECRET_PRIVATE }}
+        REFRESH_TOKEN_SECRET_PUBLIC: ${{ secrets.REFRESH_TOKEN_SECRET_PUBLIC }}
+        MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_ACCESS_KEY_SECRET: ${{ secrets.AWS_ACCESS_KEY_SECRET }}
+        STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+        WEBHOOK_SIGNING_SECRET: ${{ secrets.WEBHOOK_SIGNING_SECRET }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        
+        
+      # Use --build-arg option to pass in the values for the build-time variables. 
+      run: |
+        docker build \
+        --build-arg JWT_ACTIVATE_SECRET_KEY="$JWT_ACTIVATE_SECRET_KEY" \
+        --build-arg MONGO_URL="$MONGO_URL" \
+        --build-arg MAILGUN_API_KEY="$MAILGUN_API_KEY" \
+        --build-arg REFRESH_TOKEN_SECRET_PUBLIC="$REFRESH_TOKEN_SECRET_PUBLIC" \
+        --build-arg REFRESH_TOKEN_SECRET_PRIVATE="$REFRESH_TOKEN_SECRET_PRIVATE" \
+        --build-arg ACCESS_TOKEN_SECRET_PUBLIC="$ACCESS_TOKEN_SECRET_PUBLIC" \
+        --build-arg ACCESS_TOKEN_SECRET_PRIVATE="$ACCESS_TOKEN_SECRET_PRIVATE" \
+        --build-arg AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID" \
+        --build-arg AWS_ACCESS_KEY_SECRET="$AWS_ACCESS_KEY_SECRET" \
+        --build-arg STRIPE_SECRET_KEY="$STRIPE_SECRET_KEY" \
+        --build-arg WEBHOOK_SIGNING_SECRET="$WEBHOOK_SIGNING_SECRET" \
+        --build-arg OPENAI_API_KEY="$OPENAI_API_KEY" \
+        -t ${{ env.ECS_REGISTRY }}/fotopie-prod:latest \
+        -t ${{ env.ECS_REGISTRY }}/fotopie-prod:${{ github.sha }} .
+
+    - name: Push docker image to AWS ECR
+      run: |
+        aws ecr get-login-password --region ${{ env.AWS_REGION}} | docker login --username AWS --password-stdin ${{ env.ECS_REGISTRY }}
+        docker push ${{ env.ECS_REGISTRY }}/fotopie-prod
+        docker push ${{ env.ECS_REGISTRY }}/fotopie-prod:${{ github.sha }}
+
+    - name: Update ECS service
+      run: |
+          aws ecs update-service \
+          --cluster $CLUSTER_NAME_PROD \
+          --service $SERVICE_NAME_PROD \
+          --task-definition $TASK_DEFINITION_PROD \
+          --force-new-deployment
+
+
+
+  # integration-test:
+  #   needs: build-and-deploy
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     LOGIN_EMAIL_ADDRESS: ${{ secrets.LOGIN_EMAIL_ADDRESS }}
+  #     LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
+    
+  #   steps:
+  #   - name: Wait for 3 mins until new ECS service get started
+  #     run: sleep 180
+
+  #   - name: Perform integration test
+  #     run: |
+  #       curl --header "Content-Type: application/json" \
+  #         --request POST \
+  #         --data '{"email":"${{ env.LOGIN_EMAIL_ADDRESS }}","password":"${{ env.LOGIN_PASSWORD }}"}' \
+  #         http://fotopieAlb-802273448.ap-southeast-2.elb.amazonaws.com/api/auth/login
+
+  
