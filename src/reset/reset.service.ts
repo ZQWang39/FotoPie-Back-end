@@ -85,7 +85,9 @@ export class ResetService {
 
       //invalid:
     } catch (error) {
-      throw new UnauthorizedException("Something went wrong, please try again.");
+      throw new UnauthorizedException(
+        "Something went wrong, please try again."
+      );
     }
   }
 
@@ -123,7 +125,7 @@ export class ResetService {
     const data = {
       from: "info@fotopie.net",
       to: email,
-      subject: "Email Verification",
+      subject: "Reset Password Email Verification",
       html: `
           <p>Hi,</p>
           <p>You have requested to reset your password. Please click the link below to reset your password:</p>
