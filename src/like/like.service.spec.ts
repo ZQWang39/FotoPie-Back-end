@@ -5,22 +5,9 @@ import { Model } from 'mongoose';
 import { Posts } from 'src/posts/schema/post.schema';
 import { LikeService } from './like.service';
 
-// describe('LikeService', () => {
-//     let service: LikeService;
-  
-//     beforeEach(async () => {
-//       const module: TestingModule = await Test.createTestingModule({
-//         providers: [LikeService],
-//       }).compile();
-  
-//       service = module.get<LikeService>(LikeService);
-//     });
-  
-//     it('should be defined', () => {
-//       expect(service).toBeDefined();
-//     });
-//   });
-
+const postModelMock = {
+  findOne: jest.fn(),
+} as any;
 
   //Test findEmailByFilename
   describe('LikeService', () => {
@@ -28,49 +15,48 @@ import { LikeService } from './like.service';
     let postModel: Model<Posts>;
   
     beforeEach(async () => {
-      const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          LikeService,
-          {
-            provide: getModelToken('Like'),
-            useValue: {},
-          },
-          {
-            provide: getModelToken('Posts'),
-            useValue: {},
-          },
-        ],
-      }).compile();
+  const module: TestingModule = await Test.createTestingModule({
+    providers: [
+      LikeService,
+      {
+        provide: getModelToken('Like'),
+        useValue: {},
+      },
+      {
+        provide: getModelToken('Posts'),
+        useValue: postModel,
+      },
+    ],
+  }).compile();
+
+  service = module.get<LikeService>(LikeService);
+});
+
+describe('findEmailByFilename', () => {
+  it('should return the email of the user who created the post', async () => {
+    const createLikeDto = { filename: 'test.jpg' };
+
+    const findResult = {
+      userEmail: 'test@example.com',
+    };
+
+    postModelMock.findOne.mockReturnValueOnce({
+      exec: jest.fn().mockResolvedValueOnce(findResult)
+    } as any);
+
+    const result = await service.findEmailByFilename(createLikeDto);
+
+    expect(postModel.findOne).toHaveBeenCalledWith(createLikeDto);
+    expect(result).toBe(findResult.userEmail);
+  });
+
+  it('should throw NotFoundException when post is not found', async () => {
+    const createLikeDto = { filename: 'test.jpg' };
   
-      service = module.get<LikeService>(LikeService);
-      postModel = module.get<Model<Posts>>(getModelToken('Posts'));
-    });
+    postModelMock.findOne.mockReturnValueOnce(null);
   
-    describe('findEmailByFilename', () => {
-      it('should return the email of the user who created the post', async () => {
-        const createLikeDto = { filename: 'test.jpg' };
-  
-        const findResult = {
-          userEmail: 'test@example.com',
-        };
-  
-        jest.spyOn(postModel, 'findOne').mockReturnValueOnce({
-          exec: jest.fn().mockResolvedValueOnce(findResult)
-        } as any);
-  
-        const result = await service.findEmailByFilename(createLikeDto);
-  
-        expect(postModel.findOne).toHaveBeenCalledWith(createLikeDto);
-        expect(result).toBe(findResult.userEmail);
-      });
-  
-      it('should throw NotFoundException when post is not found', async () => {
-        const createLikeDto = { filename: 'test.jpg' };
-  
-        jest.spyOn(postModel, 'findOne').mockReturnValueOnce(null);
-  
-        await expect(service.findEmailByFilename(createLikeDto)).rejects.toThrow(NotFoundException);
-      });
-    });
+    await expect(service.findEmailByFilename(createLikeDto)).rejects.toThrow(NotFoundException);
+  });
+});
   });
 
