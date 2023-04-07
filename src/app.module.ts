@@ -23,7 +23,7 @@ import { SearchModule } from "./search/search.module";
 import { CreateImageModule } from "./create-image/create-image.module";
 import { CategoryModule } from "./category/category.module";
 import { NimaModule } from "./nima/nima.module";
-
+import { NimaController } from "./nima/nima.controller";
 
 @Module({
   imports: [
@@ -56,6 +56,6 @@ import { NimaModule } from "./nima/nima.module";
     CreateImageModule,
     NimaModule,
   ],
-  controllers: [],
+  controllers: [NimaController],
 })
 export class AppModule {}
