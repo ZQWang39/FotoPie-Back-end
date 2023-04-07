@@ -22,6 +22,7 @@ import { SearchModule } from "./search/search.module";
 
 import { CreateImageModule } from "./create-image/create-image.module";
 import { CategoryModule } from "./category/category.module";
+import { NimaModule } from "./nima/nima.module";
 
 
 @Module({
@@ -53,6 +54,7 @@ import { CategoryModule } from "./category/category.module";
     NotificationModule,
     SubscriptionModule,
     CreateImageModule,
+    NimaModule,
   ],
   controllers: [],
 })
