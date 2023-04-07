@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { Model } from "mongoose";
 import { User } from "../user/schemas/user.schema";
 import { hash as bcryptHash } from "bcryptjs";
@@ -20,28 +24,29 @@ export class ResetService {
   //---------------Main Services---------------
   //send reset request
   async resetRequest({ email }: ResetRequestDto): Promise<{ message: string }> {
+    //Search the db and see if this email exists
+    const user = await this.findOneByEmail(email);
+
+    //if email does not exist, print not found
+    if (!user) {
+      throw new NotFoundException("Invalid Email, Please try again!");
+    }
+    //if the email exists, sign the JWT token with the secret key
+    const payload = {
+      email: email,
+    };
+    const token = this.nestJwtService.sign(payload);
+    if (!token) {
+      throw new Error("Failed to sign token");
+    }
+
     try {
-      //Search the db and see if this email exists
-      const user = await this.findOneByEmail(email);
+      //send the token via email
+      await this.sendPasswordResetEmail(email, token);
 
-      //if email does not exist, print not found
-      if (!user) {
-        return { message: "User Not Found" };
-      } else {
-        //if the email exists, sign the JWT token with the secret key
-        const payload = {
-          email: email,
-        };
-        const token = await this.nestJwtService.sign(payload);
-
-        //send the token via email
-        await this.sendPasswordResetEmail(email, token);
-
-        return { message: "Email Sent Successfully" };
-      }
+      return { message: "Email Sent Successfully" };
     } catch (e) {
-      console.log(e);
-      return { message: "Email Send Error" };
+      throw new Error("Failed to send email");
     }
   }
 
@@ -54,11 +59,18 @@ export class ResetService {
     //valid:
     try {
       const decodedToken = await this.nestJwtService.verify(token);
+      console.log(decodedToken);
+
+      if (!decodedToken)
+        throw new UnauthorizedException("Invalid Token, Please try again.");
 
       const userEmail = decodedToken.email;
 
       //hash the new password
       const hashedPassword = await this.hash(password);
+
+      if (!hashedPassword)
+        throw new Error("Something went wrong, please try again.");
 
       //update the new password in db
       await this.userModel
@@ -69,13 +81,13 @@ export class ResetService {
         )
         .exec();
 
-      console.log("Password has been updated");
       return { message: "Password has been updated" };
 
       //invalid:
     } catch (error) {
-      console.log("Invalid token");
-      throw new UnauthorizedException("Invalid Token");
+      throw new UnauthorizedException(
+        "Something went wrong, please try again."
+      );
     }
   }
 
@@ -113,7 +125,7 @@ export class ResetService {
     const data = {
       from: "info@fotopie.net",
       to: email,
-      subject: "Email Verification",
+      subject: "Reset Password Email Verification",
       html: `
           <p>Hi,</p>
           <p>You have requested to reset your password. Please click the link below to reset your password:</p>
@@ -128,10 +140,9 @@ export class ResetService {
 
     try {
       await mg.messages().send(data);
-      console.log("Email has been sent");
+
       return { message: "Email has been sent" };
     } catch (error) {
-      console.log("Failed to send email", error);
       throw new Error("Failed to send email");
     }
   }

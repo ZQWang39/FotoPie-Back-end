@@ -3,7 +3,7 @@ import { Posts } from "../posts/schema/post.schema";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { Query } from "express-serve-static-core";
-import { Client} from "@elastic/elasticsearch";
+import { Client } from "@elastic/elasticsearch";
 import * as natural from "natural";
 import * as stopword from "stopword";
 
@@ -51,7 +51,7 @@ export class SearchService {
       .limit(resPerPage)
       //.sort({ score: { $meta: "textScore" } })
       .skip(skip);
-    //console.log(result1, "debug result1");
+
     const result2 = this.postsModel
       .find(
         {
@@ -64,9 +64,9 @@ export class SearchService {
       .limit(resPerPage)
       .sort({ score: { $meta: "textScore" } })
       .skip(skip);
-    //console.log(result2, "debug result2");
+
     const combinedResults = await Promise.all([result1, result2]);
-    
+
     const mergedResults = [...combinedResults[0], ...combinedResults[1]];
     //const result = mergedResults;
     const uniqueResults = new Set(
@@ -75,7 +75,6 @@ export class SearchService {
     const result = Array.from(uniqueResults).map((postId) =>
       mergedResults.find((post) => post._id.toString() === postId)
     );
-
 
     if (!result) {
       throw new NotFoundException("Searched posts not found");

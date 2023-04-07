@@ -3,7 +3,7 @@ import {
   NotFoundException,
   ForbiddenException,
 } from "@nestjs/common";
-import {  User } from "../admin/schema/user.schema";
+import { User } from "../admin/schema/user.schema";
 import { AdminService } from "src/admin/admin.service";
 import { JwtService } from "@nestjs/jwt";
 import { Token } from "./types/tokens.type";
@@ -32,7 +32,7 @@ export class AdminAuthService {
 
   async adminLogin({ email, password }: AdminLoginDto): Promise<Token> {
     const user = await this.adminService.findByEmail(email);
-    console.log(user);
+
     // const user = await this.authAdmin({ email, password });
     if (!user) {
       throw new NotFoundException();
@@ -43,7 +43,6 @@ export class AdminAuthService {
       throw new ForbiddenException();
     }
     if ("admin" !== user.role) {
-      console.log(user.role);
       throw new ForbiddenException();
     }
     return await this.generateToken(email, user.role);
@@ -52,7 +51,6 @@ export class AdminAuthService {
     const tokens = await this.getTokens(email, role);
     return tokens;
   }
-
 
   async getTokens(email: string, role: string) {
     const at = await this.jwtService.signAsync(
