@@ -24,6 +24,8 @@ import { CreateImageModule } from "./create-image/create-image.module";
 import { CategoryModule } from "./category/category.module";
 import { NimaModule } from "./nima/nima.module";
 import { NimaController } from "./nima/nima.controller";
+import { MyModule } from "./everypixel-auth/everypixel-auth.module";
+
 
 @Module({
   imports: [
@@ -55,6 +57,8 @@ import { NimaController } from "./nima/nima.controller";
     SubscriptionModule,
     CreateImageModule,
     NimaModule,
+    MyModule,
+    
   ],
   controllers: [NimaController],
 })
