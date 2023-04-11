@@ -60,7 +60,7 @@ jobs:
         from: ${{ env.SENDER_EMAIL }}
 
   build-and-deploy-uat:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/uat'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/UAT'
 
     needs: test-alert
     runs-on: ubuntu-latest
