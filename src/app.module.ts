@@ -25,6 +25,7 @@ import { CategoryModule } from "./category/category.module";
 import { NimaModule } from "./nima/nima.module";
 import { NimaController } from "./nima/nima.controller";
 import { MyModule } from "./everypixel-auth/everypixel-auth.module";
+import { QualityModule } from "./image-quality/image-quality.module";
 
 
 @Module({
@@ -58,7 +59,7 @@ import { MyModule } from "./everypixel-auth/everypixel-auth.module";
     CreateImageModule,
     NimaModule,
     MyModule,
-    
+    QualityModule,
   ],
   controllers: [NimaController],
 })

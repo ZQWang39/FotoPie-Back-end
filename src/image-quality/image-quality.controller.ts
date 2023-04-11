@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Get,
   Param,
   Req,
   HttpCode,
@@ -12,12 +13,35 @@ import { ImageQualityDto } from "./dto/image-quality.dto";
 import { QualityService } from "./image-quality.service";
 import { Quality, QualityDocument } from "./schema/image-quality.schema";
 import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guards";
+import { Query } from "@nestjs/common/decorators";
+import { Query as ExpressQuery } from "express-serve-static-core";
 
 @Controller("quality")
 export class QualityController {
-  constructor(private readonly collectService: QualityService) { }
+  constructor(private readonly qualityService: QualityService) {}
 
-  // @UseGuards(JwtAuthGuard)
-  // @Post(":filename")
-  // @HttpCode(HttpStatus.CREATED)
+  @UseGuards(JwtAuthGuard)
+  @Post(":file")
+  @HttpCode(HttpStatus.CREATED)
+  async createRank(
+    @Param("file") filenameString: string,
+    @Query() query: ExpressQuery,
+    @Req() req: any
+  ) {
+    const quality = new Quality();
+    quality.user_email = req.user["email"];
+    quality.filename = filenameString;
+    // const updatedQuality = await this.qualityService.saveQualityScore(
+    //   filenameString,
+    //   query
+    // );
+    quality.score = String(query.score);
+    await this.qualityService.create(quality);
+    return quality;
+  }
+
+  @Get()
+  getAllPosts(@Query() query: ExpressQuery): Promise<ImageQualityDto[]> {
+    return this.qualityService.findAllQualityPosts(query);
+  }
 }
