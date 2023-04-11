@@ -60,7 +60,7 @@ jobs:
         from: ${{ env.SENDER_EMAIL }}
 
   build-and-deploy-uat:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/fotopie-backend-uat'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/UAT'
 
     needs: test-alert
     runs-on: ubuntu-latest
@@ -136,7 +136,7 @@ jobs:
           --force-new-deployment
 
   build-and-deploy-prod:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/fotopie-backend-prod'
+    if: github.event_name == 'push' && github.ref == 'prod'
     needs: test-alert
     runs-on: ubuntu-latest
     env:
