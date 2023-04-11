@@ -39,8 +39,6 @@ ENV STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
 ENV WEBHOOK_SIGNING_SECRET=${WEBHOOK_SIGNING_SECRET}
 ENV OPENAI_API_KEY=${OPENAI_API_KEY}
 
-
-
 # Build the app
 RUN npm run build 
 
@@ -48,4 +46,5 @@ RUN npm run build
 EXPOSE 9090
 
 # Start the app
+
 CMD ["npm", "start"]
