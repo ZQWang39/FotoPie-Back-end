@@ -109,7 +109,7 @@ export class ResetService {
     return this.nestJwtService.sign(payload);
   }
 
-  //email service
+  //mailgun email service
   async sendPasswordResetEmail(
     email: string,
     token: string
