@@ -52,6 +52,6 @@ DevOps:
 - Jane
 - Hang Zhao
 - Shelton Chin
-- Ziqi Wang(Test pushing code from WI-** to dev bracnh)
+- Ziqi Wang
 - Shuting Xu
 - Charles Cheng
