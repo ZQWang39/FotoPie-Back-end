@@ -136,7 +136,7 @@ jobs:
           --force-new-deployment
 
   build-and-deploy-prod:
-    if: github.event_name == 'push' && github.ref == 'master'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     needs: test-alert
     runs-on: ubuntu-latest
     env:
