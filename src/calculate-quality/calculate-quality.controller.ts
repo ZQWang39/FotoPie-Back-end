@@ -1,21 +1,15 @@
 import { Controller, Get,Body } from "@nestjs/common";
-import { MyService } from "./everypixel-auth.service";
+import { CalculateQualityService } from "./calculate-quality.service";
 import { Query } from "@nestjs/common/decorators";
 import { Query as ExpressQuery } from "express-serve-static-core";
 
 @Controller("everypixel")
-export class MyController {
-  constructor(private readonly myService: MyService) {}
-
-  // @Get()
-  // async getData(): Promise<any> {
-  //   const data = await this.myService.fetchData();
-  //   return data;
-  // }
+export class CalculateQualityController {
+  constructor(private readonly calculateQualityService: CalculateQualityService) {}
 
   @Get()
   async getToken(): Promise<any> {
-    const data = await this.myService.getToken();
+    const data = await this.calculateQualityService.getToken();
     return data;
   }
 
@@ -24,7 +18,7 @@ export class MyController {
     @Query("url") url?: string,
     @Body() data?: Record<string, any>
   ): Promise<any> {
-    const quality = await this.myService.getQuality({ url, data });
+    const quality = await this.calculateQualityService.getQuality({ url, data });
     return quality;
   }
 }

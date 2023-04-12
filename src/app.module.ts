@@ -22,9 +22,7 @@ import { SearchModule } from "./search/search.module";
 
 import { CreateImageModule } from "./create-image/create-image.module";
 import { CategoryModule } from "./category/category.module";
-import { NimaModule } from "./nima/nima.module";
-import { NimaController } from "./nima/nima.controller";
-import { MyModule } from "./everypixel-auth/everypixel-auth.module";
+import { CalculateQualityModule } from "./calculate-quality/calculate-quality.module";
 import { QualityModule } from "./image-quality/image-quality.module";
 
 
@@ -57,10 +55,9 @@ import { QualityModule } from "./image-quality/image-quality.module";
     NotificationModule,
     SubscriptionModule,
     CreateImageModule,
-    NimaModule,
-    MyModule,
+    CalculateQualityModule,
     QualityModule,
   ],
-  controllers: [NimaController],
+ 
 })
 export class AppModule {}
