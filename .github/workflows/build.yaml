@@ -31,12 +31,12 @@ jobs:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
         args: --severity-threshold=high
-    
-    - name: Install Eslint
-      run: npm install eslint@8.19.0
 
-    # - name: Execute unit test
-    #   run: npm run test 
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Execute unit test
+      run: npm run test 
 
     - name: Code Quality Check
       # run: npx eslint src --max-warnings 0
@@ -100,9 +100,9 @@ jobs:
         STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
         WEBHOOK_SIGNING_SECRET: ${{ secrets.WEBHOOK_SIGNING_SECRET }}
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        EVERYPIXEL_ID: ${{ secrets.EVERYPIXEL_ID }}
+        EVERYPIXEL_API_KEY: ${{ secrets.EVERYPIXEL_API_KEY }}
         
-        
-      # Use --build-arg option to pass in the values for the build-time variables. 
       run: |
         docker build \
         --build-arg FRONTEND_URL="$FRONTEND_URL" \
@@ -118,6 +118,8 @@ jobs:
         --build-arg STRIPE_SECRET_KEY="$STRIPE_SECRET_KEY" \
         --build-arg WEBHOOK_SIGNING_SECRET="$WEBHOOK_SIGNING_SECRET" \
         --build-arg OPENAI_API_KEY="$OPENAI_API_KEY" \
+        --build-arg EVERYPIXEL_ID="$EVERYPIXEL_ID" \
+        --build-arg EVERYPIXEL_API_KEY="$EVERYPIXEL_API_KEY" \
         -t ${{ env.ECS_REGISTRY }}/fotopie-uat:latest \
         -t ${{ env.ECS_REGISTRY }}/fotopie-uat:${{ github.sha }} .
 
@@ -174,9 +176,10 @@ jobs:
         STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
         WEBHOOK_SIGNING_SECRET: ${{ secrets.WEBHOOK_SIGNING_SECRET }}
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        EVERYPIXEL_ID: ${{ secrets.EVERYPIXEL_ID }}
+        EVERYPIXEL_API_KEY: ${{ secrets.EVERYPIXEL_API_KEY }}
+
         
-        
-      # Use --build-arg option to pass in the values for the build-time variables. 
       run: |
         docker build \
         --build-arg JWT_ACTIVATE_SECRET_KEY="$JWT_ACTIVATE_SECRET_KEY" \
@@ -191,6 +194,8 @@ jobs:
         --build-arg STRIPE_SECRET_KEY="$STRIPE_SECRET_KEY" \
         --build-arg WEBHOOK_SIGNING_SECRET="$WEBHOOK_SIGNING_SECRET" \
         --build-arg OPENAI_API_KEY="$OPENAI_API_KEY" \
+        --build-arg EVERYPIXEL_ID="$EVERYPIXEL_ID" \
+        --build-arg EVERYPIXEL_API_KEY="$EVERYPIXEL_API_KEY" \
         -t ${{ env.ECS_REGISTRY }}/fotopie-prod:latest \
         -t ${{ env.ECS_REGISTRY }}/fotopie-prod:${{ github.sha }} .
 

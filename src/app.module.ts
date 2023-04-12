@@ -22,6 +22,8 @@ import { SearchModule } from "./search/search.module";
 
 import { CreateImageModule } from "./create-image/create-image.module";
 import { CategoryModule } from "./category/category.module";
+import { CalculateQualityModule } from "./calculate-quality/calculate-quality.module";
+import { QualityModule } from "./image-quality/image-quality.module";
 
 
 @Module({
@@ -53,7 +55,9 @@ import { CategoryModule } from "./category/category.module";
     NotificationModule,
     SubscriptionModule,
     CreateImageModule,
+    CalculateQualityModule,
+    QualityModule,
   ],
-  controllers: [],
+ 
 })
 export class AppModule {}

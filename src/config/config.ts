@@ -32,4 +32,8 @@ export const config = () => ({
 
   // OpenAI API key
   openai_api_key: process.env.OPENAI_API_KEY,
+
+  everypixel_id: process.env.EVERYPIXEL_ID,
+
+  everypixel_api_key: process.env.EVERYPIXEL_API_KEY,
 });

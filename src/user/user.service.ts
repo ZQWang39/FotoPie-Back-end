@@ -92,7 +92,14 @@ export class UserService {
 
     const url = `${this.ConfigService.get("frontend_url")}/activated/${token}`;
 
-    const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
+    const emailHtml = `
+    <p>Dear customer,</p>
+    <p>Welcome to the application. To confirm the email address, click here:</p>
+    <p><a href="${url}">Verify Email</a></p>
+    <p>If you did not make this request, you can safely ignore this email.</p>
+    <p>Best regards,</p>
+    <p>FotoPie Support Team</p>
+  `;
 
     const mg = mailgun({
       apiKey: this.ConfigService.get("mailgun_api_key"),
@@ -103,8 +110,8 @@ export class UserService {
       return mg.messages().send({
         from: "info@fotopie.net",
         to: email,
-        subject: "Email confirmation",
-        text,
+        subject: "Sign up Email Confirmation",
+        html: emailHtml,
       });
     } catch (error) {
       throw new BadRequestException("Failed to send email");
