@@ -36,6 +36,12 @@ export class QualityController {
     //   query
     // );
     quality.score = String(query.score);
+    const users = await this.qualityService.getQualityUserByEmail(
+      req.user["email"]
+    );
+    const user = users[0];
+    quality.userName = user?.firstName;
+    quality.userAvatar = user?.avatarPath;
     await this.qualityService.create(quality);
     return quality;
   }

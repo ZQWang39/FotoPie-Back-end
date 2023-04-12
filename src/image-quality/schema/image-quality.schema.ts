@@ -16,6 +16,12 @@ export class Quality {
 
   @Prop({ required: true })
   score: string;
+
+  @Prop({ required: true })
+  userName: string;
+
+  @Prop({ required: true })
+  userAvatar: string;
 }
 
 export const QualitySchema = SchemaFactory.createForClass(Quality);

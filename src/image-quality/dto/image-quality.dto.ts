@@ -12,4 +12,12 @@ export class ImageQualityDto {
   @IsNotEmpty()
   @IsString()
   readonly score: string;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly userName: string;
+
+  @IsNotEmpty()
+  @IsString()
+  readonly userAvatar: string;
 }
