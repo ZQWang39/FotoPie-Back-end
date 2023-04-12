@@ -100,8 +100,8 @@ jobs:
         STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
         WEBHOOK_SIGNING_SECRET: ${{ secrets.WEBHOOK_SIGNING_SECRET }}
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        EVERYPIXEL_ID: ${{ secrest.EVERYPIXEL_ID }}
-        EVERYPIXEL_API_KEY: ${{ secrest.EVERYPIXEL_API_KEY }}
+        EVERYPIXEL_ID: ${{ secrets.EVERYPIXEL_ID }}
+        EVERYPIXEL_API_KEY: ${{ secrets.EVERYPIXEL_API_KEY }}
         
       run: |
         docker build \
