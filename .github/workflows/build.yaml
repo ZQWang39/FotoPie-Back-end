@@ -100,6 +100,8 @@ jobs:
         STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
         WEBHOOK_SIGNING_SECRET: ${{ secrets.WEBHOOK_SIGNING_SECRET }}
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        EVERYPIXEL_ID: ${{ secrest.EVERYPIXEL_ID }}
+        EVERYPIXEL_API_KEY: ${{ secrest.EVERYPIXEL_API_KEY }}
         
       run: |
         docker build \
@@ -116,6 +118,8 @@ jobs:
         --build-arg STRIPE_SECRET_KEY="$STRIPE_SECRET_KEY" \
         --build-arg WEBHOOK_SIGNING_SECRET="$WEBHOOK_SIGNING_SECRET" \
         --build-arg OPENAI_API_KEY="$OPENAI_API_KEY" \
+        --build-arg EVERYPIXEL_ID="$EVERYPIXEL_ID" \
+        --build-arg EVERYPIXEL_API_KEY="$EVERYPIXEL_API_KEY" \
         -t ${{ env.ECS_REGISTRY }}/fotopie-uat:latest \
         -t ${{ env.ECS_REGISTRY }}/fotopie-uat:${{ github.sha }} .
 
@@ -172,6 +176,9 @@ jobs:
         STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
         WEBHOOK_SIGNING_SECRET: ${{ secrets.WEBHOOK_SIGNING_SECRET }}
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        EVERYPIXEL_ID: ${{ secrets.EVERYPIXEL_ID }}
+        EVERYPIXEL_API_KEY: ${{ secrets.EVERYPIXEL_API_KEY }}
+
         
       run: |
         docker build \
@@ -187,6 +194,8 @@ jobs:
         --build-arg STRIPE_SECRET_KEY="$STRIPE_SECRET_KEY" \
         --build-arg WEBHOOK_SIGNING_SECRET="$WEBHOOK_SIGNING_SECRET" \
         --build-arg OPENAI_API_KEY="$OPENAI_API_KEY" \
+        --build-arg EVERYPIXEL_ID="$EVERYPIXEL_ID" \
+        --build-arg EVERYPIXEL_API_KEY="$EVERYPIXEL_API_KEY" \
         -t ${{ env.ECS_REGISTRY }}/fotopie-prod:latest \
         -t ${{ env.ECS_REGISTRY }}/fotopie-prod:${{ github.sha }} .
 
