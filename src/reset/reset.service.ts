@@ -127,7 +127,7 @@ export class ResetService {
       to: email,
       subject: "Reset Password Email Verification",
       html: `
-          <p>Hi,</p>
+          <p>Dear customer,</p>
           <p>You have requested to reset your password. Please click the link below to reset your password:</p>
           <p><a href="${this.ConfigService.get(
             "frontend_url"
