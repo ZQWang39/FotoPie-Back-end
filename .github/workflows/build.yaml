@@ -126,7 +126,7 @@ jobs:
     - name: Push docker image to AWS ECR
       run: |
         aws ecr get-login-password --region ${{ env.AWS_REGION}} | docker login --username AWS --password-stdin ${{ env.ECS_REGISTRY }}
-        docker push ${{ env.ECS_REGISTRY }}/fotopie-uat
+        docker push ${{ env.ECS_REGISTRY }}/fotopie-uat:latest
         docker push ${{ env.ECS_REGISTRY }}/fotopie-uat:${{ github.sha }}
 
     - name: Update ECS service
@@ -204,7 +204,7 @@ jobs:
     - name: Push docker image to AWS ECR
       run: |
         aws ecr get-login-password --region ${{ env.AWS_REGION}} | docker login --username AWS --password-stdin ${{ env.ECS_REGISTRY }}
-        docker push ${{ env.ECS_REGISTRY }}/fotopie-prod
+        docker push ${{ env.ECS_REGISTRY }}/fotopie-prod:latest
         docker push ${{ env.ECS_REGISTRY }}/fotopie-prod:${{ github.sha }}
 
     - name: Update ECS service
