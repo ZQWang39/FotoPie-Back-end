@@ -59,7 +59,6 @@ export class ResetService {
     //valid:
     try {
       const decodedToken = await this.nestJwtService.verify(token);
-      console.log(decodedToken);
 
       if (!decodedToken)
         throw new UnauthorizedException("Invalid Token, Please try again.");
