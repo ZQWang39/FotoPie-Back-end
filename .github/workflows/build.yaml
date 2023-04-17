@@ -87,7 +87,7 @@ jobs:
     
     - name: Build docker image
       env: 
-        FRONTEND_URL : ${{ secrets.FRONTEND_URL }}
+        FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
         JWT_ACTIVATE_SECRET_KEY : ${{ secrets.JWT_ACTIVATE_SECRET_KEY }}
         MONGO_URL: ${{ secrets.MONGO_URL }}
         ACCESS_TOKEN_SECRET_PRIVATE: ${{ secrets.ACCESS_TOKEN_SECRET_PRIVATE }}
@@ -164,7 +164,7 @@ jobs:
     
     - name: Build docker image
       env: 
-        FRONTEND_URL : ${{ secrets.FRONTEND_URL }}
+        FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
         JWT_ACTIVATE_SECRET_KEY : ${{ secrets.JWT_ACTIVATE_SECRET_KEY }}
         MONGO_URL: ${{ secrets.MONGO_URL }}
         ACCESS_TOKEN_SECRET_PRIVATE: ${{ secrets.ACCESS_TOKEN_SECRET_PRIVATE }}
