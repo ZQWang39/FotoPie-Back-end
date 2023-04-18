@@ -87,8 +87,8 @@ jobs:
     
     - name: Build docker image
       env: 
-        FRONTEND_URL : ${{ secrets.FRONTEND_URL }}
-        JWT_ACTIVATE_SECRET_KEY : ${{ secrets.JWT_ACTIVIATE_SECRET_KEY }}
+        FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+        JWT_ACTIVATE_SECRET_KEY : ${{ secrets.JWT_ACTIVATE_SECRET_KEY }}
         MONGO_URL: ${{ secrets.MONGO_URL }}
         ACCESS_TOKEN_SECRET_PRIVATE: ${{ secrets.ACCESS_TOKEN_SECRET_PRIVATE }}
         ACCESS_TOKEN_SECRET_PUBLIC: ${{ secrets.ACCESS_TOKEN_SECRET_PUBLIC }}
@@ -126,7 +126,7 @@ jobs:
     - name: Push docker image to AWS ECR
       run: |
         aws ecr get-login-password --region ${{ env.AWS_REGION}} | docker login --username AWS --password-stdin ${{ env.ECS_REGISTRY }}
-        docker push ${{ env.ECS_REGISTRY }}/fotopie-uat
+        docker push ${{ env.ECS_REGISTRY }}/fotopie-uat:latest
         docker push ${{ env.ECS_REGISTRY }}/fotopie-uat:${{ github.sha }}
 
     - name: Update ECS service
@@ -164,7 +164,8 @@ jobs:
     
     - name: Build docker image
       env: 
-        JWT_ACTIVATE_SECRET_KEY : ${{ secrets.JWT_ACTIVIATE_SECRET_KEY }}
+        FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+        JWT_ACTIVATE_SECRET_KEY : ${{ secrets.JWT_ACTIVATE_SECRET_KEY }}
         MONGO_URL: ${{ secrets.MONGO_URL }}
         ACCESS_TOKEN_SECRET_PRIVATE: ${{ secrets.ACCESS_TOKEN_SECRET_PRIVATE }}
         ACCESS_TOKEN_SECRET_PUBLIC: ${{ secrets.ACCESS_TOKEN_SECRET_PUBLIC }}
@@ -182,6 +183,7 @@ jobs:
         
       run: |
         docker build \
+        --build-arg FRONTEND_URL="$FRONTEND_URL" \
         --build-arg JWT_ACTIVATE_SECRET_KEY="$JWT_ACTIVATE_SECRET_KEY" \
         --build-arg MONGO_URL="$MONGO_URL" \
         --build-arg MAILGUN_API_KEY="$MAILGUN_API_KEY" \
@@ -202,7 +204,7 @@ jobs:
     - name: Push docker image to AWS ECR
       run: |
         aws ecr get-login-password --region ${{ env.AWS_REGION}} | docker login --username AWS --password-stdin ${{ env.ECS_REGISTRY }}
-        docker push ${{ env.ECS_REGISTRY }}/fotopie-prod
+        docker push ${{ env.ECS_REGISTRY }}/fotopie-prod:latest
         docker push ${{ env.ECS_REGISTRY }}/fotopie-prod:${{ github.sha }}
 
     - name: Update ECS service
